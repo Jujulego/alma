@@ -1,0 +1,13 @@
+{
+  "name": "alma",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "yarn@3.0.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jujulego/alma"
+  },
+  "devDependencies": {
+    "@jujulego/jill": "1.1.1"
+  }
+}
