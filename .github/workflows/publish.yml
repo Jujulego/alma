@@ -120,5 +120,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.name }}-coverage
+          name: ${{ matrix.slug }}-coverage
           path: ${{ matrix.root }}/coverage
