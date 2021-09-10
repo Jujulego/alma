@@ -1,11 +1,8 @@
-name: 'Publish'
+name: 'Pull Request'
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
-
-  milestone:
-    types: [ closed ]
 
 jobs:
   setup:
@@ -13,6 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
+      - run: git fetch origin ${{ github.base_ref }}
 
       - name: Use Node.js 14.x
         uses: actions/setup-node@v2.4.0
@@ -25,11 +23,11 @@ jobs:
 
       - name: List workspaces to lint
         id: lint
-        run: echo "::set-output name=matrix::$(yarn jill list --with-script lint --json)"
+        run: echo "::set-output name=matrix::$(yarn jill list --with-script lint --affected origin/${{ github.base_ref }} --json)"
 
       - name: List workspaces to test
         id: test
-        run: echo "::set-output name=matrix::$(yarn jill list --with-script test --json)"
+        run: echo "::set-output name=matrix::$(yarn jill list --with-script test --affected origin/${{ github.base_ref }} --json)"
 
     outputs:
       matrix-lint: ${{ steps.lint.outputs.matrix }}
