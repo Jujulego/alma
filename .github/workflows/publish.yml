@@ -27,11 +27,11 @@ jobs:
 
       - name: List workspaces to lint
         id: lint
-        run: echo "::set-output name=matrix::$(yarn jill list --with-script lint --affected main~1 --json)"
+        run: echo "::set-output name=matrix::$(yarn jill list --with-script lint --json)"
 
       - name: List workspaces to test
         id: test
-        run: echo "::set-output name=matrix::$(yarn jill list --with-script test --affected main~1 --json)"
+        run: echo "::set-output name=matrix::$(yarn jill list --with-script test --json)"
 
     outputs:
       matrix-lint: ${{ steps.lint.outputs.matrix }}
