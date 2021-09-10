@@ -1,0 +1,90 @@
+name: 'Publish'
+
+on:
+  push:
+    branches: [ main ]
+
+  milestone:
+    types: [ closed ]
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 2
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: List workspaces to test
+        id: test
+        run: echo "::set-output name=matrix::$(yarn jill list --with-script test --affected main~1 --json)"
+
+    outputs:
+      matrix-test: ${{ steps.test.outputs.matrix }}
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn jill each build
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: packages/*/dist/*
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [setup, build]
+    if: ${{ fromJson(needs.setup.outputs.matrix-test)[0] }}
+
+    strategy:
+      matrix:
+        include: ${{ fromJson(needs.setup.outputs.matrix-test) }}
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 14
+          cache: yarn
+
+      - name: Install
+        run: yarn install --immutable
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: packages
+
+      - name: Test
+        run: yarn workspace ${{ matrix.name }} test
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}-coverage
+          path: ${{ matrix.root }}/coverage
