@@ -34,6 +34,7 @@ jobs:
         run: echo "::set-output name=matrix::$(yarn jill list --with-script test --affected main~1 --json)"
 
     outputs:
+      matrix-lint: ${{ steps.lint.outputs.matrix }}
       matrix-test: ${{ steps.test.outputs.matrix }}
 
   build:
