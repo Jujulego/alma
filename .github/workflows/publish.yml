@@ -176,7 +176,7 @@ jobs:
       - name: Apply milestone version
         if: ${{ github.event_name == 'milestone' }}
         run: |
-          yarn workspace @jujulego/alma-utils version -i ${{ github.event.milestone.title }}
+          yarn workspaces foreach version -i ${{ github.event.milestone.title }}
 
           if `git diff --quiet --exit-code`
           then
