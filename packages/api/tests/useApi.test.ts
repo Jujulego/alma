@@ -17,10 +17,13 @@ describe('useApi.get', () => {
 
     // Render
     const { result, waitForNextUpdate } = renderHook(() => useAPI.get<string>('/api/test'));
-    await waitForNextUpdate();
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test' }));
+    expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
+
+    // After receive
+    await waitForNextUpdate();
+    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
 
     expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.get).toHaveBeenCalledWith('/api/test', {
