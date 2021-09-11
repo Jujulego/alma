@@ -11,6 +11,9 @@ jobs:
   setup:
     runs-on: ubuntu-latest
 
+    permissions:
+      actions: write
+
     steps:
       - name: Publish only the latest commit
         uses: styfle/cancel-workflow-action@0.9.1
@@ -133,7 +136,6 @@ jobs:
     needs: [lint, tests]
 
     permissions:
-      actions: write
       contents: write
 
     steps:
@@ -174,7 +176,7 @@ jobs:
       - name: Apply milestone version
         if: ${{ github.event_name == 'milestone' }}
         run: |
-          yarn workspace @jujulego/alma-utils version -i ${{ github.event.milestone.title }}
+          yarn workspaces foreach version -i ${{ github.event.milestone.title }}
 
           if `git diff --quiet --exit-code`
           then
