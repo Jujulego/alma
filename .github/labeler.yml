@@ -1,1 +1,2 @@
+api: packages/api/**/*
 utils: packages/utils/**/*
