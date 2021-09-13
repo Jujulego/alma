@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
 import { useAPI } from '../src';
@@ -35,3 +35,30 @@ for (const method of ['get', 'head', 'options'] as (GetMethods)[]) {
     });
   });
 }
+
+describe('useApi.delete', () => {
+  // Tests
+  it('should return api call result', async () => {
+    // Mocks
+    jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
+
+    // Render
+    const { result } = renderHook(() => useAPI.delete<string>('/api/test'));
+
+    // Checks
+    expect(result.current).toEqual(expect.objectContaining({ loading: false }));
+
+    // After send
+    await act(async () => {
+      await expect(result.current.send({ test: 'a' }))
+        .resolves.toEqual('test');
+    });
+    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+
+    expect(axios.delete).toHaveBeenCalledTimes(1);
+    expect(axios.delete).toHaveBeenCalledWith('/api/test', {
+      cancelToken: expect.any(axios.CancelToken),
+      params: { test: 'a' },
+    });
+  });
+});
