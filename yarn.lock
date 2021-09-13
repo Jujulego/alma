@@ -726,7 +726,7 @@ __metadata:
     "@types/testing-library__jest-dom": 5.14.1
     "@typescript-eslint/eslint-plugin": 4.31.0
     "@typescript-eslint/parser": 4.31.0
-    axios: ^0.21.4
+    axios: 0.21.4
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.0
     eslint-plugin-react: 7.25.1
@@ -737,6 +737,7 @@ __metadata:
     ts-jest: 27.0.5
     typescript: 4.4.3
   peerDependencies:
+    axios: ^0.21.4
     react: ^17.0.0
     react-dom: ^17.0.0
   languageName: unknown
@@ -1547,7 +1548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.21.4":
+"axios@npm:0.21.4":
   version: 0.21.4
   resolution: "axios@npm:0.21.4"
   dependencies:
