@@ -761,6 +761,7 @@ __metadata:
     eslint-plugin-jest: 24.4.0
     eslint-plugin-react: 7.25.1
     eslint-plugin-react-hooks: 4.2.0
+    eslint-plugin-testing-library: 4.12.2
     jest: 27.2.0
     lodash.isequal: ^4.5.0
     react: 17.0.2
