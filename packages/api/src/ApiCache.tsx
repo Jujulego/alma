@@ -25,7 +25,7 @@ export const ApiCache: FC<ApiCacheProps> = ({ children }) => {
   );
 
   // Render
-  return <CacheContext.Provider value={{ cache, setCache: set }}>{children}</CacheContext.Provider>;
+  return <CacheContext.Provider value={{ cache, setCache: set }}>{ children }</CacheContext.Provider>;
 };
 
 export default ApiCache;
