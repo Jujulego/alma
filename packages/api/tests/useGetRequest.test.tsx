@@ -1,7 +1,8 @@
+import React, { FC } from 'react';
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useGetRequest } from '../src';
+import { CacheContext, useGetRequest } from '../src';
 
 // Setup
 beforeEach(() => {
@@ -32,6 +33,40 @@ describe('useGetRequest', () => {
     expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should use cached data first', async () => {
+    // Render
+    const spyCache = jest.fn<void, [string, string]>();
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+      .mockResolvedValue({
+        status: 200,
+        statusText: 'OK',
+        data: 'test',
+        headers: {},
+        config: {}
+      });
+
+    const wrapper: FC = ({ children }) => (
+      <CacheContext.Provider value={{
+        cache: { 'test-id': { data: 'cached' } },
+        setCache: spyCache
+      }}>
+        { children }
+      </CacheContext.Provider>
+    );
+
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'), { wrapper });
+
+    // Checks
+    expect(result.current).toEqual(expect.objectContaining({ data: 'cached', loading: true }));
+
+    // After receive
+    await waitForNextUpdate();
+    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyCache).toHaveBeenCalledWith('test-id', 'test');
   });
 
   it('should not run api call', async () => {
