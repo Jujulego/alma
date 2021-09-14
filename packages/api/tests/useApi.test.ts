@@ -62,3 +62,34 @@ describe('useApi.delete', () => {
     });
   });
 });
+
+type PostMethods = 'post' | 'put' | 'patch';
+
+for (const method of ['post', 'put', 'patch'] as (PostMethods)[]) {
+  describe(`useApi.${method}`, () => {
+    // Tests
+    it('should return api call result', async () => {
+      // Mocks
+      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+
+      // Render
+      const { result } = renderHook(() => useAPI[method]<string>('/api/test'));
+
+      // Checks
+      expect(result.current).toEqual(expect.objectContaining({ loading: false }));
+
+      // After send
+      await act(async () => {
+        await expect(result.current.send('body', { test: 'a' }))
+          .resolves.toEqual('test');
+      });
+      expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+
+      expect(axios[method]).toHaveBeenCalledTimes(1);
+      expect(axios[method]).toHaveBeenCalledWith('/api/test', 'body', {
+        cancelToken: expect.any(axios.CancelToken),
+        params: { test: 'a' },
+      });
+    });
+  });
+}
