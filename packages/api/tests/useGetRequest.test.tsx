@@ -26,11 +26,57 @@ describe('useGetRequest', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
+    expect(result.current).toEqual({
+      loading: true,
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     // After receive
     await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return api call error', async () => {
+    // Render
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+      .mockRejectedValue({
+        isAxiosError: true,
+        response: {
+          status: 400,
+          statusText: 'Bad Request',
+          data: 'Bad Request',
+          headers: {},
+          config: {}
+        }
+      });
+
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
+
+    // Checks
+    expect(result.current).toEqual({
+      loading: true,
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
+    // After receive
+    await waitForNextUpdate();
+    expect(result.current).toEqual({
+      loading: false,
+      status: 400,
+      error: 'Bad Request',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
@@ -59,11 +105,22 @@ describe('useGetRequest', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'), { wrapper });
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: 'cached', loading: true }));
+    expect(result.current).toEqual({
+      loading: true,
+      data: 'cached',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     // After receive
     await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     expect(spy).toHaveBeenCalledTimes(1);
     expect(spyCache).toHaveBeenCalledWith('test-id', 'test');
@@ -83,7 +140,12 @@ describe('useGetRequest', () => {
     const { result } = renderHook(() => useGetRequest(spy, 'test-id', false));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
+    expect(result.current).toEqual({
+      loading: false,
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
     expect(spy).toHaveBeenCalledTimes(0);
   });
 
@@ -101,15 +163,33 @@ describe('useGetRequest', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
     await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     // After reload
     act(() => result.current.reload());
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: true }));
+    expect(result.current).toEqual({
+      loading: true,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
     await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     expect(spy).toHaveBeenCalledTimes(2);
   });
@@ -128,17 +208,22 @@ describe('useGetRequest', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
     await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({ data: 'test', loading: false }));
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
 
     // After update (simple value)
     act(() => result.current.update('it\'s'));
-    expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s', loading: false }));
+    expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s' }));
 
     // After update (updator)
     act(() => result.current.update((old) => `${old} working`));
-    expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s working', loading: false }));
+    expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s working' }));
 
     expect(spy).toHaveBeenCalledTimes(1);
   });

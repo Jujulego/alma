@@ -1,6 +1,14 @@
 // Utility types
-export type Updator<R> = (data?: R) => R
+export type Updator<R> = (data?: R) => R;
+export type APIParams = Record<string, unknown>;
 
-export type APIParams = Record<string, unknown>
-export type APIState<R> = { data?: R; loading: boolean }
-export type APIPromise<R> = Promise<R> & { cancel: () => void }
+export interface APIState<R, E = unknown> {
+  loading: boolean;
+  status?: number;
+  data?: R;
+  error?: E;
+}
+
+export interface APIPromise<R> extends Promise<R> {
+  cancel: () => void;
+}
