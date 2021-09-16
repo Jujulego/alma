@@ -47,7 +47,7 @@ export function useAPIOptions<R, P extends APIParams = APIParams, E = unknown>(u
   return useGetRequest<R, E>(generator, `api-options:${url}`, load);
 }
 
-export function useAPIDelete<R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIDeleteReturn<P, R> {
+export function useAPIDelete<R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIDeleteReturn<P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -57,7 +57,7 @@ export function useAPIDelete<R = unknown, P extends APIParams = APIParams>(url: 
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useDeleteRequest(generator);
+  return useDeleteRequest<R, P, E>(generator);
 }
 
 export function useAPIPost<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
