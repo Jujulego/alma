@@ -30,7 +30,7 @@
     "@testing-library/react-hooks": "7.0.2",
     "@types/jest": "27.0.1",
     "@types/lodash.isequal": "4.5.5",
-    "@types/react": "17.0.20",
+    "@types/react": "17.0.21",
     "@types/testing-library__jest-dom": "5.14.1",
     "@typescript-eslint/eslint-plugin": "4.31.1",
     "@typescript-eslint/parser": "4.31.1",
