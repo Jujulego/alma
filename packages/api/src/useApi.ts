@@ -8,7 +8,7 @@ import { APIGetRequestConfig, APIGetReturn, useGetRequest } from './useGetReques
 import { APIPostRequestConfig, APIPostReturn, usePostRequest } from './usePostRequest';
 
 // API Hooks
-export function useAPIGet<R, P extends APIParams = APIParams>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R> {
+export function useAPIGet<R, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
@@ -18,10 +18,10 @@ export function useAPIGet<R, P extends APIParams = APIParams>(url: string, param
     [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest(generator, `api-get:${url}`, load);
+  return useGetRequest<R, E>(generator, `api-get:${url}`, load);
 }
 
-export function useAPIHead<R, P extends APIParams = APIParams>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R> {
+export function useAPIHead<R, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
@@ -31,10 +31,10 @@ export function useAPIHead<R, P extends APIParams = APIParams>(url: string, para
     [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest(generator, `api-head:${url}`, load);
+  return useGetRequest<R, E>(generator, `api-head:${url}`, load);
 }
 
-export function useAPIOptions<R, P extends APIParams = APIParams>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R> {
+export function useAPIOptions<R, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
@@ -44,10 +44,10 @@ export function useAPIOptions<R, P extends APIParams = APIParams>(url: string, p
     [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest(generator, `api-options:${url}`, load);
+  return useGetRequest<R, E>(generator, `api-options:${url}`, load);
 }
 
-export function useAPIDelete<R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIDeleteReturn<P, R> {
+export function useAPIDelete<R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIDeleteReturn<P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -57,10 +57,10 @@ export function useAPIDelete<R = unknown, P extends APIParams = APIParams>(url: 
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useDeleteRequest(generator);
+  return useDeleteRequest<R, P, E>(generator);
 }
 
-export function useAPIPost<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPost<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -70,10 +70,10 @@ export function useAPIPost<B, R = unknown, P extends APIParams = APIParams>(url:
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
-export function useAPIPut<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPut<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -83,10 +83,10 @@ export function useAPIPut<B, R = unknown, P extends APIParams = APIParams>(url: 
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
-export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -96,7 +96,7 @@ export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams>(url
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
 // Namespaces
