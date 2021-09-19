@@ -752,18 +752,17 @@ __metadata:
     "@testing-library/react": 12.1.0
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.1
-    "@types/lodash.isequal": 4.5.5
     "@types/react": 17.0.21
     "@types/testing-library__jest-dom": 5.14.1
     "@typescript-eslint/eslint-plugin": 4.31.1
     "@typescript-eslint/parser": 4.31.1
+    dequal: ^2.0.2
     eslint: 7.32.0
     eslint-plugin-jest: 24.4.2
     eslint-plugin-react: 7.25.2
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.2
     jest: 27.2.0
-    lodash.isequal: ^4.5.0
     react: 17.0.2
     react-dom: 17.0.2
     ts-jest: 27.0.5
@@ -1046,22 +1045,6 @@ __metadata:
   version: 7.0.9
   resolution: "@types/json-schema@npm:7.0.9"
   checksum: 259d0e25f11a21ba5c708f7ea47196bd396e379fddb79c76f9f4f62c945879dc21657904914313ec2754e443c5018ea8372362f323f30e0792897fdb2098a705
-  languageName: node
-  linkType: hard
-
-"@types/lodash.isequal@npm:4.5.5":
-  version: 4.5.5
-  resolution: "@types/lodash.isequal@npm:4.5.5"
-  dependencies:
-    "@types/lodash": "*"
-  checksum: 9dd22ceb5453a711e3ce6cd5a31d0ba8fe2263b3c989bc3b64e398933dbe7e9fd22a77a585ab7ee4f27d80a00845e15602b2a4a4b113f01291e2fd236a7707f7
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:*":
-  version: 4.14.172
-  resolution: "@types/lodash@npm:4.14.172"
-  checksum: 5fc51ea40d7e455bd1c760bcc60c9e81f82d85988666d4d4969bd8311367c63bbf1fe2be48755ba87836710e45fff94014ec164ebe6ccaa72815014981152434
   languageName: node
   linkType: hard
 
@@ -2270,6 +2253,13 @@ __metadata:
   version: 1.1.2
   resolution: "depd@npm:1.1.2"
   checksum: 6b406620d269619852885ce15965272b829df6f409724415e0002c8632ab6a8c0a08ec1f0bd2add05dc7bd7507606f7e2cc034fa24224ab829580040b835ecd9
+  languageName: node
+  linkType: hard
+
+"dequal@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "dequal@npm:2.0.2"
+  checksum: 86c7a2c59f7b0797ed397c74b5fcdb744e48fc19440b70ad6ac59f57550a96b0faef3f1cfd5760ec5e6d3f7cb101f634f1f80db4e727b1dc8389bf62d977c0a0
   languageName: node
   linkType: hard
 
@@ -4231,13 +4221,6 @@ fsevents@^2.3.2:
   version: 4.5.0
   resolution: "lodash.clonedeep@npm:4.5.0"
   checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
-  languageName: node
-  linkType: hard
-
-"lodash.isequal@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.isequal@npm:4.5.0"
-  checksum: da27515dc5230eb1140ba65ff8de3613649620e8656b19a6270afe4866b7bd461d9ba2ac8a48dcc57f7adac4ee80e1de9f965d89d4d81a0ad52bb3eec2609644
   languageName: node
   linkType: hard
 

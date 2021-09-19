@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal';
+import { dequal } from 'dequal/lite';
 import { useRef } from 'react';
 
 /**
@@ -11,7 +11,7 @@ import { useRef } from 'react';
 export function useDeepMemo<T>(obj: T): T {
   const ref = useRef<T>(obj);
 
-  if (!isEqual(ref.current, obj)) {
+  if (!dequal(ref.current, obj)) {
     ref.current = obj;
   }
 
