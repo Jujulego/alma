@@ -1,7 +1,8 @@
-import axios, { AxiosError, AxiosResponse, CancelTokenSource } from 'axios';
+import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIParams, APIPromise, APIState } from './types';
+import { APIPromise, makeAPIPromise } from './api-promise';
+import { APIParams, APIState } from './types';
 
 // Types
 export type APIDeleteRequestGenerator<P extends APIParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
@@ -24,28 +25,7 @@ export function useDeleteRequest<R, P extends APIParams, E = unknown>(generator:
       const source = axios.CancelToken.source();
 
       // Make request
-      const promise = generator(source, params)
-        .then((res): R => {
-          setState({ loading: false, status: res.status, data: res.data });
-
-          return res.data;
-        })
-        .catch((error) => {
-          if (axios.isAxiosError(error)) {
-            const { response } = error as AxiosError<E>;
-
-            if (response) {
-              setState({ loading: false, status: response.status, error: response.data });
-              throw error;
-            }
-          }
-
-          setState((old) => ({ ...old, loading: false }));
-          throw error;
-        }) as APIPromise<R>;
-
-      promise.cancel = () => source.cancel();
-      return promise;
+      return makeAPIPromise(generator(source, params), source, setState);
     },
     [generator]
   );

@@ -1,3 +1,4 @@
+export * from './api-promise';
 export * from './ApiCache';
 export * from './CacheContext';
 export * from './types';

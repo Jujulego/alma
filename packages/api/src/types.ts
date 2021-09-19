@@ -8,7 +8,3 @@ export interface APIState<R, E = unknown> {
   data?: R;
   error?: E;
 }
-
-export interface APIPromise<R> extends Promise<R> {
-  cancel: () => void;
-}

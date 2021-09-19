@@ -1,15 +1,12 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIParams, APIPromise, APIState } from './types';
+import { APIParams, APIState } from './types';
+import { APIPromise, makeAPIPromise } from './api-promise';
 
 // Types
 export type APIPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
-export type APIPostRequestGenerator<B, P extends APIParams, R> = (
-  body: B,
-  source: CancelTokenSource,
-  params?: P
-) => Promise<AxiosResponse<R>>;
+export type APIPostRequestGenerator<B, P extends APIParams, R> = (body: B, source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
 
 export interface APIPostReturn<B, P extends APIParams, R, E = unknown> extends APIState<R, E> {
   send: (data: B, params?: P) => APIPromise<R>;
@@ -29,28 +26,7 @@ export function usePostRequest<B, R, P extends APIParams, E = unknown>(generator
       const source = axios.CancelToken.source();
 
       // Make request
-      const promise = generator(body, source, params)
-        .then((res): R => {
-          setState({ loading: false, status: res.status, data: res.data });
-
-          return res.data;
-        })
-        .catch((error) => {
-          if (axios.isAxiosError(error)) {
-            const { response } = error as AxiosError<E>;
-
-            if (response) {
-              setState({ loading: false, status: response.status, error: response.data });
-              throw error;
-            }
-          }
-
-          setState((old) => ({ ...old, loading: false }));
-          throw error;
-        }) as APIPromise<R>;
-
-      promise.cancel = () => source.cancel();
-      return promise;
+      return makeAPIPromise(generator(body, source, params), source, setState);
     },
     [generator]
   );
