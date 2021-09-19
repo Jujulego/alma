@@ -60,7 +60,7 @@ export function useAPIDelete<R = unknown, P extends APIParams = APIParams, E = u
   return useDeleteRequest<R, P, E>(generator);
 }
 
-export function useAPIPost<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPost<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -70,10 +70,10 @@ export function useAPIPost<B, R = unknown, P extends APIParams = APIParams>(url:
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
-export function useAPIPut<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPut<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -83,10 +83,10 @@ export function useAPIPut<B, R = unknown, P extends APIParams = APIParams>(url: 
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
-export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R> {
+export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks
@@ -96,7 +96,7 @@ export function useAPIPatch<B, R = unknown, P extends APIParams = APIParams>(url
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return usePostRequest(generator);
+  return usePostRequest<B, R, P, E>(generator);
 }
 
 // Namespaces
