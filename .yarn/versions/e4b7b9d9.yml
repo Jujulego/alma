@@ -1,0 +1,3 @@
+releases:
+  "@jujulego/alma-api": prerelease
+  "@jujulego/alma-utils": patch
