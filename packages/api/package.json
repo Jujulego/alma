@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-api",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +23,7 @@
     "react-dom": "^17.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-utils": "^1.0.0"
+    "@jujulego/alma-utils": "^1.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.14.1",
@@ -45,5 +45,6 @@
     "react-dom": "17.0.2",
     "ts-jest": "27.0.5",
     "typescript": "4.4.3"
-  }
+  },
+  "stableVersion": "1.0.0-alpha.3"
 }

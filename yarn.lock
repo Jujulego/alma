@@ -717,7 +717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
-    "@jujulego/alma-utils": ^1.0.0
+    "@jujulego/alma-utils": ^1.0.1
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.0
     "@testing-library/react-hooks": 7.0.2
@@ -744,7 +744,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/alma-utils@^1.0.0, @jujulego/alma-utils@workspace:packages/utils":
+"@jujulego/alma-utils@^1.0.1, @jujulego/alma-utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-utils@workspace:packages/utils"
   dependencies:
