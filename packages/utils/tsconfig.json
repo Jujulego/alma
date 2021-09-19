@@ -3,7 +3,7 @@
   "compilerOptions": {
     "incremental": true,
     "jsx": "react",
-    "outDir": "./dist",
+    "outDir": "./dist/cjs",
     "rootDir": ".",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
   }

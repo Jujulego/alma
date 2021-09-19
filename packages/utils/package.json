@@ -1,9 +1,10 @@
 {
   "name": "@jujulego/alma-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Jujulego/alma",
@@ -14,7 +15,7 @@
   },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
     "test": "jest"
   },
   "peerDependencies": {
