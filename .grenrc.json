@@ -1,6 +1,6 @@
 {
   "dataSources": "prs",
-  "ignoreLabels": ["api", "utils"],
+  "ignoreLabels": ["api", "table", "utils"],
   "groupBy": {
     "Enhancements:": ["enhancement"],
     "Bug Fixes:": ["bug"],

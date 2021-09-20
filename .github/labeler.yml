@@ -1,2 +1,3 @@
 api: packages/api/**/*
+table: packages/table/**/*
 utils: packages/utils/**/*
