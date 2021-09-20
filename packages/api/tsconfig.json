@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "incremental": true,
-    "jsx": "react",
+    "jsx": "react-jsxdev",
     "outDir": "./dist/cjs",
     "rootDir": ".",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
