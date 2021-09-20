@@ -2,7 +2,7 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
-import { APIParams } from './types';
+import { APIParams } from '../types';
 import { APIGetRequestConfig, APIGetReturn, useGetRequest } from './useGetRequest';
 
 /**

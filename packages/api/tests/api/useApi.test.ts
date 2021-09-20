@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
-import { useApi } from '../src';
+import { useApi } from '../../src';
 
 // Setup
 beforeEach(() => {

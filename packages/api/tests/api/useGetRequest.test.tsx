@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { CacheContext, useGetRequest } from '../src';
+import { CacheContext, useGetRequest } from '../../src';
 
 // Setup
 beforeEach(() => {

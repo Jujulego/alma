@@ -1,8 +1,8 @@
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIPromise, makeAPIPromise } from './api-promise';
-import { APIParams, APIState } from './types';
+import { APIPromise, makeAPIPromise } from '../api-promise';
+import { APIParams, APIState } from '../types';
 
 // Types
 export type APIDeleteRequestGenerator<P extends APIParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;

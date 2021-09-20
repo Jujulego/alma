@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useCache } from './cache';
-import { APIState, Updator } from './types';
+import { useCache } from '../cache';
+import { APIState, Updator } from '../types';
 
 // Types
 export type APIGetRequestGenerator<R> = (source: CancelTokenSource) => Promise<AxiosResponse<R>>

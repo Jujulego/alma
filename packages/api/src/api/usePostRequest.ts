@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIParams, APIState } from './types';
-import { APIPromise, makeAPIPromise } from './api-promise';
+import { APIParams, APIState } from '../types';
+import { APIPromise, makeAPIPromise } from '../api-promise';
 
 // Types
 export type APIPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>

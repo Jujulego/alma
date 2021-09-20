@@ -1,7 +1,7 @@
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { APIPromise, useDeleteRequest } from '../src';
+import { APIPromise, usePostRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -9,12 +9,12 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useDeleteRequest', () => {
+describe('usePostRequest', () => {
   // Tests
   it('should return api call result', async () => {
     // Render
     let resolve: (data: string) => void;
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [string, CancelTokenSource]>()
       .mockReturnValue(new Promise<AxiosResponse<string>>((res) => {
         resolve = (data) => res({
           status: 200,
@@ -25,7 +25,7 @@ describe('useDeleteRequest', () => {
         });
       }));
 
-    const { result } = renderHook(() => useDeleteRequest(spy));
+    const { result } = renderHook(() => usePostRequest(spy));
 
     // Checks
     expect(result.current).toEqual({
@@ -36,7 +36,7 @@ describe('useDeleteRequest', () => {
     // After send
     let prom: APIPromise<string>;
     act(() => {
-      prom = result.current.send();
+      prom = result.current.send('body');
     });
 
     expect(result.current).toEqual({
@@ -45,6 +45,7 @@ describe('useDeleteRequest', () => {
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy).toHaveBeenCalledWith('body', expect.anything(), undefined);
 
     // After receive
     await act(async () => {
@@ -63,11 +64,11 @@ describe('useDeleteRequest', () => {
   it('should return api call error', async () => {
     // Render
     let reject: () => void;
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [string, CancelTokenSource]>()
       .mockReturnValue(new Promise<AxiosResponse<string>>((_, rej) => {
         reject = () => rej({
           isAxiosError: true,
-            response: {
+          response: {
             status: 400,
             statusText: 'Bad Request',
             data: 'Bad Request',
@@ -77,7 +78,7 @@ describe('useDeleteRequest', () => {
         });
       }));
 
-    const { result } = renderHook(() => useDeleteRequest(spy));
+    const { result } = renderHook(() => usePostRequest(spy));
 
     // Checks
     expect(result.current).toEqual({
@@ -88,7 +89,7 @@ describe('useDeleteRequest', () => {
     // After send
     let prom: APIPromise<string>;
     act(() => {
-      prom = result.current.send();
+      prom = result.current.send('body');
     });
 
     expect(result.current).toEqual({
@@ -125,19 +126,19 @@ describe('useDeleteRequest', () => {
     // Render
     let cancel: CancelTokenSource | null = null;
 
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
-      .mockImplementation((cnl) => {
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [string, CancelTokenSource]>()
+      .mockImplementation((body, cnl) => {
         cancel = cnl;
 
         return new Promise<AxiosResponse<string>>(() => undefined);
       });
 
-    const { result } = renderHook(() => useDeleteRequest(spy));
+    const { result } = renderHook(() => usePostRequest(spy));
 
     // Checks
     let prom: APIPromise<string>;
     act(() => {
-      prom = result.current.send();
+      prom = result.current.send('body');
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
