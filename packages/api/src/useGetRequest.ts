@@ -8,11 +8,25 @@ import { APIState, Updator } from './types';
 export type APIGetRequestGenerator<R> = (source: CancelTokenSource) => Promise<AxiosResponse<R>>
 
 export interface APIGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
+  /**
+   * Load request on mount
+   *
+   * @default true
+   */
   load?: boolean;
 }
 
 export interface APIGetReturn<R, E = unknown> extends APIState<R, E> {
+  /**
+   * Update cached result
+   *
+   * @param data: value to store
+   */
   update: (data: R | Updator<R>) => void;
+
+  /**
+   * Force request reload
+   */
   reload: () => void;
 }
 

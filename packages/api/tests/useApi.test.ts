@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
-import { useAPI } from '../src';
+import { useApi } from '../src';
 
 // Setup
 beforeEach(() => {
@@ -19,7 +19,7 @@ for (const method of ['get', 'head', 'options'] as (GetMethods)[]) {
       jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
 
       // Render
-      const { result, waitForNextUpdate } = renderHook(() => useAPI[method]<string>('/api/test'));
+      const { result, waitForNextUpdate } = renderHook(() => useApi[method]<string>('/api/test'));
 
       // Checks
       expect(result.current).toEqual(expect.objectContaining({ data: undefined, loading: true }));
@@ -43,7 +43,7 @@ describe('useApi.delete', () => {
     jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
 
     // Render
-    const { result } = renderHook(() => useAPI.delete<string>('/api/test'));
+    const { result } = renderHook(() => useApi.delete<string>('/api/test'));
 
     // Checks
     expect(result.current).toEqual(expect.objectContaining({ loading: false }));
@@ -73,7 +73,7 @@ for (const method of ['post', 'put', 'patch'] as (PostMethods)[]) {
       jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
 
       // Render
-      const { result } = renderHook(() => useAPI[method]<string>('/api/test'));
+      const { result } = renderHook(() => useApi[method]<string>('/api/test'));
 
       // Checks
       expect(result.current).toEqual(expect.objectContaining({ loading: false }));

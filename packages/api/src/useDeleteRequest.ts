@@ -8,6 +8,11 @@ import { APIParams, APIState } from './types';
 export type APIDeleteRequestGenerator<P extends APIParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
 
 export interface APIDeleteReturn<P extends APIParams, R, E = unknown> extends APIState<R, E> {
+  /**
+   * Send delete request
+   *
+   * @param params: custom query parameters
+   */
   send: (params?: P) => APIPromise<R>;
 }
 
