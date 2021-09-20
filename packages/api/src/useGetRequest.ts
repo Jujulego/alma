@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useCache } from './CacheContext';
+import { useCache } from './cache';
 import { APIState, Updator } from './types';
 
 // Types

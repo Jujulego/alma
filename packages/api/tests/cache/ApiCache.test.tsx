@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiCache, useCache } from '../src';
+import { ApiCache, useCache } from '../../src';
 
 // Setup
 beforeEach(() => {

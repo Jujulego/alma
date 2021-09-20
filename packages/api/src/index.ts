@@ -1,6 +1,5 @@
 export * from './api-promise';
-export * from './ApiCache';
-export * from './CacheContext';
+export * from './cache';
 export * from './types';
 export * as useApi from './useApi';
 export * from './useApiDelete';
