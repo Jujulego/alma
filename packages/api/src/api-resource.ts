@@ -2,7 +2,7 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useMemo } from 'react';
 
 import { useApi } from './api';
-import { Updator } from './types';
+import { CombineArg, Updator } from './types';
 
 // Types
 export interface IApiResourceGetState<T> {
@@ -14,31 +14,47 @@ export interface IApiResourceGetState<T> {
 }
 
 export interface IApiResourceDeleteState<T> {
-  remove: () => Promise<T> // TODO: should be an ApiPromise
+  remove: () => Promise<T>; // TODO: should be an ApiPromise
 }
 
-export interface IApiResourcePutState<Put, T> {
-  put: (body: Put) => Promise<T> // TODO: should be an ApiPromise
+export interface IApiResourcePutState<B, T> {
+  put: (body: B) => Promise<T>; // TODO: should be an ApiPromise
 }
 
-export type IApiResourceUrlBuilder<A extends unknown[]> = (...args: A) => string;
+export type IApiResourceUrlBuilder<A> = A extends void ? string : (arg: A) => string;
 
-export type IApiResourceHookMethods<T, A extends unknown[], S extends IApiResourceGetState<T>> = {
-  url: IApiResourceUrlBuilder<A>;
-  delete: () => IApiResourceHook<T, A, S & IApiResourceDeleteState<T>>;
-  put: <Put>() => IApiResourceHook<T, A, S & IApiResourcePutState<Put, T>>;
+export type IApiResourceHookMethods<T, A, S extends IApiResourceGetState<T>> = {
+  url: (arg: A) => string;
+  delete: <NA = A>(url?: IApiResourceUrlBuilder<NA>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourceDeleteState<T>>;
+  put: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePutState<NB, T>>;
 }
 
-export type IApiResourceHook<T, A extends unknown[], S extends IApiResourceGetState<T>> = ((...args: A) => S) & IApiResourceHookMethods<T, A, S>;
+export type IApiResourceHook<T, A, S extends IApiResourceGetState<T>> = ((arg: A) => S) & IApiResourceHookMethods<T, A, S>;
+
+// Utils
+function hookMethods<T, A, S extends IApiResourceGetState<T>>(url: (arg: A) => string): IApiResourceHookMethods<T, A, S> {
+  return {
+    url,
+    delete<NA = A>(url?: IApiResourceUrlBuilder<NA>) {
+      return addDeleteCall<T, CombineArg<A, NA>, S>(this, url as IApiResourceUrlBuilder<CombineArg<A, NA>>);
+    },
+    put<NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) {
+      return addPutCall<NB, T, CombineArg<A, NA>, S>(this, url);
+    }
+  };
+}
 
 // Hook modifiers
-function addDeleteCall<T, A extends unknown[], S extends IApiResourceGetState<T>>(hook: IApiResourceHook<T, A, S>): IApiResourceHook<T, A, S & IApiResourceDeleteState<T>> {
-  function useApiResource(...args: A): S & IApiResourceDeleteState<T> {
+function addDeleteCall<T, A, S extends IApiResourceGetState<T>>(wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourceDeleteState<T>> {
+  const deleteUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
+
+  // new hook
+  function useApiResource(arg: A): S & IApiResourceDeleteState<T> {
     // Memo
-    const url = useMemo(() => hook.url(...args), [useDeepMemo(args)]); // eslint-disable-line react-hooks/exhaustive-deps
+    const url = useMemo(() => deleteUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Api
-    const all = hook(...args);
+    const all = wrapped(arg);
     const { send } = useApi.delete<T>(url);
 
     // Result
@@ -49,52 +65,48 @@ function addDeleteCall<T, A extends unknown[], S extends IApiResourceGetState<T>
         all.update(res);
 
         return res;
-      }, [send, all.update])
+      }, [send, all.update]) // eslint-disable-line react-hooks/exhaustive-deps
     };
   }
 
-  return Object.assign(useApiResource, hook as unknown as IApiResourceHookMethods<T, A, S & IApiResourceDeleteState<T>>);
+  return Object.assign(useApiResource, hookMethods<T, A, S & IApiResourceDeleteState<T>>(wrapped.url));
 }
 
-function addPutCall<Put, T, A extends unknown[], S extends IApiResourceGetState<T>>(hook: IApiResourceHook<T, A, S>): IApiResourceHook<T, A, S & IApiResourcePutState<Put, T>> {
-  function useApiResource(...args: A): S & IApiResourcePutState<Put, T> {
+function addPutCall<B, T, A, S extends IApiResourceGetState<T>>(wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourcePutState<B, T>> {
+  const putUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
+
+  // new hook
+  function useApiResource(arg: A): S & IApiResourcePutState<B, T> {
     // Memo
-    const url = useMemo(() => hook.url(...args), [useDeepMemo(args)]); // eslint-disable-line react-hooks/exhaustive-deps
+    const url = useMemo(() => putUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Api
-    const all = hook(...args);
-    const { send } = useApi.put<Put, T>(url);
+    const all = wrapped(arg);
+    const { send } = useApi.put<B, T>(url);
 
     // Result
     return {
       ...all,
-      put: useCallback(async (data: Put) => {
+      put: useCallback(async (data: B) => {
         const res = await send(data);
         all.update(res);
 
         return res;
-      }, [send, all.update])
+      }, [send, all.update]) // eslint-disable-line react-hooks/exhaustive-deps
     };
   }
 
-  return Object.assign(useApiResource, hook as unknown as IApiResourceHookMethods<T, A, S & IApiResourcePutState<Put, T>>);
+  return Object.assign(useApiResource, hookMethods<T, A, S & IApiResourcePutState<B, T>>(wrapped.url));
 }
 
 // Hook builder
-export function apiResource<T, A extends unknown[] = []>(url: string | IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, IApiResourceGetState<T>> {
-  const hook: IApiResourceHookMethods<T, A, IApiResourceGetState<T>> = {
-    url: typeof url === 'string' ? () => url : url,
-    delete<S extends IApiResourceGetState<T>>() {
-      return addDeleteCall<T, A, S>(this);
-    },
-    put<Put, S extends IApiResourceGetState<T>>() {
-      return addPutCall<Put, T, A, S>(this);
-    }
-  };
+export function apiResource<T, A = void>(url: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, IApiResourceGetState<T>> {
+  const getUrl: (arg: A) => string = typeof url === 'string' ? () => url : url;
 
-  function useApiResource(...args: A): IApiResourceGetState<T> {
+  // hook
+  function useApiResource(arg: A): IApiResourceGetState<T> {
     // Memo
-    const url = useMemo(() => hook.url(...args), [useDeepMemo(args)]); // eslint-disable-line react-hooks/exhaustive-deps
+    const url = useMemo(() => getUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Api
     const { data, loading, reload, update } = useApi.get<T>(url);
@@ -108,5 +120,5 @@ export function apiResource<T, A extends unknown[] = []>(url: string | IApiResou
     };
   }
 
-  return Object.assign(useApiResource, hook);
+  return Object.assign(useApiResource, hookMethods<T, A, IApiResourceGetState<T>>(getUrl));
 }

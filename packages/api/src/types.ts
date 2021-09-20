@@ -2,6 +2,8 @@
 export type Updator<R> = (data?: R) => R;
 export type APIParams = Record<string, unknown>;
 
+export type CombineArg<A1, A2> = A1 extends void ? A2 : (A2 extends void ? A1 : A1 & A2)
+
 export interface APIState<R, E = unknown> {
   loading: boolean;
 
