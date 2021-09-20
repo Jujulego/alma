@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 /**
- * useInterval hook
  * Force the component to render regularly
  *
  * @param ms: milliseconds to wait before re-rendering the component

@@ -9,6 +9,12 @@ export type APIPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
 export type APIPostRequestGenerator<B, P extends APIParams, R> = (body: B, source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
 
 export interface APIPostReturn<B, P extends APIParams, R, E = unknown> extends APIState<R, E> {
+  /**
+   * Send a post/put/patch request
+   *
+   * @param data: body of the request
+   * @param params: custom query parameters
+   */
   send: (data: B, params?: P) => APIPromise<R>;
 }
 

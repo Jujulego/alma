@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * usePrevious hook
  * Returns the previous value of its value parameter
  *
  * @param value: value to save
