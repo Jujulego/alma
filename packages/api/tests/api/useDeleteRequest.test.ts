@@ -1,7 +1,7 @@
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { APIPromise, useDeleteRequest } from '../../src';
+import { ApiPromise, useDeleteRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -34,7 +34,7 @@ describe('useDeleteRequest', () => {
     });
 
     // After send
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send();
     });
@@ -86,7 +86,7 @@ describe('useDeleteRequest', () => {
     });
 
     // After send
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send();
     });
@@ -123,7 +123,7 @@ describe('useDeleteRequest', () => {
 
   it('should cancel api call result', async () => {
     // Render
-    let cancel: CancelTokenSource | null = null;
+    let cancel: CancelTokenSource;
 
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
       .mockImplementation((cnl) => {
@@ -135,7 +135,7 @@ describe('useDeleteRequest', () => {
     const { result } = renderHook(() => useDeleteRequest(spy));
 
     // Checks
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send();
     });

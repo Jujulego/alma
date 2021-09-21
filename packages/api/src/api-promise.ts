@@ -3,13 +3,27 @@ import { Dispatch, SetStateAction } from 'react';
 import { APIState } from './types';
 
 // Interface
-export interface APIPromise<T> extends Promise<T> {
+export type ApiPromiseCallback<A, R> = ((arg: A) => R | PromiseLike<R>) | undefined | null;
+
+export interface ApiPromise<T> extends Promise<T> {
   cancel: () => void;
+  then<R1 = T, R2 = never>(onfulfilled?: ApiPromiseCallback<T, R1>, onrejected?: ApiPromiseCallback<T, R2>): ApiPromise<R1 | R2>;
+  catch<R = never>(onrejected?: ApiPromiseCallback<unknown, R>): ApiPromise<T | R>;
 }
 
 // Builder
-export function makeAPIPromise<R, E>(promise: Promise<AxiosResponse<R>>, source: CancelTokenSource, setState: Dispatch<SetStateAction<APIState<R, E>>>): APIPromise<R> {
-  const apiPromise = promise
+export function makeApiPromise<T>(prom: Promise<T>, cancel: () => void): ApiPromise<T> {
+  const api = prom as ApiPromise<T>;
+
+  api.cancel = cancel;
+  api.then = (...args) => makeApiPromise(prom.then(...args), cancel);
+  api.catch = (...args) => makeApiPromise(prom.catch(...args), cancel);
+
+  return api;
+}
+
+export function makeRequestApiPromise<R, E>(promise: Promise<AxiosResponse<R>>, source: CancelTokenSource, setState: Dispatch<SetStateAction<APIState<R, E>>>): ApiPromise<R> {
+  return makeApiPromise(promise, () => source.cancel())
     .then((res): R => {
       setState({ loading: false, status: res.status, data: res.data });
       return res.data;
@@ -26,9 +40,5 @@ export function makeAPIPromise<R, E>(promise: Promise<AxiosResponse<R>>, source:
 
       setState((old) => ({ ...old, loading: false }));
       throw error;
-    }) as APIPromise<R>;
-
-  apiPromise.cancel = () => source.cancel();
-
-  return apiPromise;
+    });
 }

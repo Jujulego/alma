@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIPromise, makeAPIPromise } from '../api-promise';
+import { ApiPromise, makeRequestApiPromise } from '../api-promise';
 import { APIParams, APIState } from '../types';
 
 // Types
@@ -13,7 +13,7 @@ export interface APIDeleteReturn<P extends APIParams, R, E = unknown> extends AP
    *
    * @param params: custom query parameters
    */
-  send: (params?: P) => APIPromise<R>;
+  send: (params?: P) => ApiPromise<R>;
 }
 
 // Base hooks
@@ -30,7 +30,7 @@ export function useDeleteRequest<R, P extends APIParams, E = unknown>(generator:
       const source = axios.CancelToken.source();
 
       // Make request
-      return makeAPIPromise(generator(source, params), source, setState);
+      return makeRequestApiPromise(generator(source, params), source, setState);
     },
     [generator]
   );

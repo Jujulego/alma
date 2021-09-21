@@ -1,7 +1,7 @@
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { APIPromise, usePostRequest } from '../../src';
+import { ApiPromise, usePostRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -34,7 +34,7 @@ describe('usePostRequest', () => {
     });
 
     // After send
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send('body');
     });
@@ -87,7 +87,7 @@ describe('usePostRequest', () => {
     });
 
     // After send
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send('body');
     });
@@ -124,7 +124,7 @@ describe('usePostRequest', () => {
 
   it('should cancel api call result', async () => {
     // Render
-    let cancel: CancelTokenSource | null = null;
+    let cancel: CancelTokenSource;
 
     const spy = jest.fn<Promise<AxiosResponse<string>>, [string, CancelTokenSource]>()
       .mockImplementation((body, cnl) => {
@@ -136,7 +136,7 @@ describe('usePostRequest', () => {
     const { result } = renderHook(() => usePostRequest(spy));
 
     // Checks
-    let prom: APIPromise<string>;
+    let prom: ApiPromise<string>;
     act(() => {
       prom = result.current.send('body');
     });

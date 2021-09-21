@@ -2,7 +2,7 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useMemo } from 'react';
 
 import { useApi } from './api';
-import { APIPromise } from './api-promise';
+import { ApiPromise } from './api-promise';
 import { CombineArg, Updator } from './types';
 
 // Types
@@ -15,11 +15,11 @@ export interface IApiResourceGetState<T> {
 }
 
 export interface IApiResourceDeleteState<T> {
-  remove: () => APIPromise<T>;
+  remove: () => ApiPromise<T>;
 }
 
 export interface IApiResourcePutState<B, T> {
-  put: (body: B) => Promise<T>; // TODO: should be an ApiPromise
+  put: (body: B) => ApiPromise<T>;
 }
 
 export type IApiResourceUrlBuilder<A> = A extends void ? string : (arg: A) => string;
@@ -83,11 +83,17 @@ function addPutCall<B, T, A, S extends IApiResourceGetState<T>>(wrapped: IApiRes
     // Result
     return {
       ...all,
-      put: useCallback(async (data: B) => {
-        const res = await send(data);
-        all.update(res);
+      put: useCallback((data: B) => {
+        const prom = send(data);
+        const apip = prom.then((res) => {
+          all.update(res);
 
-        return res;
+          return res;
+        }) as ApiPromise<T>;
+
+        apip.cancel = prom.cancel;
+
+        return apip;
       }, [send, all.update]) // eslint-disable-line react-hooks/exhaustive-deps
     };
   }

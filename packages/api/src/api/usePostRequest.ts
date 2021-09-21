@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axi
 import { useCallback, useState } from 'react';
 
 import { APIParams, APIState } from '../types';
-import { APIPromise, makeAPIPromise } from '../api-promise';
+import { ApiPromise, makeRequestApiPromise } from '../api-promise';
 
 // Types
 export type APIPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
@@ -15,7 +15,7 @@ export interface APIPostReturn<B, P extends APIParams, R, E = unknown> extends A
    * @param data: body of the request
    * @param params: custom query parameters
    */
-  send: (data: B, params?: P) => APIPromise<R>;
+  send: (data: B, params?: P) => ApiPromise<R>;
 }
 
 // Base hooks
@@ -32,7 +32,7 @@ export function usePostRequest<B, R, P extends APIParams, E = unknown>(generator
       const source = axios.CancelToken.source();
 
       // Make request
-      return makeAPIPromise(generator(body, source, params), source, setState);
+      return makeRequestApiPromise(generator(body, source, params), source, setState);
     },
     [generator]
   );
