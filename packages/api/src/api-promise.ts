@@ -14,10 +14,13 @@ export interface ApiPromise<T> extends Promise<T> {
 // Builder
 export function makeApiPromise<T>(prom: Promise<T>, cancel: () => void): ApiPromise<T> {
   const api = prom as ApiPromise<T>;
-
   api.cancel = cancel;
-  api.then = (...args) => makeApiPromise(prom.then(...args), cancel);
-  api.catch = (...args) => makeApiPromise(prom.catch(...args), cancel);
+
+  const oldThen = prom.then;
+  api.then = (...args) => makeApiPromise(oldThen.call(api, ...args), cancel);
+
+  const oldCatch = prom.catch;
+  api.catch = (...args) => makeApiPromise(oldCatch.call(api, ...args), cancel);
 
   return api;
 }
