@@ -2,12 +2,12 @@ import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
 import { ApiPromise, makeRequestApiPromise } from '../api-promise';
-import { APIParams, APIState } from '../types';
+import { ApiParams, ApiState } from '../types';
 
 // Types
-export type APIDeleteRequestGenerator<P extends APIParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
+export type ApiDeleteRequestGenerator<P extends ApiParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
 
-export interface APIDeleteReturn<P extends APIParams, R, E = unknown> extends APIState<R, E> {
+export interface ApiDeleteReturn<P extends ApiParams, R, E = unknown> extends ApiState<R, E> {
   /**
    * Send delete request
    *
@@ -17,9 +17,9 @@ export interface APIDeleteReturn<P extends APIParams, R, E = unknown> extends AP
 }
 
 // Base hooks
-export function useDeleteRequest<R, P extends APIParams, E = unknown>(generator: APIDeleteRequestGenerator<P, R>): APIDeleteReturn<P, R, E> {
+export function useDeleteRequest<R, P extends ApiParams, E = unknown>(generator: ApiDeleteRequestGenerator<P, R>): ApiDeleteReturn<P, R, E> {
   // State
-  const [state, setState] = useState<APIState<R, E>>({ loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({ loading: false });
 
   // Callback
   const send = useCallback(

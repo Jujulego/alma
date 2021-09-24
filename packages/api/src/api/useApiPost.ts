@@ -2,8 +2,8 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
-import { APIParams } from '../types';
-import { APIPostRequestConfig, APIPostReturn, usePostRequest } from './usePostRequest';
+import { ApiParams } from '../types';
+import { ApiPostRequestConfig, ApiPostReturn, usePostRequest } from './usePostRequest';
 
 /**
  * Send a post request with axios, returns the current status of the request.
@@ -12,7 +12,7 @@ import { APIPostRequestConfig, APIPostReturn, usePostRequest } from './usePostRe
  * @param params: query parameters
  * @param config: axios configuration
  */
-export function useApiPost<B, R = unknown, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config?: APIPostRequestConfig): APIPostReturn<B, P, R, E> {
+export function useApiPost<B, R = unknown, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config?: ApiPostRequestConfig): ApiPostReturn<B, P, R, E> {
   useDebugValue(url);
 
   // Callbacks

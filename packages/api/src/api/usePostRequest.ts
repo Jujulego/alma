@@ -1,14 +1,14 @@
 import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { APIParams, APIState } from '../types';
+import { ApiParams, ApiState } from '../types';
 import { ApiPromise, makeRequestApiPromise } from '../api-promise';
 
 // Types
-export type APIPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
-export type APIPostRequestGenerator<B, P extends APIParams, R> = (body: B, source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
+export type ApiPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
+export type ApiPostRequestGenerator<B, P extends ApiParams, R> = (body: B, source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
 
-export interface APIPostReturn<B, P extends APIParams, R, E = unknown> extends APIState<R, E> {
+export interface ApiPostReturn<B, P extends ApiParams, R, E = unknown> extends ApiState<R, E> {
   /**
    * Send a post/put/patch request
    *
@@ -19,9 +19,9 @@ export interface APIPostReturn<B, P extends APIParams, R, E = unknown> extends A
 }
 
 // Base hooks
-export function usePostRequest<B, R, P extends APIParams, E = unknown>(generator: APIPostRequestGenerator<B, P, R>): APIPostReturn<B, P, R, E> {
+export function usePostRequest<B, R, P extends ApiParams, E = unknown>(generator: ApiPostRequestGenerator<B, P, R>): ApiPostReturn<B, P, R, E> {
   // State
-  const [state, setState] = useState<APIState<R, E>>({ loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({ loading: false });
 
   // Callback
   const send = useCallback(

@@ -2,8 +2,8 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
-import { APIParams } from '../types';
-import { APIGetRequestConfig, APIGetReturn, useGetRequest } from './useGetRequest';
+import { ApiParams } from '../types';
+import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetRequest';
 
 /**
  * Send a options request with axios, returns the current status of the request.
@@ -12,7 +12,7 @@ import { APIGetRequestConfig, APIGetReturn, useGetRequest } from './useGetReques
  * @param params: query parameters
  * @param config: axios configuration
  */
-export function useApiOptions<R, P extends APIParams = APIParams, E = unknown>(url: string, params?: P, config: APIGetRequestConfig = {}): APIGetReturn<R, E> {
+export function useApiOptions<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
