@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
 import { useApi } from '../../src';
+import { GET_METHODS, POST_METHODS } from '../utils';
 
 // Setup
 beforeEach(() => {
@@ -9,9 +10,7 @@ beforeEach(() => {
 });
 
 // Test suites
-type GetMethods = 'get' | 'head' | 'options';
-
-for (const method of ['get', 'head', 'options'] as (GetMethods)[]) {
+for (const method of GET_METHODS) {
   describe(`useApi.${method}`, () => {
     // Tests
     it('should return api call result', async () => {
@@ -63,9 +62,7 @@ describe('useApi.delete', () => {
   });
 });
 
-type PostMethods = 'post' | 'put' | 'patch';
-
-for (const method of ['post', 'put', 'patch'] as (PostMethods)[]) {
+for (const method of POST_METHODS) {
   describe(`useApi.${method}`, () => {
     // Tests
     it('should return api call result', async () => {
