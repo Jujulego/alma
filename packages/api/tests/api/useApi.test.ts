@@ -12,11 +12,13 @@ beforeEach(() => {
 // Test suites
 for (const method of GET_METHODS) {
   describe(`useApi.${method}`, () => {
+    // Mocks
+    beforeEach(() => {
+      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+    });
+
     // Tests
     it('should return api call result', async () => {
-      // Mocks
-      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
-
       // Render
       const { result, waitForNextUpdate } = renderHook(() => useApi[method]<string>('/api/test'));
 
@@ -36,11 +38,13 @@ for (const method of GET_METHODS) {
 }
 
 describe('useApi.delete', () => {
+  // Mocks
+  beforeEach(() => {
+    jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
+  });
+
   // Tests
   it('should return api call result', async () => {
-    // Mocks
-    jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
-
     // Render
     const { result } = renderHook(() => useApi.delete<string>('/api/test'));
 
@@ -64,11 +68,13 @@ describe('useApi.delete', () => {
 
 for (const method of POST_METHODS) {
   describe(`useApi.${method}`, () => {
+    // Mocks
+    beforeEach(() => {
+      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+    });
+
     // Tests
     it('should return api call result', async () => {
-      // Mocks
-      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
-
       // Render
       const { result } = renderHook(() => useApi[method]<string>('/api/test'));
 
