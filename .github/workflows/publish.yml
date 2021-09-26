@@ -88,11 +88,6 @@ jobs:
       - name: Install
         run: yarn install --immutable
 
-      - uses: actions/download-artifact@v2
-        with:
-          name: build-artifacts
-          path: packages
-
       - name: Lint
         run: yarn workspace ${{ matrix.name }} lint
 

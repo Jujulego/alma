@@ -5,6 +5,6 @@
     "jsx": "react-jsxdev",
     "outDir": "./dist/cjs",
     "rootDir": ".",
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   }
 }

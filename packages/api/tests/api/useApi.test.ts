@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
 import { useApi } from '../../src';
+import { GET_METHODS, POST_METHODS } from '../utils';
 
 // Setup
 beforeEach(() => {
@@ -9,15 +10,15 @@ beforeEach(() => {
 });
 
 // Test suites
-type GetMethods = 'get' | 'head' | 'options';
-
-for (const method of ['get', 'head', 'options'] as (GetMethods)[]) {
+for (const method of GET_METHODS) {
   describe(`useApi.${method}`, () => {
+    // Mocks
+    beforeEach(() => {
+      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+    });
+
     // Tests
     it('should return api call result', async () => {
-      // Mocks
-      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
-
       // Render
       const { result, waitForNextUpdate } = renderHook(() => useApi[method]<string>('/api/test'));
 
@@ -37,11 +38,13 @@ for (const method of ['get', 'head', 'options'] as (GetMethods)[]) {
 }
 
 describe('useApi.delete', () => {
+  // Mocks
+  beforeEach(() => {
+    jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
+  });
+
   // Tests
   it('should return api call result', async () => {
-    // Mocks
-    jest.spyOn(axios, 'delete').mockResolvedValue({ data: 'test' });
-
     // Render
     const { result } = renderHook(() => useApi.delete<string>('/api/test'));
 
@@ -63,15 +66,15 @@ describe('useApi.delete', () => {
   });
 });
 
-type PostMethods = 'post' | 'put' | 'patch';
-
-for (const method of ['post', 'put', 'patch'] as (PostMethods)[]) {
+for (const method of POST_METHODS) {
   describe(`useApi.${method}`, () => {
+    // Mocks
+    beforeEach(() => {
+      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+    });
+
     // Tests
     it('should return api call result', async () => {
-      // Mocks
-      jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
-
       // Render
       const { result } = renderHook(() => useApi[method]<string>('/api/test'));
 

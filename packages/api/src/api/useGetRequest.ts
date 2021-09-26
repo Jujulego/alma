@@ -2,12 +2,12 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource
 import { useCallback, useEffect, useState } from 'react';
 
 import { useCache } from '../cache';
-import { APIState, Updator } from '../types';
+import { ApiState, Updator } from '../types';
 
 // Types
-export type APIGetRequestGenerator<R> = (source: CancelTokenSource) => Promise<AxiosResponse<R>>
+export type ApiGetRequestGenerator<R> = (source: CancelTokenSource) => Promise<AxiosResponse<R>>
 
-export interface APIGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
+export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
   /**
    * Load request on mount
    *
@@ -16,7 +16,7 @@ export interface APIGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
   load?: boolean;
 }
 
-export interface APIGetReturn<R, E = unknown> extends APIState<R, E> {
+export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
   /**
    * Update cached result
    *
@@ -31,13 +31,13 @@ export interface APIGetReturn<R, E = unknown> extends APIState<R, E> {
 }
 
 // Base hooks
-export function useGetRequest<R, E = unknown>(generator: APIGetRequestGenerator<R>, cacheId: string, load = true): APIGetReturn<R, E> {
+export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, cacheId: string, load = true): ApiGetReturn<R, E> {
   // Cache
   const { data, setCache } = useCache<R>(cacheId);
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
-  const [state, setState] = useState<APIState<R, E>>({ data, loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({ data, loading: false });
 
   // Effect
   useEffect(() => {
