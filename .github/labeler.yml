@@ -1,2 +1,3 @@
 api: packages/api/**/*
+graphql: packages/graphql/**/*
 utils: packages/utils/**/*
