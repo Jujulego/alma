@@ -10,6 +10,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.yarn" />
       <excludeFolder url="file://$MODULE_DIR$/packages/utils/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/api/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/graphql/coverage" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

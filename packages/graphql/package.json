@@ -25,7 +25,8 @@
     "react-dom": "^17.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-api": "^1.1.0"
+    "@jujulego/alma-api": "^1.1.0",
+    "@jujulego/alma-utils": "^1.0.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.14.1",

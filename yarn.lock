@@ -762,6 +762,7 @@ __metadata:
   resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
   dependencies:
     "@jujulego/alma-api": ^1.1.0
+    "@jujulego/alma-utils": ^1.0.5
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.1
     "@testing-library/react-hooks": 7.0.2
