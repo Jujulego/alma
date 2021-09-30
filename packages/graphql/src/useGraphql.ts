@@ -1,17 +1,22 @@
-import axios, { CancelTokenSource } from 'axios';
-import { useCallback, useDebugValue } from 'react';
 import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
+import axios, { CancelTokenSource } from 'axios';
+import { useCallback, useDebugValue, useMemo } from 'react';
 
-export function useGraphql<R, E = unknown>(url: string, query: string, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
+import { buildRequest, GraphqlDocument } from './utils';
+
+export function useGraphql<R, E = unknown>(url: string, doc: GraphqlDocument, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
+  // Memos
+  const req = useMemo(() => buildRequest(doc), [doc]);
+
   // Callbacks
   const generator = useCallback(
-    (source: CancelTokenSource) => axios.post<R>(url, query, { ...rconfig, cancelToken: source.token }),
-    [url, useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
+    (source: CancelTokenSource) => axios.post<R>(url, req, { ...rconfig, cancelToken: source.token }),
+    [url, useDeepMemo(req), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest<R, E>(generator, `graphql:${url}`, load);
+  return useGetRequest<R, E>(generator, `graphql:${url}:${req.operationName}`, load);
 }
