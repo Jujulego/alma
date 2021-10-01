@@ -91,8 +91,8 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [state.data, setCache]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setState((old) => ({ ...old, data: cached }));
-  }, [swrId, cached]);
+    if (!disableSwr) setState((old) => ({ ...old, data: cached }));
+  }, [swrId, cached]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return {
     ...state,
