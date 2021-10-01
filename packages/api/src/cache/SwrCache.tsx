@@ -1,18 +1,18 @@
 import { FC, ReactNode, useCallback, useState } from 'react';
 
-import { CacheContext, CacheState } from './CacheContext';
+import { SwrCacheContext, SwrCacheState } from './SwrCacheContext';
 
 // Types
 interface State {
-  [id: string]: CacheState<unknown>
+  [id: string]: SwrCacheState<unknown>
 }
 
-export interface ApiCacheProps {
+export interface SwrCacheProps {
   children?: ReactNode
 }
 
 // Component
-export const ApiCache: FC<ApiCacheProps> = ({ children }) => {
+export const SwrCache: FC<SwrCacheProps> = ({ children }) => {
   // State
   const [cache, setCache] = useState<State>({});
 
@@ -25,7 +25,7 @@ export const ApiCache: FC<ApiCacheProps> = ({ children }) => {
   );
 
   // Render
-  return <CacheContext.Provider value={{ cache, setCache: set }}>{ children }</CacheContext.Provider>;
+  return <SwrCacheContext.Provider value={{ cache, setCache: set }}>{ children }</SwrCacheContext.Provider>;
 };
 
-export default ApiCache;
+export default SwrCache;

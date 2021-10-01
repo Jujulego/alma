@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { CacheContext, useGetRequest } from '../../src';
+import { SwrCacheContext, useGetRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -81,7 +81,7 @@ describe('useGetRequest', () => {
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it('should use cached data first', async () => {
+  it('should return cached data first', async () => {
     // Render
     const spyCache = jest.fn<void, [string, string]>();
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
@@ -94,12 +94,12 @@ describe('useGetRequest', () => {
       });
 
     const wrapper: FC = ({ children }) => (
-      <CacheContext.Provider value={{
+      <SwrCacheContext.Provider value={{
         cache: { 'test-id': { data: 'cached' } },
         setCache: spyCache
       }}>
         { children }
-      </CacheContext.Provider>
+      </SwrCacheContext.Provider>
     );
 
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'), { wrapper });
@@ -126,6 +126,51 @@ describe('useGetRequest', () => {
     expect(spyCache).toHaveBeenCalledWith('test-id', 'test');
   });
 
+  it('should not use cached data', async () => {
+    // Render
+    const spyCache = jest.fn<void, [string, string]>();
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+      .mockResolvedValue({
+        status: 200,
+        statusText: 'OK',
+        data: 'test',
+        headers: {},
+        config: {}
+      });
+
+    const wrapper: FC = ({ children }) => (
+      <SwrCacheContext.Provider value={{
+        cache: { 'test-id': { data: 'cached' } },
+        setCache: spyCache
+      }}>
+        { children }
+      </SwrCacheContext.Provider>
+    );
+
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id', { disableSwr: true }), { wrapper });
+
+    // Checks
+    expect(result.current).toEqual({
+      loading: true,
+      data: undefined,
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
+    // After receive
+    await waitForNextUpdate();
+    expect(result.current).toEqual({
+      loading: false,
+      status: 200,
+      data: 'test',
+      reload: expect.any(Function),
+      update: expect.any(Function)
+    });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spyCache).not.toHaveBeenCalled();
+  });
+
   it('should not run api call', async () => {
     // Render
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
@@ -137,7 +182,7 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const { result } = renderHook(() => useGetRequest(spy, 'test-id', false));
+    const { result } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
 
     // Checks
     expect(result.current).toEqual({

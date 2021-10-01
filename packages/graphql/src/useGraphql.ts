@@ -24,5 +24,5 @@ export function useGraphql<R, V extends GqlVariables = GqlVariables, E = unknown
     if (!req.operationName) console.warn('No operation name found in document, result won\'t be cached');
   }, [req]);
 
-  return useGetRequest<R, E>(generator, `graphql:${url}:${req.operationName}`, { noCache: !req.operationName, load });
+  return useGetRequest<R, E>(generator, `graphql:${url}:${req.operationName}`, { disableSwr: !req.operationName, load });
 }
