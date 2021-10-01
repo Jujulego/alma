@@ -28,7 +28,7 @@ export function useSwrCache<R = unknown>(id: string): SwrCacheResult<R> {
   const { cache, setCache } = useContext(SwrCacheContext);
 
   return {
-    data: cache[id].data as R | undefined,
+    data: cache[id]?.data as R | undefined,
     setCache: useCallback((data: R) => setCache(id, data), [setCache, id])
   };
 }

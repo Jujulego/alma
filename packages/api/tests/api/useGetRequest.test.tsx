@@ -137,7 +137,7 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const { result } = renderHook(() => useGetRequest(spy, 'test-id', false));
+    const { result } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
 
     // Checks
     expect(result.current).toEqual({
