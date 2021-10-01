@@ -1,15 +1,17 @@
 import { DocumentNode, OperationDefinitionNode, print } from 'graphql';
 
 // Types
-export type GraphqlDocument = string | DocumentNode;
+export type GqlDocument = string | DocumentNode;
+export type GqlVariables = Record<string, unknown>;
 
-export interface GraphqlRequest {
+export interface GqlRequest {
   query: string;
   operationName?: string;
+  variables?: GqlVariables;
 }
 
 // Utils
-export function buildRequest(document: GraphqlDocument): GraphqlRequest {
+export function buildRequest(document: GqlDocument): GqlRequest {
   if (typeof document === 'string') {
     return { query: document };
   }
