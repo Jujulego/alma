@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext } from 'react';
 
 // Types
 export interface SwrCacheState<R> {
-  data?: R
+  data: R | undefined
 }
 
 export interface SwrCacheContextProps {
@@ -10,7 +10,7 @@ export interface SwrCacheContextProps {
   setCache: (id: string, data: unknown) => void
 }
 
-export interface SwrCacheProps<R> extends SwrCacheState<R> {
+export interface SwrCacheResult<R> extends SwrCacheState<R> {
   setCache: (data: R) => void
 }
 
@@ -24,11 +24,11 @@ const swrCacheDefaults: SwrCacheContextProps = {
 export const SwrCacheContext = createContext(swrCacheDefaults);
 
 // Hook
-export function useSwrCache<R = unknown>(id: string): SwrCacheProps<R> {
+export function useSwrCache<R = unknown>(id: string): SwrCacheResult<R> {
   const { cache, setCache } = useContext(SwrCacheContext);
 
   return {
-    ...cache[id],
+    data: cache[id].data as R | undefined,
     setCache: useCallback((data: R) => setCache(id, data), [setCache, id])
-  } as SwrCacheProps<R>;
+  };
 }
