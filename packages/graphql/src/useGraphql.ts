@@ -18,5 +18,5 @@ export function useGraphql<R, E = unknown>(url: string, doc: GraphqlDocument, co
     [url, useDeepMemo(req), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest<R, E>(generator, `graphql:${url}:${req.operationName}`, load);
+  return useGetRequest<R, E>(generator, `graphql:${url}:${req.operationName}`, { noCache: !req.operationName, load });
 }

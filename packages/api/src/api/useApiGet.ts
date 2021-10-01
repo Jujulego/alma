@@ -14,7 +14,7 @@ import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetReques
  */
 export function useApiGet<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
   useDebugValue(url);
-  const { load, ...rconfig } = config;
+  const { load, noCache, ...rconfig } = config;
 
   // Callbacks
   const generator = useCallback(
@@ -22,5 +22,5 @@ export function useApiGet<R, P extends ApiParams = ApiParams, E = unknown>(url: 
     [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  return useGetRequest<R, E>(generator, `api-get:${url}`, load);
+  return useGetRequest<R, E>(generator, `api-get:${url}`, { noCache, load });
 }

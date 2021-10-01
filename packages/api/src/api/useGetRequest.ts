@@ -14,6 +14,13 @@ export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
    * @default true
    */
   load?: boolean;
+
+  /**
+   * Disable cache
+   *
+   * @default false
+   */
+  noCache?: boolean;
 }
 
 export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
@@ -31,7 +38,7 @@ export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
 }
 
 // Base hooks
-export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, cacheId: string, load = true): ApiGetReturn<R, E> {
+export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, cacheId: string, { noCache, load }: ApiGetRequestConfig): ApiGetReturn<R, E> {
   // Cache
   const { data, setCache } = useCache<R>(cacheId);
 
@@ -78,8 +85,10 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [generator, reload, setCache]);
 
   useEffect(() => {
-    if (state.data) setCache(state.data);
-  }, [state.data, setCache]);
+    if (state.data && !noCache) {
+      setCache(state.data);
+    }
+  }, [state.data, setCache]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     setState((old) => ({ ...old, data }));
