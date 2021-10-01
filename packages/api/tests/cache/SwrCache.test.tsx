@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiCache, useCache } from '../../src';
+import { SwrCache, useSwrCache } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -9,14 +9,14 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('ApiCache', () => {
+describe('SwrCache', () => {
   // Tests
   it('should update cache', () => {
     const wrapper: FC = ({ children }) => (
-      <ApiCache>{children}</ApiCache>
+      <SwrCache>{children}</SwrCache>
     );
 
-    const { result } = renderHook(() => useCache<string>('test'), { wrapper });
+    const { result } = renderHook(() => useSwrCache<string>('test'), { wrapper });
 
     // Checks
     expect(result.current.data).toBeUndefined();
