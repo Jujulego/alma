@@ -14,13 +14,20 @@ export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
    * @default true
    */
   load?: boolean;
+
+  /**
+   * Disable use of Swr cache
+   *
+   * @default false
+   */
+  disableSwr?: boolean;
 }
 
 export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
   /**
    * Update cached result
    *
-   * @param data: value to store
+   * @param data: value to store or updator
    */
   update: (data: R | Updator<R>) => void;
 
@@ -31,13 +38,13 @@ export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
 }
 
 // Base hooks
-export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, cacheId: string, load = true): ApiGetReturn<R, E> {
+export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, swrId: string, { load, disableSwr }: ApiGetRequestConfig): ApiGetReturn<R, E> {
   // Cache
-  const { data, setCache } = useSwrCache<R>(cacheId);
+  const { data: cached, setCache } = useSwrCache<R>(swrId);
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
-  const [state, setState] = useState<ApiState<R, E>>({ data, loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({ data: disableSwr ? undefined : cached, loading: false });
 
   // Effect
   useEffect(() => {
@@ -78,12 +85,12 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [generator, reload, setCache]);
 
   useEffect(() => {
-    if (state.data) setCache(state.data);
-  }, [state.data, setCache]);
+    if (state.data && !disableSwr) setCache(state.data);
+  }, [state.data, setCache]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    setState((old) => ({ ...old, data }));
-  }, [cacheId]); // eslint-disable-line react-hooks/exhaustive-deps
+    setState((old) => ({ ...old, data: cached }));
+  }, [swrId, cached]);
 
   return {
     ...state,
