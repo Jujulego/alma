@@ -38,7 +38,9 @@ export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
 }
 
 // Base hooks
-export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, swrId: string, { load, disableSwr }: ApiGetRequestConfig): ApiGetReturn<R, E> {
+export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, swrId: string, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
+  const { load = true, disableSwr = false } = config;
+
   // Cache
   const { data: cached, setCache } = useSwrCache<R>(swrId);
 
