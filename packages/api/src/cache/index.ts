@@ -1,2 +1,2 @@
-export * from './ApiCache';
-export * from './CacheContext';
+export * from './SwrCache';
+export * from './SwrCacheContext';

@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { CacheContext, useGetRequest } from '../../src';
+import { SwrCacheContext, useGetRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -94,12 +94,12 @@ describe('useGetRequest', () => {
       });
 
     const wrapper: FC = ({ children }) => (
-      <CacheContext.Provider value={{
+      <SwrCacheContext.Provider value={{
         cache: { 'test-id': { data: 'cached' } },
         setCache: spyCache
       }}>
         { children }
-      </CacheContext.Provider>
+      </SwrCacheContext.Provider>
     );
 
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'), { wrapper });

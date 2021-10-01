@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-import { useCache } from '../cache';
+import { useSwrCache } from '../cache';
 import { ApiState, Updator } from '../types';
 
 // Types
@@ -33,7 +33,7 @@ export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
 // Base hooks
 export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, cacheId: string, load = true): ApiGetReturn<R, E> {
   // Cache
-  const { data, setCache } = useCache<R>(cacheId);
+  const { data, setCache } = useSwrCache<R>(cacheId);
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
