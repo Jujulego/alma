@@ -1,6 +1,6 @@
 import { OperationDefinitionNode, print } from 'graphql';
 
-import { GqlDocument, GqlErrorResponse, GqlRequest, GqlResponse } from './types';
+import { GqlDocument, GqlRequest } from './types';
 
 // Utils
 export function buildRequest(document: GqlDocument): GqlRequest {
