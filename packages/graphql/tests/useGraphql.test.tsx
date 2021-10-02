@@ -46,7 +46,7 @@ describe('useGraphql', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGraphql<unknown>('/graphql', req, {}));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: [], loading: true }));
+    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
 
     // After receive
     await waitForNextUpdate();
@@ -56,14 +56,16 @@ describe('useGraphql', () => {
           isSuccessful: true
         }
       },
-      error: [
-        {
-          message: 'error in test',
-          location: {
-            column: 1, line: 1
+      error: expect.objectContaining({
+        errors: [
+          {
+            message: 'error in test',
+            location: {
+              column: 1, line: 1
+            }
           }
-        }
-      ],
+        ]
+      }),
       loading: false
     }));
 
@@ -115,20 +117,22 @@ describe('useGraphql', () => {
     const { result, waitForNextUpdate } = renderHook(() => useGraphql<unknown>('/graphql', req, {}));
 
     // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: [], loading: true }));
+    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
 
     // After receive
     await waitForNextUpdate();
     expect(result.current).toEqual(expect.objectContaining({
       data: undefined,
-      error: [
-        {
-          message: 'error in test',
-          location: {
-            column: 1, line: 1
+      error: {
+        errors: [
+          {
+            message: 'error in test',
+            location: {
+              column: 1, line: 1
+            }
           }
-        }
-      ],
+        ]
+      },
       loading: false
     }));
 

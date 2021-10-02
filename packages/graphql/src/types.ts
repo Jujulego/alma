@@ -1,4 +1,5 @@
 import { DocumentNode } from 'graphql';
+import { ApiGetReturn } from '../../api';
 
 // Types
 export type GqlDocument = string | DocumentNode;
@@ -30,3 +31,5 @@ export interface GqlResponse<R> {
 export interface GqlErrorResponse {
   errors: GqlError[];
 }
+
+export type GqlReturn<R, E = unknown> = ApiGetReturn<R, E | GqlErrorResponse>;

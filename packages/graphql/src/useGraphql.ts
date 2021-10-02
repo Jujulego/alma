@@ -1,13 +1,13 @@
-import { ApiGetRequestConfig, ApiGetReturn, useGetRequest, Updator } from '@jujulego/alma-api';
+import { ApiGetRequestConfig, useGetRequest, Updator } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
 
-import { GqlDocument, GqlError, GqlErrorResponse, GqlResponse, GqlVariables } from './types';
+import { GqlDocument, GqlErrorResponse, GqlResponse, GqlReturn, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
-// Types
-export function useGraphql<R, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): ApiGetReturn<R, GqlError[]> {
+
+export function useGraphql<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): GqlReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
@@ -26,7 +26,7 @@ export function useGraphql<R, V extends GqlVariables = GqlVariables>(url: string
   }, [req]);
 
   // Api call
-  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, GqlErrorResponse>(generator, `graphql:${url}:${req.operationName}`, {
+  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, E | GqlErrorResponse>(generator, `graphql:${url}:${req.operationName}`, {
     disableSwr: !req.operationName,
     load
   });
@@ -34,14 +34,7 @@ export function useGraphql<R, V extends GqlVariables = GqlVariables>(url: string
   return {
     ...state,
     data: data?.data,
-    error: useMemo(() => {
-      const errors: GqlError[] = [];
-
-      if (error) errors.push(...error.errors);
-      if (data?.errors) errors.push(...data.errors);
-
-      return errors;
-    }, [data, error]),
+    error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
     update: useCallback((data: R | Updator<R>) => {
       const updator: Updator<R> = typeof data === 'function' ? (data as Updator<R>) : () => data;
 
