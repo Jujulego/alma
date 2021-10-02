@@ -526,7 +526,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jest/core@npm:^27.2.4":
+"@jest/core@npm:^27.2.3, @jest/core@npm:^27.2.4":
   version: 27.2.4
   resolution: "@jest/core@npm:27.2.4"
   dependencies:
@@ -725,7 +725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/alma-api@workspace:packages/api":
+"@jujulego/alma-api@^1.1.0, @jujulego/alma-api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
@@ -751,6 +751,41 @@ __metadata:
     typescript: 4.4.3
   peerDependencies:
     axios: ^0.21.4
+    react: ^17.0.0
+    react-dom: ^17.0.0
+  languageName: unknown
+  linkType: soft
+
+"@jujulego/alma-graphql@workspace:packages/graphql":
+  version: 0.0.0-use.local
+  resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
+  dependencies:
+    "@jujulego/alma-api": ^1.1.0
+    "@jujulego/alma-utils": ^1.0.5
+    "@testing-library/jest-dom": 5.14.1
+    "@testing-library/react": 12.1.1
+    "@testing-library/react-hooks": 7.0.2
+    "@types/jest": 27.0.2
+    "@types/react": 17.0.24
+    "@types/testing-library__jest-dom": 5.14.1
+    "@typescript-eslint/eslint-plugin": 4.32.0
+    "@typescript-eslint/parser": 4.32.0
+    axios: 0.21.4
+    eslint: 7.32.0
+    eslint-plugin-jest: 24.4.3
+    eslint-plugin-react: 7.26.0
+    eslint-plugin-react-hooks: 4.2.0
+    eslint-plugin-testing-library: 4.12.4
+    graphql: ^15.6.0
+    graphql-tag: ^2.12.5
+    jest: 27.2.3
+    react: 17.0.2
+    react-dom: 17.0.2
+    ts-jest: 27.0.5
+    typescript: 4.4.3
+  peerDependencies:
+    axios: ^0.21.4
+    graphql: ^15.6.0
     react: ^17.0.0
     react-dom: ^17.0.0
   languageName: unknown
@@ -1117,6 +1152,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: e342bfaa4fe052fc3a445ea49f746f3fd82cfc9c8028eae139a3e0763ead1871f353bd40da2a472f23d2b52544d2781d40e3159c0703e7e2ff08c13f067a3b9c
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:17.0.24":
+  version: 17.0.24
+  resolution: "@types/react@npm:17.0.24"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 99383e2cbaa85831984cc17ec4a5fe7fd091aa21ef023855570440d8d0b5038efb8159701e8e2a0f6ddff3efae655922ded690190e7d172653608cbde016cb66
   languageName: node
   linkType: hard
 
@@ -2579,6 +2625,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-react@npm:7.26.0":
+  version: 7.26.0
+  resolution: "eslint-plugin-react@npm:7.26.0"
+  dependencies:
+    array-includes: ^3.1.3
+    array.prototype.flatmap: ^1.2.4
+    doctrine: ^2.1.0
+    estraverse: ^5.2.0
+    jsx-ast-utils: ^2.4.1 || ^3.0.0
+    minimatch: ^3.0.4
+    object.entries: ^1.1.4
+    object.fromentries: ^2.0.4
+    object.hasown: ^1.0.0
+    object.values: ^1.1.4
+    prop-types: ^15.7.2
+    resolve: ^2.0.0-next.3
+    semver: ^6.3.0
+    string.prototype.matchall: ^4.0.5
+  peerDependencies:
+    eslint: ^3 || ^4 || ^5 || ^6 || ^7
+  checksum: 363c2ed43ae0c6457c6ad1e7e7c561892189d3e1253a7d5e369413053e9629129c533d3512d9992087f95a3ac71e464d552d63e8c711f90d83c6e8db543587df
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-react@npm:7.26.1":
   version: 7.26.1
   resolution: "eslint-plugin-react@npm:7.26.1"
@@ -3132,6 +3202,24 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
+"graphql-tag@npm:^2.12.5":
+  version: 2.12.5
+  resolution: "graphql-tag@npm:2.12.5"
+  dependencies:
+    tslib: ^2.1.0
+  peerDependencies:
+    graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 7afe8b0a261bc81278e8350cbc48a641986665fa88521ece137feb8d1d62aacbe79afd4e159b618d56af106291ae8369592e46584fd8fbaf4f440201ea884fdd
+  languageName: node
+  linkType: hard
+
+"graphql@npm:^15.6.0":
+  version: 15.6.0
+  resolution: "graphql@npm:15.6.0"
+  checksum: 439959514665bc03ba86d6e55d8fb81d4c1e8ba3fc7f5114878b0ba794147e7ef57f368e40dadbb3f94d7c5f6685d15599bebb3a124cee2a1a8871a797d5ae81
+  languageName: node
+  linkType: hard
+
 "has-bigints@npm:^1.0.1":
   version: 1.0.1
   resolution: "has-bigints@npm:1.0.1"
@@ -3666,7 +3754,7 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"jest-cli@npm:^27.2.4":
+"jest-cli@npm:^27.2.3, jest-cli@npm:^27.2.4":
   version: 27.2.4
   resolution: "jest-cli@npm:27.2.4"
   dependencies:
@@ -4128,6 +4216,24 @@ fsevents@^2.3.2:
     merge-stream: ^2.0.0
     supports-color: ^8.0.0
   checksum: 0caae100e97e247a1c0140928fff075aade1a41317f18316e63db32b626858dff3552bf4e09c9c3bd9af5e8dbe92123fdaed3c9cc8f5439ec64cd970c612bd5d
+  languageName: node
+  linkType: hard
+
+"jest@npm:27.2.3":
+  version: 27.2.3
+  resolution: "jest@npm:27.2.3"
+  dependencies:
+    "@jest/core": ^27.2.3
+    import-local: ^3.0.2
+    jest-cli: ^27.2.3
+  peerDependencies:
+    node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+  peerDependenciesMeta:
+    node-notifier:
+      optional: true
+  bin:
+    jest: bin/jest.js
+  checksum: 742414360aa74937f9f3f21d2918f03d38ea5ccfd3bfd8912770676e652469ead8b33bd7278ac7fa762a33fa64af9e6d99cc3facaf30ee260452e5ebcf44f2ee
   languageName: node
   linkType: hard
 
@@ -5905,6 +6011,13 @@ resolve@^2.0.0-next.3:
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.1.0":
+  version: 2.3.1
+  resolution: "tslib@npm:2.3.1"
+  checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
   languageName: node
   linkType: hard
 
