@@ -7,4 +7,4 @@
 [![Tree shaking](https://badgen.net/bundlephobia/tree-shaking/@jujulego/alma-graphql@latest)](https://bundlephobia.com/package/@jujulego/alma-graphql@latest)
 
 ## Description
-React generic utils
+React graphql utils
