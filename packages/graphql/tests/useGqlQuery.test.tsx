@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 import gql from 'graphql-tag';
 
-import { useGraphql } from '../src';
+import { useGqlQuery } from '../src';
 
 // Setup
 beforeEach(() => {
@@ -10,7 +10,7 @@ beforeEach(() => {
 });
 
 // Tests
-describe('useGraphql', () => {
+describe('useGqlQuery', () => {
   beforeEach(() => {
     // Mocks
     jest.spyOn(axios, 'post').mockResolvedValue({
@@ -43,7 +43,7 @@ describe('useGraphql', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGraphql<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
 
     // Checks
     expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
@@ -114,7 +114,7 @@ describe('useGraphql', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGraphql<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
 
     // Checks
     expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
@@ -149,7 +149,7 @@ describe('useGraphql', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGraphql<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
 
     // After receive
     await waitForNextUpdate();

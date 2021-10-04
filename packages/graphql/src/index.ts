@@ -1,1 +1,1 @@
-export * from './useGraphql';
+export * from './useGqlQuery';
