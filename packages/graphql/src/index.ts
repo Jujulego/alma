@@ -1,1 +1,2 @@
-export * from './useGraphql';
+export * from './useGqlMutation';
+export * from './useGqlQuery';

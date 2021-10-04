@@ -3,11 +3,18 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
 
-import { GqlDocument, GqlErrorResponse, GqlResponse, GqlReturn, GqlVariables } from './types';
+import { GqlDocument, GqlErrorResponse, GqlResponse, GqlQueryReturn, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
-
-export function useGraphql<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): GqlReturn<R, E> {
+/**
+ * Send a graphql query, then return status and result of the request.
+ *
+ * @param url: URL of the graphql endpoint
+ * @param doc: graphql query
+ * @param vars: query variables
+ * @param config: axios configuration
+ */
+export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R, E> {
   useDebugValue(url);
   const { load, ...rconfig } = config;
 
