@@ -33,7 +33,7 @@ describe('useGqlQuery', () => {
   });
 
   // Tests
-  it('should return api call result', async () => {
+  it('should return query result', async () => {
     // Render
     const req = gql`
         query Test {
@@ -83,7 +83,7 @@ describe('useGqlQuery', () => {
     );
   });
 
-  it('should return api call error', async () => {
+  it('should return query error', async () => {
     // Mocks
     jest.spyOn(axios, 'post').mockRejectedValue({
       isAxiosError: true,
