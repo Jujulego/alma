@@ -3,8 +3,8 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
 
-import { GqlDocument, GqlErrorResponse, GqlResponse, GqlVariables, GqlMutationReturn } from './types';
-import { buildRequest } from './utils';
+import { GqlDocument, GqlErrorResponse, GqlResponse, GqlVariables, GqlMutationReturn } from '../types';
+import { buildRequest } from '../utils';
 
 /**
  * Send a graphql mutation, then return status and result of the request.
