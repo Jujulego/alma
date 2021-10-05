@@ -15,11 +15,11 @@ import { buildRequest } from '../utils';
  * @param config: axios configuration
  */
 export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R, E> {
-  useDebugValue(url);
   const { load, ...rconfig } = config;
 
   // Memos
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
+  useDebugValue(req.operationName);
 
   // Callbacks
   const generator = useCallback(

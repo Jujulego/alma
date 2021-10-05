@@ -14,10 +14,9 @@ import { buildRequest } from '../utils';
  * @param config: axios configuration
  */
 export function useGqlMutation<R, V extends GqlVariables, E = unknown>(url: string, doc: GqlDocument, config: ApiPostRequestConfig = {}): GqlMutationReturn<V, R, E> {
-  useDebugValue(url);
-
   // Memos
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
+  useDebugValue(req.operationName);
 
   // Callbacks
   const generator = useCallback(
