@@ -1,10 +1,11 @@
-import { ApiGetRequestConfig, ApiParams, ApiPromise, Updator, useGetRequest, usePostRequest } from '@jujulego/alma-api';
+import { ApiGetRequestConfig, ApiParams, ApiPromise, Updator, usePostRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback } from 'react';
 
 import { GqlDocument, GqlErrorResponse, GqlResponse, GqlVariables } from './types';
 import { buildRequest } from './utils';
+import { useQueryRequest } from './gql/useQueryRequest';
 
 // Types
 export interface IGqlResourceState<T, E = unknown> {
@@ -83,34 +84,7 @@ export function gqlResource<T, V extends GqlVariables, E = unknown>(url: string,
 
   // Hook
   function useGqlResource(vars: V, config: ApiGetRequestConfig = {}): IGqlResourceState<T, E> {
-    const { load, ...rconfig } = config;
-
-    // Stabilise objects
-    const svars = useDeepMemo(vars);
-    const sconfig = useDeepMemo(rconfig);
-
-    // Callbacks
-    const generator = useCallback(
-      (source: CancelTokenSource) => axios.post<GqlResponse<T>>(url, { ...req, variables: svars }, { ...sconfig, cancelToken: source.token }),
-      [svars, sconfig]
-    );
-
-    // Api call
-    const { data, error, update, ...state } = useGetRequest<GqlResponse<T>, E | GqlErrorResponse>(generator, `graphql:${url}:${req.operationName}`, {
-      disableSwr: !req.operationName,
-      load
-    });
-
-    return {
-      ...state,
-      data: data?.data,
-      error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
-      update: useCallback((data: T | Updator<T>) => {
-        const updator: Updator<T> = typeof data === 'function' ? (data as Updator<T>) : () => data;
-
-        update((old) => ({ ...old, data: updator(old?.data) }));
-      }, [update])
-    };
+    return useQueryRequest<T, V, E>(url, req, vars, config);
   }
 
   return Object.assign(useGqlResource, hookMethods<T, V, IGqlResourceState<T, E>, E>(url));

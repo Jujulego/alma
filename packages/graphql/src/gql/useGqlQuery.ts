@@ -1,9 +1,8 @@
-import { ApiGetRequestConfig, useGetRequest, Updator } from '@jujulego/alma-api';
-import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
-import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
+import { ApiGetRequestConfig } from '@jujulego/alma-api';
+import { useEffect, useMemo } from 'react';
 
-import { GqlDocument, GqlErrorResponse, GqlResponse, GqlQueryReturn, GqlVariables } from '../types';
+import { GqlDocument, GqlQueryReturn, GqlVariables } from '../types';
+import { useQueryRequest } from './useQueryRequest';
 import { buildRequest } from '../utils';
 
 /**
@@ -14,18 +13,9 @@ import { buildRequest } from '../utils';
  * @param vars: query variables
  * @param config: axios configuration
  */
-export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R, E> {
-  const { load, ...rconfig } = config;
-
-  // Memos
-  const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
-  useDebugValue(req.operationName);
-
-  // Callbacks
-  const generator = useCallback(
-    (source: CancelTokenSource) => axios.post<GqlResponse<R>>(url, { ...req, variables: vars }, { ...rconfig, cancelToken: source.token }),
-    [url, req, useDeepMemo(vars), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config?: ApiGetRequestConfig): GqlQueryReturn<R, E> {
+  // Build request
+  const req = useMemo(() => buildRequest(doc), [doc]);
 
   // Effects
   useEffect(() => {
@@ -33,19 +23,5 @@ export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknow
   }, [req]);
 
   // Api call
-  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, E | GqlErrorResponse>(generator, `graphql:${url}:${req.operationName}`, {
-    disableSwr: !req.operationName,
-    load
-  });
-
-  return {
-    ...state,
-    data: data?.data,
-    error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
-    update: useCallback((data: R | Updator<R>) => {
-      const updator: Updator<R> = typeof data === 'function' ? (data as Updator<R>) : () => data;
-
-      update((old) => ({ ...old, data: updator(old?.data) }));
-    }, [update])
-  };
+  return useQueryRequest<R, V, E>(url, req, vars, config);
 }
