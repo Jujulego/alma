@@ -1,10 +1,9 @@
 import { ApiGetRequestConfig, ApiPromise, Updator } from '@jujulego/alma-api';
 import { useCallback } from 'react';
 
+import { useQueryRequest, useMutationRequest } from './gql';
 import { GqlDocument, GqlErrorResponse, GqlVariables } from './types';
 import { buildRequest } from './utils';
-import { useQueryRequest } from './gql/useQueryRequest';
-import { useMutationRequest } from './gql/useMutationRequest';
 
 // Types
 export interface IGqlResourceState<T, E = unknown> {

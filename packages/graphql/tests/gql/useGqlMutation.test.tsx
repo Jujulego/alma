@@ -1,68 +1,79 @@
+import { ApiPromise } from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
-import axios from 'axios';
 import gql from 'graphql-tag';
 
-import { useGqlMutation } from '../../src';
+import { useGqlMutation, useMutationRequest as _useMutationRequest } from '../../src';
+import { buildRequest as _buildRequest } from '../../src/utils';
+import { TestData } from '../types';
+
+// Mocks
+jest.mock('../../src/gql/useMutationRequest');
+const useMutationRequest = _useMutationRequest as jest.MockedFunction<typeof _useMutationRequest>;
+
+jest.mock('../../src/utils');
+const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
 
 // Setup
+const req = gql`
+    mutation Success($test: String!) {
+        success(name: $test) {
+            isSuccessful
+        }
+    }
+`;
+
 beforeEach(() => {
   jest.resetAllMocks();
 });
 
 // Tests
 describe('useGqlMutation', () => {
-  beforeEach(() => {
-    // Mocks
-    jest.spyOn(axios, 'post').mockResolvedValue({
-      data: {
-        data: {
-          test: {
-            isSuccessful: true
-          }
-        }
-      }
-    });
-  });
-
   // Tests
-  it('should return mutation result', async () => {
+  it('should send request using useMutationRequest and buildRequest', async () => {
+    // Mocks
+    const spy = jest.fn<ApiPromise<{ success: TestData }>, [{ name: string }]>()
+      .mockResolvedValue({
+        success: { isSuccessful: true }
+      });
+
+    useMutationRequest.mockReturnValue({
+      loading: true,
+      send: spy,
+    });
+
+    buildRequest.mockReturnValue({
+      operationName: 'Success',
+      query: 'mutation Success { ... }'
+    });
+
     // Render
-    const req = gql`
-        mutation Test($test: String!) {
-            success(name: $test) {
-                isSuccessful
-            }
-        }
-    `;
+    const { result } = renderHook(() => useGqlMutation<{ success: TestData }, { name: string }>('/graphql', req));
 
-    const { result } = renderHook(() => useGqlMutation<unknown, { name: string }>('/graphql', req));
+    // Check result
+    expect(result.current).toEqual({
+      loading: true,
+      send: expect.any(Function),
+    });
 
-    // Checks
-    expect(result.current).toEqual(expect.objectContaining({ loading: false }));
+    // Check buildRequest
+    expect(buildRequest).toHaveBeenCalledTimes(1);
+    expect(buildRequest).toHaveBeenCalledWith(req);
 
-    // After send
+    // Check useMutationRequest
+    expect(useMutationRequest).toHaveBeenCalledWith(
+      '/graphql',
+      { operationName: 'Success', query: 'mutation Success { ... }' },
+      undefined
+    );
+
+    // Send request
     await act(async () => {
-      await expect(result.current.send({ name: 'test' }))
+      await expect(result.current.send({ name: 'name' }))
         .resolves.toEqual({
-          test: {
-            isSuccessful: true
-          }
+          success: { isSuccessful: true }
         });
     });
 
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
-      '/graphql',
-      {
-        operationName: 'Test',
-        query: expect.any(String),
-        variables: {
-          name: 'test'
-        }
-      },
-      {
-        cancelToken: expect.any(axios.CancelToken),
-      }
-    );
+    expect(spy).toHaveBeenCalledWith({ name: 'name' });
   });
 });

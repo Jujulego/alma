@@ -34,7 +34,7 @@ beforeEach(() => {
 // Tests
 describe('useGqlQuery', () => {
   // Tests
-  it('should send request using useQueryRequest and build request', () => {
+  it('should send request using useQueryRequest and buildRequest', () => {
     // Mocks
     buildRequest.mockReturnValue({
       operationName: 'Test',
