@@ -11,7 +11,7 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('apiResource', () => {
+describe('gqlResource', () => {
   beforeEach(() => {
     // Mocks
     jest.spyOn(axios, 'post').mockResolvedValue({
@@ -195,3 +195,7 @@ describe('apiResource', () => {
     expect(axios.post).toHaveBeenCalledTimes(1);
   });
 });
+
+// describe('gqlResource.mutation', () => {
+//
+// });

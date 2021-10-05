@@ -1,17 +1,20 @@
 import { ApiGetRequestConfig, Updator, useGetRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
-import { useCallback, useDebugValue } from 'react';
+import { useCallback, useDebugValue, useMemo } from 'react';
 
 import { GqlErrorResponse, GqlQueryReturn, GqlRequest, GqlResponse, GqlVariables } from '../types';
 
 export function useQueryRequest<R, V extends GqlVariables, E = unknown>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R, E> {
-  useDebugValue(`${req.operationName} => ${url}`);
   const { load, ...rconfig } = config;
 
   // Stabilise objects
   const sconfig = useDeepMemo(rconfig);
   const svars = useDeepMemo(vars);
+
+  // Memos
+  const swrId = useMemo(() => ['graphql', url, req.operationName].join(':'), [url, req.operationName]);
+  useDebugValue(swrId);
 
   // Request generator
   const generator = useCallback((source: CancelTokenSource) => axios.post<GqlResponse<R>>(
@@ -21,7 +24,7 @@ export function useQueryRequest<R, V extends GqlVariables, E = unknown>(url: str
   ), [url, req, svars, sconfig]);
 
   // Api call
-  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, E | GqlErrorResponse>(generator, `graphql:${url}:${req.operationName}`, {
+  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, E | GqlErrorResponse>(generator, swrId, {
     disableSwr: !req.operationName,
     load
   });
