@@ -1,201 +1,87 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-import axios from 'axios';
+import { renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
-import { gqlResource } from '../src';
+import { gqlResource, useQueryRequest as _useQueryRequest } from '../src';
+import { buildRequest as _buildRequest } from '../src/utils';
 import { TestData } from './types';
 
+// Mocks
+jest.mock('../src/gql/useQueryRequest');
+const useQueryRequest = _useQueryRequest as jest.MockedFunction<typeof _useQueryRequest>;
+
+jest.mock('../src/utils');
+const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
+
 // Setup
+const req = gql`
+    query Test {
+        test {
+            isSuccessful
+        }
+    }
+`;
+
 beforeEach(() => {
   jest.resetAllMocks();
+
+  // Mocks
+  useQueryRequest.mockReturnValue({
+    loading: true,
+    update: jest.fn(),
+    reload: jest.fn(),
+  });
 });
 
 // Test suites
 describe('gqlResource', () => {
-  beforeEach(() => {
-    // Mocks
-    jest.spyOn(axios, 'post').mockResolvedValue({
-      data: {
-        data: {
-          test: {
-            isSuccessful: true
-          }
-        },
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      }
-    });
-  });
-
   // Tests
-  it('should send document with variables to given url and return results', async () => {
-    // Render
-    const useGqlTest = gqlResource<TestData, { name: string }>('/graphql', gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `);
-    const { result, waitForNextUpdate } = renderHook(() => useGqlTest({ name: 'name' }));
-
-    // Check
-    expect(result.current).toEqual({
-      data: undefined,
-      error: undefined,
-      loading: true,
-      reload: expect.any(Function),
-      update: expect.any(Function),
+  it('should send request using useQueryRequest and build request', () => {
+    // Mocks
+    buildRequest.mockReturnValue({
+      operationName: 'Test',
+      query: 'query Test { ... }'
     });
 
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      },
-      error: expect.objectContaining({
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      }),
-      loading: false
-    }));
+    // Build query
+    const useGqlTest = gqlResource<TestData, { name: string }>('/graphql', req);
 
-    // Check axios call
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
+    // Check buildRequest
+    expect(buildRequest).toHaveBeenCalledTimes(1);
+    expect(buildRequest).toHaveBeenCalledWith(req);
+
+    // Render
+    const { result } = renderHook(() => useGqlTest({ name: 'name' }));
+
+    // Check result
+    expect(result.current).toEqual({
+      loading: true,
+      update: expect.any(Function),
+      reload: expect.any(Function),
+    });
+
+    // Check useQueryRequest
+    expect(useQueryRequest).toHaveBeenCalledWith(
       '/graphql',
-      {
-        operationName: 'Test',
-        query: expect.any(String),
-        variables: { name: 'name' }
-      },
-      {
-        cancelToken: expect.any(axios.CancelToken),
-      }
+      { operationName: 'Test', query: 'query Test { ... }' },
+      { name: 'name' },
+      undefined
     );
   });
 
-  it('should send document with variables to given url and return error', async () => {
+  it('should warn on request without operationName', () => {
     // Mocks
-    jest.spyOn(axios, 'post').mockRejectedValue({
-      isAxiosError: true,
-      response: {
-        status: 400,
-        statusText: 'Bad Request',
-        data: {
-          errors: [
-            {
-              message: 'error in test',
-              location: {
-                column: 1, line: 1
-              }
-            }
-          ]
-        },
-        headers: {},
-        config: {}
-      }
+    buildRequest.mockReturnValue({
+      query: 'query { ... }'
     });
 
-    // Render
-    const useGqlTest = gqlResource<TestData, { name: string }>('/graphql', gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `);
-    const { result, waitForNextUpdate } = renderHook(() => useGqlTest({ name: 'name' }));
+    jest.spyOn(console, 'warn')
+      .mockImplementation();
 
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: undefined,
-      error: expect.objectContaining({
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      })
-    }));
+    // Build query
+    gqlResource<TestData, { name: string }>('/graphql', req);
 
-    // Check axios call
-    expect(axios.post).toHaveBeenCalledTimes(1);
-  });
-
-  it('should update state value', async () => {
-    // Render
-    const useGqlTest = gqlResource<{ test: TestData }, { name: string }>('/graphql', gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `);
-    const { result, waitForNextUpdate } = renderHook(() => useGqlTest({ name: 'name' }));
-
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      },
-    }));
-
-    // After update (simple value)
-    act(() => result.current.update({
-      test: {
-        isSuccessful: false
-      }
-    }));
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: false
-        }
-      }
-    }));
-
-    // After update (updator)
-    act(() => result.current.update((old) => ({
-      test: {
-        isSuccessful: !old?.test?.isSuccessful
-      }
-    })));
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      }
-    }));
-
-    // Check axios call
-    expect(axios.post).toHaveBeenCalledTimes(1);
+    // Check
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith('No operation name found in document, result will not be cached');
   });
 });
-
-// describe('gqlResource.mutation', () => {
-//
-// });

@@ -19,7 +19,7 @@ export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknow
 
   // Effects
   useEffect(() => {
-    if (!req.operationName) console.warn('No operation name found in document, result won\'t be cached');
+    if (!req.operationName) console.warn('No operation name found in document, result will not be cached');
   }, [req]);
 
   // Api call

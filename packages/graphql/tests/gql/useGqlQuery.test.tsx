@@ -1,195 +1,83 @@
-import { act, renderHook } from '@testing-library/react-hooks';
-import axios from 'axios';
+import { renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
-import { useGqlQuery } from '../../src';
-import { TestData } from '../types';
+import { useGqlQuery, useQueryRequest as _useQueryRequest } from '../../src';
+import { buildRequest as _buildRequest } from '../../src/utils';
+
+// Mocks
+jest.mock('../../src/gql/useQueryRequest');
+const useQueryRequest = _useQueryRequest as jest.MockedFunction<typeof _useQueryRequest>;
+
+jest.mock('../../src/utils');
+const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
 
 // Setup
+const req = gql`
+    query Test($name: String!) {
+        test(name: $name) {
+            isSuccessful
+        }
+    }
+`;
+
 beforeEach(() => {
   jest.resetAllMocks();
+
+  // Mocks
+  useQueryRequest.mockReturnValue({
+    loading: true,
+    update: jest.fn(),
+    reload: jest.fn(),
+  });
 });
 
 // Tests
 describe('useGqlQuery', () => {
-  beforeEach(() => {
-    // Mocks
-    jest.spyOn(axios, 'post').mockResolvedValue({
-      data: {
-        data: {
-          test: {
-            isSuccessful: true
-          }
-        },
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      }
-    });
-  });
-
   // Tests
-  it('should return query result', async () => {
+  it('should send request using useQueryRequest and build request', () => {
+    // Mocks
+    buildRequest.mockReturnValue({
+      operationName: 'Test',
+      query: 'query Test { ... }'
+    });
+
     // Render
-    const req = gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `;
+    const { result } = renderHook(() => useGqlQuery('/graphql', req, { name: 'name' }));
 
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
+    // Check result
+    expect(result.current).toEqual({
+      loading: true,
+      update: expect.any(Function),
+      reload: expect.any(Function),
+    });
 
-    // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
+    // Check buildRequest
+    expect(buildRequest).toHaveBeenCalledTimes(1);
+    expect(buildRequest).toHaveBeenCalledWith(req);
 
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      },
-      error: expect.objectContaining({
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      }),
-      loading: false
-    }));
-
-    expect(axios.post).toHaveBeenCalledTimes(1);
-    expect(axios.post).toHaveBeenCalledWith(
+    // Check useQueryRequest
+    expect(useQueryRequest).toHaveBeenCalledWith(
       '/graphql',
-      {
-        operationName: 'Test',
-        query: expect.any(String),
-        variables: {}
-      },
-      {
-        cancelToken: expect.any(axios.CancelToken),
-      }
+      { operationName: 'Test', query: 'query Test { ... }' },
+      { name: 'name' },
+      undefined
     );
   });
 
-  it('should return query error', async () => {
+  it('should warn on request without operationName', () => {
     // Mocks
-    jest.spyOn(axios, 'post').mockRejectedValue({
-      isAxiosError: true,
-      response: {
-        status: 400,
-        statusText: 'Bad Request',
-        data: {
-          errors: [
-            {
-              message: 'error in test',
-              location: {
-                column: 1, line: 1
-              }
-            }
-          ]
-        },
-        headers: {},
-        config: {}
-      }
+    buildRequest.mockReturnValue({
+      query: 'query { ... }'
     });
 
+    jest.spyOn(console, 'warn')
+      .mockImplementation();
+
     // Render
-    const req = gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `;
+    renderHook(() => useGqlQuery('/graphql', req, { name: 'name' }));
 
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
-
-    // Checks
-    expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
-
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: undefined,
-      error: {
-        errors: [
-          {
-            message: 'error in test',
-            location: {
-              column: 1, line: 1
-            }
-          }
-        ]
-      },
-      loading: false
-    }));
-
-    expect(axios.post).toHaveBeenCalledTimes(1);
-  });
-
-  it('should update state value', async () => {
-    // Render
-    const req = gql`
-        query Test {
-            test {
-                isSuccessful
-            }
-        }
-    `;
-
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
-
-    // After receive
-    await waitForNextUpdate();
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      }
-    }));
-
-    // After update (simple value)
-    act(() => result.current.update({
-      test: {
-        isSuccessful: false
-      }
-    }));
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: false
-        }
-      }
-    }));
-
-    // After update (updator)
-    act(() => result.current.update((old: any) => ({
-      test: {
-        isSuccessful: !old?.test?.isSuccessful
-      }
-    })));
-    expect(result.current).toEqual(expect.objectContaining({
-      data: {
-        test: {
-          isSuccessful: true
-        }
-      }
-    }));
-
-    expect(axios.post).toHaveBeenCalledTimes(1);
+    // Check
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith('No operation name found in document, result will not be cached');
   });
 });

@@ -28,10 +28,7 @@ describe('useQueryRequest', () => {
     });
 
     useGetRequest.mockReturnValue({
-      loading: false,
-      data: {
-        data: { test: { isSuccessful: true } }
-      },
+      loading: true,
       update: jest.fn(),
       reload: jest.fn(),
     });

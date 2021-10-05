@@ -69,11 +69,11 @@ export function gqlResource<T, V extends GqlVariables, E = unknown>(url: string,
   const req = buildRequest(doc);
 
   if (!req.operationName) {
-    console.warn('No operation name found in document, result won\'t be cached');
+    console.warn('No operation name found in document, result will not be cached');
   }
 
   // Hook
-  function useGqlResource(vars: V, config: ApiGetRequestConfig = {}): IGqlResourceState<T, E> {
+  function useGqlResource(vars: V, config?: ApiGetRequestConfig): IGqlResourceState<T, E> {
     return useQueryRequest<T, V, E>(url, req, vars, config);
   }
 
