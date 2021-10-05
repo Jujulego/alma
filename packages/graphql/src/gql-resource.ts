@@ -1,11 +1,10 @@
-import { ApiGetRequestConfig, ApiParams, ApiPromise, Updator, usePostRequest } from '@jujulego/alma-api';
-import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import { ApiGetRequestConfig, ApiPromise, Updator } from '@jujulego/alma-api';
 import { useCallback } from 'react';
 
-import { GqlDocument, GqlErrorResponse, GqlResponse, GqlVariables } from './types';
+import { GqlDocument, GqlErrorResponse, GqlVariables } from './types';
 import { buildRequest } from './utils';
 import { useQueryRequest } from './gql/useQueryRequest';
+import { useMutationRequest } from './gql/useMutationRequest';
 
 // Types
 export interface IGqlResourceState<T, E = unknown> {
@@ -44,17 +43,8 @@ function addMutateCall<N extends string, TM, VM extends GqlVariables, T, V exten
 
   // Modified hook
   function useGqlResource(vars: V, config?: ApiGetRequestConfig): S & IGqlResourceMutateState<N, TM, VM> {
-    // Stabilise objects
-    const sconfig = useDeepMemo(config);
-
-    // Callbacks
-    const generator = useCallback(
-      (vars: VM, source: CancelTokenSource) => axios.post<GqlResponse<TM>>(url, { ...req, variables: vars }, { ...sconfig, cancelToken: source.token }),
-      [sconfig]
-    );
-
     // Api
-    const { send } = usePostRequest<VM, GqlResponse<TM>, ApiParams, E | GqlErrorResponse>(generator);
+    const { send } = useMutationRequest<TM, VM, E>(url, req, config);
     const all = wrapped(vars, config);
 
     // Result
@@ -63,8 +53,8 @@ function addMutateCall<N extends string, TM, VM extends GqlVariables, T, V exten
     return Object.assign(all, {
       [name]: useCallback((vars: VM) => {
         return send(vars).then((res) => {
-          update((state) => merge(state, res.data));
-          return res.data;
+          update((state) => merge(state, res));
+          return res;
         });
       }, [update, send])
     } as IGqlResourceMutateState<N, TM, VM>);
