@@ -27,7 +27,7 @@ export function useMutationRequest<R, V extends GqlVariables, E = unknown>(url: 
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
     send: useCallback((vars: V) => {
       return send(vars)
-        .then((data) => data?.data);
+        .then((data) => data.data);
     }, [send])
   };
 }

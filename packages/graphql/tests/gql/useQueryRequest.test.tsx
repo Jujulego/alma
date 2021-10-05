@@ -3,9 +3,8 @@ import * as almaApi from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
-import { useQueryRequest } from '../../src';
+import { GqlResponse, useQueryRequest } from '../../src';
 import { TestData } from '../types';
-import { GqlResponse } from '../../dist/types/types';
 
 // Mocks
 jest.mock('@jujulego/alma-api');
