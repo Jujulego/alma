@@ -2,7 +2,8 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 import gql from 'graphql-tag';
 
-import { useGqlQuery } from '../src';
+import { useGqlQuery } from '../../src';
+import { TestData } from '../types';
 
 // Setup
 beforeEach(() => {
@@ -43,7 +44,7 @@ describe('useGqlQuery', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
 
     // Checks
     expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
@@ -114,7 +115,7 @@ describe('useGqlQuery', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
 
     // Checks
     expect(result.current).toEqual(expect.objectContaining({ data: undefined, error: undefined, loading: true }));
@@ -149,7 +150,7 @@ describe('useGqlQuery', () => {
         }
     `;
 
-    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<unknown>('/graphql', req, {}));
+    const { result, waitForNextUpdate } = renderHook(() => useGqlQuery<{ test: TestData }>('/graphql', req, {}));
 
     // After receive
     await waitForNextUpdate();
@@ -164,13 +165,13 @@ describe('useGqlQuery', () => {
     // After update (simple value)
     act(() => result.current.update({
       test: {
-        name: 'test #1'
+        isSuccessful: false
       }
     }));
     expect(result.current).toEqual(expect.objectContaining({
       data: {
         test: {
-          name: 'test #1'
+          isSuccessful: false
         }
       }
     }));
@@ -178,15 +179,13 @@ describe('useGqlQuery', () => {
     // After update (updator)
     act(() => result.current.update((old: any) => ({
       test: {
-        ...old.test,
-        isSuccessful: false
+        isSuccessful: !old?.test?.isSuccessful
       }
     })));
     expect(result.current).toEqual(expect.objectContaining({
       data: {
         test: {
-          name: 'test #1',
-          isSuccessful: false
+          isSuccessful: true
         }
       }
     }));

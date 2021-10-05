@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 import gql from 'graphql-tag';
 
-import { useGqlMutation } from '../src';
+import { useGqlMutation } from '../../src';
 
 // Setup
 beforeEach(() => {
