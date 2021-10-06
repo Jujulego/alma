@@ -4,6 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { GqlDocument, GqlQueryReturn, GqlVariables } from '../types';
 import { useQueryRequest } from './useQueryRequest';
 import { buildRequest } from '../utils';
+import { useDeepMemo } from '../../../utils';
 
 /**
  * Send a graphql query, then return status and result of the request.
@@ -15,7 +16,7 @@ import { buildRequest } from '../utils';
  */
 export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config?: ApiGetRequestConfig): GqlQueryReturn<R, E> {
   // Build request
-  const req = useMemo(() => buildRequest(doc), [doc]);
+  const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
 
   // Effects
   useEffect(() => {
