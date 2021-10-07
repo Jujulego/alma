@@ -17,12 +17,9 @@ export const SwrCache: FC<SwrCacheProps> = ({ children }) => {
   const [cache, setCache] = useState<State>({});
 
   // Callbacks
-  const set = useCallback(
-    (id: string, data: unknown) => {
-      setCache((old) => ({ ...old, [id]: { data } }));
-    },
-    [setCache]
-  );
+  const set = useCallback((id: string, data: unknown) => {
+    setCache((old) => ({ ...old, [id]: { data } }));
+  }, [setCache]);
 
   // Render
   return <SwrCacheContext.Provider value={{ cache, setCache: set }}>{ children }</SwrCacheContext.Provider>;
