@@ -1,12 +1,21 @@
-import { FC } from 'react';
 import { AxiosResponse, CancelTokenSource } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { SwrCacheContext, useGetRequest } from '../../src';
+import { useGetRequest, useSwrCache as _useSwrCache } from '../../src';
+
+// Mocks
+jest.mock('../../src/cache/SwrCacheContext');
+const useSwrCache = _useSwrCache as jest.MockedFunction<typeof _useSwrCache>;
 
 // Setup
 beforeEach(() => {
   jest.resetAllMocks();
+
+  // Mocks
+  useSwrCache.mockReturnValue({
+    data: undefined,
+    setCache: jest.fn(),
+  });
 });
 
 // Test suites
@@ -31,6 +40,8 @@ describe('useGetRequest', () => {
       reload: expect.any(Function),
       update: expect.any(Function)
     });
+
+    expect(useSwrCache).toHaveBeenCalledWith('test-id');
 
     // After receive
     await waitForNextUpdate();
@@ -61,13 +72,6 @@ describe('useGetRequest', () => {
 
     const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
 
-    // Checks
-    expect(result.current).toEqual({
-      loading: true,
-      reload: expect.any(Function),
-      update: expect.any(Function)
-    });
-
     // After receive
     await waitForNextUpdate();
     expect(result.current).toEqual({
@@ -82,8 +86,15 @@ describe('useGetRequest', () => {
   });
 
   it('should return cached data first', async () => {
+    // Mocks
+    const spyCache = jest.fn<void, [string]>();
+
+    useSwrCache.mockReturnValue({
+      data: 'cached',
+      setCache: spyCache,
+    });
+
     // Render
-    const spyCache = jest.fn<void, [string, string]>();
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
       .mockResolvedValue({
         status: 200,
@@ -93,16 +104,7 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const wrapper: FC = ({ children }) => (
-      <SwrCacheContext.Provider value={{
-        cache: { 'test-id': { data: 'cached' } },
-        setCache: spyCache
-      }}>
-        { children }
-      </SwrCacheContext.Provider>
-    );
-
-    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'), { wrapper });
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id'));
 
     // Checks
     expect(result.current).toEqual({
@@ -123,12 +125,19 @@ describe('useGetRequest', () => {
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spyCache).toHaveBeenCalledWith('test-id', 'test');
+    expect(spyCache).toHaveBeenCalledWith('test');
   });
 
   it('should not use cached data', async () => {
+    // Mocks
+    const spyCache = jest.fn<void, [string]>();
+
+    useSwrCache.mockReturnValue({
+      data: 'cached',
+      setCache: spyCache,
+    });
+
     // Render
-    const spyCache = jest.fn<void, [string, string]>();
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
       .mockResolvedValue({
         status: 200,
@@ -138,16 +147,7 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const wrapper: FC = ({ children }) => (
-      <SwrCacheContext.Provider value={{
-        cache: { 'test-id': { data: 'cached' } },
-        setCache: spyCache
-      }}>
-        { children }
-      </SwrCacheContext.Provider>
-    );
-
-    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id', { disableSwr: true }), { wrapper });
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id', { disableSwr: true }));
 
     // Checks
     expect(result.current).toEqual({
@@ -182,7 +182,7 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const { result } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
+    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
 
     // Checks
     expect(result.current).toEqual({
@@ -240,6 +240,14 @@ describe('useGetRequest', () => {
   });
 
   it('should update state value', async () => {
+    // Mocks
+    const spyCache = jest.fn<void, [string]>();
+
+    useSwrCache.mockReturnValue({
+      data: undefined,
+      setCache: spyCache,
+    });
+
     // Render
     const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
       .mockResolvedValue({
@@ -265,10 +273,12 @@ describe('useGetRequest', () => {
     // After update (simple value)
     act(() => result.current.update('it\'s'));
     expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s' }));
+    expect(spyCache).toHaveBeenCalledWith('it\'s');
 
     // After update (updator)
     act(() => result.current.update((old) => `${old} working`));
     expect(result.current).toEqual(expect.objectContaining({ data: 'it\'s working' }));
+    expect(spyCache).toHaveBeenCalledWith('it\'s working');
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
