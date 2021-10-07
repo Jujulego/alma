@@ -1,5 +1,5 @@
 // Utility types
-export type Updator<R> = (data?: R) => R;
+export type Updator<R> = (data?: R) => R | undefined;
 export type ApiParams = Record<string, unknown>;
 
 export type CombineArg<A1, A2> = A1 extends void ? A2 : (A2 extends void ? A1 : A1 & A2)
