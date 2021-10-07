@@ -5,7 +5,7 @@ import { useCallback, useDebugValue, useMemo } from 'react';
 
 import { GqlErrorResponse, GqlQueryReturn, GqlRequest, GqlResponse, GqlVariables } from '../types';
 
-export function useQueryRequest<R, V extends GqlVariables, E = unknown>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R, E> {
+export function useQueryRequest<R, V extends GqlVariables>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R> {
   const { load, ...rconfig } = config;
 
   // Stabilise objects
@@ -24,19 +24,21 @@ export function useQueryRequest<R, V extends GqlVariables, E = unknown>(url: str
   ), [url, req, svars, sconfig]);
 
   // Api call
-  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, E | GqlErrorResponse>(generator, swrId, {
+  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, GqlErrorResponse>(generator, swrId, {
     disableSwr: !req.operationName,
     load
   });
 
   return {
-    ...state,
+    loading: state.loading,
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
+
     update: useCallback((data: R | Updator<R>) => {
       const updator: Updator<R> = typeof data === 'function' ? (data as Updator<R>) : () => data;
 
-      update((old) => ({ ...old, data: updator(old?.data) }));
+      update((old) => ({ ...old, data: updator(old?.data) as R }));
     }, [update]),
+    reload: state.reload,
   };
 }

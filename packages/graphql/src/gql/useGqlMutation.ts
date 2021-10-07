@@ -13,10 +13,10 @@ import { useMutationRequest } from './useMutationRequest';
  * @param doc: graphql query
  * @param config: axios configuration
  */
-export function useGqlMutation<R, V extends GqlVariables, E = unknown>(url: string, doc: GqlDocument, config?: ApiPostRequestConfig): GqlMutationReturn<V, R, E> {
+export function useGqlMutation<R, V extends GqlVariables>(url: string, doc: GqlDocument, config?: ApiPostRequestConfig): GqlMutationReturn<V, R> {
   // Memos
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
 
   // Api call
-  return useMutationRequest<R, V, E>(url, req, config);
+  return useMutationRequest<R, V>(url, req, config);
 }

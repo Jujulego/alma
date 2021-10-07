@@ -1,5 +1,5 @@
+import { ApiPromise, Updator } from '@jujulego/alma-api';
 import { DocumentNode } from 'graphql';
-import { ApiGetReturn, ApiParams, ApiPostReturn } from '../../api';
 
 // Types
 export type GqlDocument = string | DocumentNode;
@@ -32,5 +32,19 @@ export interface GqlErrorResponse {
   errors: GqlError[];
 }
 
-export type GqlQueryReturn<R, E = unknown> = ApiGetReturn<R, E | GqlErrorResponse>;
-export type GqlMutationReturn<B, R = unknown, E = unknown> = ApiPostReturn<B, ApiParams, R, E | GqlErrorResponse>;
+export interface GqlQueryReturn<R> {
+  loading: boolean;
+  data?: R;
+  error?: GqlErrorResponse;
+
+  update: (data: R | Updator<R>) => void;
+  reload: () => void;
+}
+
+export interface GqlMutationReturn<V extends GqlVariables, R> {
+  loading: boolean;
+  data?: R;
+  error?: GqlErrorResponse;
+
+  send: (vars: V) => ApiPromise<R>;
+}

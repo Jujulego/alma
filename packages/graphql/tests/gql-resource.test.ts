@@ -2,7 +2,12 @@ import { ApiPromise, Updator } from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
-import { gqlResource, useMutationRequest as _useMutationRequest, useQueryRequest as _useQueryRequest } from '../src';
+import {
+  gqlResource,
+  gqlVars,
+  useMutationRequest as _useMutationRequest,
+  useQueryRequest as _useQueryRequest
+} from '../src';
 import { buildRequest as _buildRequest } from '../src/utils';
 import { TestData } from './types';
 
@@ -136,7 +141,7 @@ describe('useGqlMutation', () => {
     const spyMerge = jest.fn<{ test: TestData }, [{ test: TestData } | undefined, { success: TestData }]>()
       .mockImplementation((old, res) => ({ test: res.success }));
 
-    const useGqlMTest = useGqlQTest.mutation<'success', { success: TestData }, { name: string }>('success', mutation, spyMerge);
+    const useGqlMTest = useGqlQTest.mutation('success', mutation, spyMerge, gqlVars<{ name: string }>());
 
     // Check buildRequest
     expect(buildRequest).toHaveBeenCalledTimes(2);

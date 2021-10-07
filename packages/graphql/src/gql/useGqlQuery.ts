@@ -14,7 +14,7 @@ import { buildRequest } from '../utils';
  * @param vars: query variables
  * @param config: axios configuration
  */
-export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument, vars: V, config?: ApiGetRequestConfig): GqlQueryReturn<R, E> {
+export function useGqlQuery<R, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument, vars: V, config?: ApiGetRequestConfig): GqlQueryReturn<R> {
   // Build request
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
 
@@ -24,5 +24,5 @@ export function useGqlQuery<R, V extends GqlVariables = GqlVariables, E = unknow
   }, [req]);
 
   // Api call
-  return useQueryRequest<R, V, E>(url, req, vars, config);
+  return useQueryRequest<R, V>(url, req, vars, config);
 }

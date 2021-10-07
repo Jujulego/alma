@@ -5,7 +5,7 @@ import { useCallback, useDebugValue } from 'react';
 
 import { GqlErrorResponse, GqlMutationReturn, GqlRequest, GqlResponse, GqlVariables } from '../types';
 
-export function useMutationRequest<R, V extends GqlVariables, E = unknown>(url: string, req: GqlRequest, config: ApiPostRequestConfig = {}): GqlMutationReturn<V, R, E> {
+export function useMutationRequest<R, V extends GqlVariables = GqlVariables>(url: string, req: GqlRequest, config: ApiPostRequestConfig = {}): GqlMutationReturn<V, R> {
   useDebugValue(req.operationName);
 
   // Stabilise objects
@@ -19,12 +19,13 @@ export function useMutationRequest<R, V extends GqlVariables, E = unknown>(url: 
   ), [url, req, sconfig]);
 
   // Api call
-  const { send, data, error, ...state } = usePostRequest<V, GqlResponse<R>, ApiParams, E | GqlErrorResponse>(generator);
+  const { send, loading, data, error } = usePostRequest<V, GqlResponse<R>, ApiParams, GqlErrorResponse>(generator);
 
   return {
-    ...state,
+    loading: loading,
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
+
     send: useCallback((vars: V) => {
       return send(vars)
         .then((data) => data.data);
