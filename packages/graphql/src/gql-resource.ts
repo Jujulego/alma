@@ -30,7 +30,7 @@ export interface IGqlResourceHookMethods<T, V extends GqlVariables, S extends IG
 // Utils
 function hookMethods<T, V extends GqlVariables, S extends IGqlResourceState<T, E>, E = unknown>(url: string): IGqlResourceHookMethods<T, V, S, E> {
   return {
-    mutation<N extends string, TM, VM extends GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<T, TM>) {
+    mutation<N extends string, TM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<T, TM>) {
       return addMutateCall<N, TM, VM, T, V, S, E>(url, name, doc, this, merge);
     }
   };
@@ -63,7 +63,7 @@ function addMutateCall<N extends string, TM, VM extends GqlVariables, T, V exten
 }
 
 // Hook builder
-export function gqlResource<T, V extends GqlVariables, E = unknown>(url: string, doc: GqlDocument): GqlResourceHook<T, V, IGqlResourceState<T, E>> {
+export function gqlResource<T, V extends GqlVariables = GqlVariables, E = unknown>(url: string, doc: GqlDocument): GqlResourceHook<T, V, IGqlResourceState<T, E>> {
   // Build request
   const req = buildRequest(doc);
 
