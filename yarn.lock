@@ -725,7 +725,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/alma-api@^1.1.0, @jujulego/alma-api@workspace:packages/api":
+"@jujulego/alma-api@^1.1.2, @jujulego/alma-api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
@@ -760,7 +760,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
   dependencies:
-    "@jujulego/alma-api": ^1.1.0
+    "@jujulego/alma-api": ^1.1.2
     "@jujulego/alma-utils": ^1.0.5
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.2
