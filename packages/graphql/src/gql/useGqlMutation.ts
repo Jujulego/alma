@@ -2,9 +2,9 @@ import { ApiPostRequestConfig } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useMemo } from 'react';
 
-import { GqlDocument, GqlVariables, GqlMutationReturn } from '../types';
+import { GqlDocument, GqlVariables } from '../types';
+import { GqlMutationState, useMutationRequest } from './useMutationRequest';
 import { buildRequest } from '../utils';
-import { useMutationRequest } from './useMutationRequest';
 
 /**
  * Send a graphql mutation, then return status and result of the request.
@@ -13,10 +13,10 @@ import { useMutationRequest } from './useMutationRequest';
  * @param doc: graphql query
  * @param config: axios configuration
  */
-export function useGqlMutation<R, V extends GqlVariables>(url: string, doc: GqlDocument, config?: ApiPostRequestConfig): GqlMutationReturn<V, R> {
+export function useGqlMutation<D, V extends GqlVariables>(url: string, doc: GqlDocument, config?: ApiPostRequestConfig): GqlMutationState<D, V> {
   // Memos
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
 
   // Api call
-  return useMutationRequest<R, V>(url, req, config);
+  return useMutationRequest<D, V>(url, req, config);
 }

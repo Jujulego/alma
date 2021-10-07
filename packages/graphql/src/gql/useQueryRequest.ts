@@ -3,9 +3,25 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import axios, { CancelTokenSource } from 'axios';
 import { useCallback, useDebugValue, useMemo } from 'react';
 
-import { GqlErrorResponse, GqlQueryReturn, GqlRequest, GqlResponse, GqlVariables } from '../types';
+import { GqlErrorResponse, GqlRequest, GqlResponse, GqlState, GqlVariables } from '../types';
 
-export function useQueryRequest<R, V extends GqlVariables>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryReturn<R> {
+// Types
+export interface GqlQueryState<D> extends GqlState<D> {
+  /**
+   * Update cached result
+   *
+   * @param data: value to store or updator
+   */
+  update: (data: D | Updator<D>) => void;
+
+  /**
+   * Force request reload
+   */
+  reload: () => void;
+}
+
+// Hook
+export function useQueryRequest<D, V extends GqlVariables>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryState<D> {
   const { load, ...rconfig } = config;
 
   // Stabilise objects
@@ -17,14 +33,14 @@ export function useQueryRequest<R, V extends GqlVariables>(url: string, req: Gql
   useDebugValue(swrId);
 
   // Request generator
-  const generator = useCallback((source: CancelTokenSource) => axios.post<GqlResponse<R>>(
+  const generator = useCallback((source: CancelTokenSource) => axios.post<GqlResponse<D>>(
     url,
     { ...req, variables: svars },
     { ...sconfig, cancelToken: source.token }
   ), [url, req, svars, sconfig]);
 
   // Api call
-  const { data, error, update, ...state } = useGetRequest<GqlResponse<R>, GqlErrorResponse>(generator, swrId, {
+  const { data, error, update, ...state } = useGetRequest<GqlResponse<D>, GqlErrorResponse>(generator, swrId, {
     disableSwr: !req.operationName,
     load
   });
@@ -34,10 +50,10 @@ export function useQueryRequest<R, V extends GqlVariables>(url: string, req: Gql
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
 
-    update: useCallback((data: R | Updator<R>) => {
-      const updator: Updator<R> = typeof data === 'function' ? (data as Updator<R>) : () => data;
+    update: useCallback((data: D | Updator<D>) => {
+      const updator: Updator<D> = typeof data === 'function' ? (data as Updator<D>) : () => data;
 
-      update((old) => ({ ...old, data: updator(old?.data) as R }));
+      update((old) => ({ ...old, data: updator(old?.data) as D }));
     }, [update]),
     reload: state.reload,
   };

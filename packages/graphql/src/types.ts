@@ -23,8 +23,8 @@ export interface GqlError {
   extensions?: unknown;
 }
 
-export interface GqlResponse<R> {
-  data: R;
+export interface GqlResponse<D> {
+  data: D;
   errors?: GqlError[];
 }
 
@@ -32,19 +32,8 @@ export interface GqlErrorResponse {
   errors: GqlError[];
 }
 
-export interface GqlQueryReturn<R> {
+export interface GqlState<D> {
   loading: boolean;
-  data?: R;
+  data?: D;
   error?: GqlErrorResponse;
-
-  update: (data: R | Updator<R>) => void;
-  reload: () => void;
-}
-
-export interface GqlMutationReturn<V extends GqlVariables, R> {
-  loading: boolean;
-  data?: R;
-  error?: GqlErrorResponse;
-
-  send: (vars: V) => ApiPromise<R>;
 }

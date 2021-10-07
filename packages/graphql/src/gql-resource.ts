@@ -1,54 +1,44 @@
-import { ApiGetRequestConfig, ApiPromise, Updator } from '@jujulego/alma-api';
+import { ApiGetRequestConfig, ApiPromise } from '@jujulego/alma-api';
 import { useCallback } from 'react';
 
-import { useQueryRequest, useMutationRequest } from './gql';
-import { GqlDocument, GqlErrorResponse, GqlVariables } from './types';
+import { useQueryRequest, useMutationRequest, GqlQueryState } from './gql';
+import { GqlDocument, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
 // Types
-export type Holder<V> = { _?: V };
+export type Holder<T> = { _: T } | undefined;
 export type GqlMerge<S, R> = (state: S | undefined, res: R) => S | undefined;
 
-export interface GqlState<T> {
-  loading: boolean;
-  data?: T;
-  error?: GqlErrorResponse;
-
-  reload: () => void;
-  update: (data: T | Updator<T>) => void;
+export type GqlStateMethods<N extends string, DM, VM extends GqlVariables> = {
+  [key in N]: (vars: VM) => ApiPromise<DM>;
 }
 
-export type GqlStateMethods<N extends string, TM, VM extends GqlVariables> = {
-  [key in N]: (vars: VM) => ApiPromise<TM>;
-}
+export type GqlHook<D, V extends GqlVariables, S extends GqlQueryState<D>> =
+  ((vars: V, config?: ApiGetRequestConfig) => S) & GqlHookMethods<D, V, S>;
 
-export type GqlHook<T, V extends GqlVariables, S extends GqlState<T>> = ((vars: V, config?: ApiGetRequestConfig) => S) & GqlHookMethods<T, V, S>;
-
-export interface GqlHookMethods<T, V extends GqlVariables, S extends GqlState<T>> {
-  mutation: <N extends string, TM = T, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<T, TM>, _?: Holder<VM>) => GqlHook<T, V, S & GqlStateMethods<N, TM, VM>>
+export interface GqlHookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>> {
+  mutation<N extends string, DM = D, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<D, DM>, _?: Holder<VM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>>
 }
 
 // Utils
-export function gqlVars<V extends GqlVariables>(): Holder<V> {
-  return {};
-}
+export const gqlVars = <V extends GqlVariables>(): Holder<V> => undefined;
 
-function hookMethods<T, V extends GqlVariables, S extends GqlState<T>>(url: string): GqlHookMethods<T, V, S> {
+function hookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>>(url: string): GqlHookMethods<D, V, S> {
   return {
-    mutation<N extends string, TM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<T, TM>) {
-      return addMutateCall<N, TM, VM, T, V, S>(url, name, doc, this, merge);
+    mutation<N extends string, DM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<D, DM>) {
+      return addMutateCall<N, D, DM, V, VM, S>(url, name, doc, this, merge);
     }
   };
 }
 
 // Hook modifiers
-function addMutateCall<N extends string, TM, VM extends GqlVariables, T, V extends GqlVariables, S extends GqlState<T>>(url: string, name: N, doc: GqlDocument, wrapped: GqlHook<T, V, S>, merge: GqlMerge<T, TM>): GqlHook<T, V, S & GqlStateMethods<N, TM, VM>> {
+function addMutateCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlQueryState<D>>(url: string, name: N, doc: GqlDocument, wrapped: GqlHook<D, V, S>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>> {
   const req = buildRequest(doc);
 
   // Modified hook
-  function useGqlResource(vars: V, config?: ApiGetRequestConfig): S & GqlStateMethods<N, TM, VM> {
+  function useGqlResource(vars: V, config?: ApiGetRequestConfig): S & GqlStateMethods<N, DM, VM> {
     // Api
-    const { send } = useMutationRequest<TM, VM>(url, req, config);
+    const { send } = useMutationRequest<DM, VM>(url, req, config);
     const all = wrapped(vars, config);
 
     // Result
@@ -57,18 +47,18 @@ function addMutateCall<N extends string, TM, VM extends GqlVariables, T, V exten
     return Object.assign(all, {
       [name]: useCallback((vars: VM) => {
         return send(vars).then((res) => {
-          update((state) => merge(state, res) as T);
+          update((state) => merge(state, res) as D);
           return res;
         });
       }, [update, send])
-    } as GqlStateMethods<N, TM, VM>);
+    } as GqlStateMethods<N, DM, VM>);
   }
 
-  return Object.assign(useGqlResource, hookMethods<T, V, S & GqlStateMethods<N, TM, VM>>(url));
+  return Object.assign(useGqlResource, hookMethods<D, V, S & GqlStateMethods<N, DM, VM>>(url));
 }
 
 // Hook builder
-export function gqlResource<T, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument, _?: Holder<V>): GqlHook<T, V, GqlState<T>> {
+export function gqlResource<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument, _?: Holder<V>): GqlHook<D, V, GqlQueryState<D>> {
   // Build request
   const req = buildRequest(doc);
 
@@ -77,9 +67,9 @@ export function gqlResource<T, V extends GqlVariables = GqlVariables>(url: strin
   }
 
   // Hook
-  function useGqlResource(vars: V, config?: ApiGetRequestConfig): GqlState<T> {
-    return useQueryRequest<T, V>(url, req, vars, config);
+  function useGqlResource(vars: V, config?: ApiGetRequestConfig): GqlQueryState<D> {
+    return useQueryRequest<D, V>(url, req, vars, config);
   }
 
-  return Object.assign(useGqlResource, hookMethods<T, V, GqlState<T>>(url));
+  return Object.assign(useGqlResource, hookMethods<D, V, GqlQueryState<D>>(url));
 }
