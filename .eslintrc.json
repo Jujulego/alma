@@ -28,6 +28,9 @@
     "jsx-quotes": ["error", "prefer-double"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
+    "no-console": ["error", {
+      "allow": ["warn", "error"]
+    }],
     "react/jsx-uses-react": "off",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off"
