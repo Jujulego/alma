@@ -1,0 +1,4 @@
+declined:
+  - "@jujulego/alma-api"
+  - "@jujulego/alma-graphql"
+  - "@jujulego/alma-utils"
