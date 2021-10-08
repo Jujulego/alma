@@ -2,13 +2,12 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
 import {
-  useApi,
+  ApiParams, ApiPromise, useApi,
   useDeleteRequest as _useDeleteRequest,
   useGetRequest as _useGetRequest,
   usePostRequest as _usePostRequest
 } from '../../src';
 import { GET_METHODS, POST_METHODS } from '../utils';
-import { ApiParams, ApiPromise } from '../../dist/types';
 
 // Mocks
 jest.mock('../../src/api/useDeleteRequest');

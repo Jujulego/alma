@@ -2,6 +2,9 @@
   "env": {
     "esm": {
       "presets": [
+        ["@babel/preset-react", {
+          "runtime": "automatic"
+        }],
         "@babel/preset-typescript"
       ]
     },
@@ -12,6 +15,9 @@
           "targets": {
             "node": "14"
           }
+        }],
+        ["@babel/preset-react", {
+          "runtime": "automatic"
         }],
         "@babel/preset-typescript"
       ]
