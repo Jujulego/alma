@@ -32,6 +32,7 @@ lerna-debug.log*
 # Configs
 .eslintrc.json
 .gitignore
+gulpfile.js
 jest.config.js
 nest-cli.json
 sonar-project.properties

@@ -1603,6 +1603,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
+    "@babel/core": 7.15.5
+    "@babel/preset-env": 7.15.6
+    "@babel/preset-typescript": 7.15.0
+    "@babel/runtime": 7.15.4
     "@jujulego/alma-utils": ^1.0.5
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.2
@@ -1613,11 +1617,16 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 4.33.0
     "@typescript-eslint/parser": 4.33.0
     axios: 0.21.4
+    del: 6.0.0
     eslint: 7.32.0
     eslint-plugin-jest: 24.5.2
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.4
+    gulp: 4.0.2
+    gulp-babel: 8.0.0
+    gulp-cli: 2.3.0
+    gulp-typescript: 6.0.0-alpha.1
     jest: 27.2.4
     react: 17.0.2
     react-dom: 17.0.2
