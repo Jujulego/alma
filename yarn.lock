@@ -23,6 +23,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/code-frame@npm:^7.15.8":
+  version: 7.15.8
+  resolution: "@babel/code-frame@npm:7.15.8"
+  dependencies:
+    "@babel/highlight": ^7.14.5
+  checksum: d75950f0e0925b33ab5e870079134509c13bcdbf96c8bf4d0dea91606775bc044258c762104ab20882fda3b07cbff24176ed77dfb57af5a901bde33ddfe690bb
+  languageName: node
+  linkType: hard
+
 "@babel/compat-data@npm:^7.13.11, @babel/compat-data@npm:^7.15.0":
   version: 7.15.0
   resolution: "@babel/compat-data@npm:7.15.0"
@@ -53,6 +62,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/core@npm:7.15.8":
+  version: 7.15.8
+  resolution: "@babel/core@npm:7.15.8"
+  dependencies:
+    "@babel/code-frame": ^7.15.8
+    "@babel/generator": ^7.15.8
+    "@babel/helper-compilation-targets": ^7.15.4
+    "@babel/helper-module-transforms": ^7.15.8
+    "@babel/helpers": ^7.15.4
+    "@babel/parser": ^7.15.8
+    "@babel/template": ^7.15.4
+    "@babel/traverse": ^7.15.4
+    "@babel/types": ^7.15.6
+    convert-source-map: ^1.7.0
+    debug: ^4.1.0
+    gensync: ^1.0.0-beta.2
+    json5: ^2.1.2
+    semver: ^6.3.0
+    source-map: ^0.5.0
+  checksum: 61e5050580a2808344f23161c971e917fe711a546e3afa4d022be4ec5325f8bdf559cc9afd962e39ecc3643d9cdcbbac7abc7b8dd05330020475317564c8d290
+  languageName: node
+  linkType: hard
+
 "@babel/generator@npm:^7.15.4, @babel/generator@npm:^7.7.2":
   version: 7.15.4
   resolution: "@babel/generator@npm:7.15.4"
@@ -61,6 +93,17 @@ __metadata:
     jsesc: ^2.5.1
     source-map: ^0.5.0
   checksum: fec8e8fa46723d7edf4087dc07b1f65a64488cba9662458431dd00d2a24f7c41b21e3160cfa1ba3df9373b2bb5e84189a95206c9ce6f14845a3929fc1ab58f57
+  languageName: node
+  linkType: hard
+
+"@babel/generator@npm:^7.15.8":
+  version: 7.15.8
+  resolution: "@babel/generator@npm:7.15.8"
+  dependencies:
+    "@babel/types": ^7.15.6
+    jsesc: ^2.5.1
+    source-map: ^0.5.0
+  checksum: 3afc4d50280352125b6f1bca01fd1e4b272e1cf26248879fb38b74f8c67d7f9304c650e182623f9e7855d8154c6f05f66df81817a71de66e7dfe6670785eb344
   languageName: node
   linkType: hard
 
@@ -199,7 +242,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-module-transforms@npm:^7.14.5":
+"@babel/helper-module-transforms@npm:^7.14.5, @babel/helper-module-transforms@npm:^7.15.8":
   version: 7.15.8
   resolution: "@babel/helper-module-transforms@npm:7.15.8"
   dependencies:
@@ -361,6 +404,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/parser@npm:^7.15.8":
+  version: 7.15.8
+  resolution: "@babel/parser@npm:7.15.8"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: a26c91967655f3961bc0c2565f7b9ac870ee3db86c9a0f00b96a7fb65210687be023431c79b3ed2a13b9c945e6afa09c36542ee508741e7ce3039a5b0f18c4b2
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@npm:^7.15.4":
   version: 7.15.4
   resolution: "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining@npm:7.15.4"
@@ -374,7 +426,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-async-generator-functions@npm:^7.15.4":
+"@babel/plugin-proposal-async-generator-functions@npm:^7.15.8":
   version: 7.15.8
   resolution: "@babel/plugin-proposal-async-generator-functions@npm:7.15.8"
   dependencies:
@@ -1117,7 +1169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-spread@npm:^7.14.6":
+"@babel/plugin-transform-spread@npm:^7.15.8":
   version: 7.15.8
   resolution: "@babel/plugin-transform-spread@npm:7.15.8"
   dependencies:
@@ -1198,16 +1250,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/preset-env@npm:7.15.6":
-  version: 7.15.6
-  resolution: "@babel/preset-env@npm:7.15.6"
+"@babel/preset-env@npm:7.15.8":
+  version: 7.15.8
+  resolution: "@babel/preset-env@npm:7.15.8"
   dependencies:
     "@babel/compat-data": ^7.15.0
     "@babel/helper-compilation-targets": ^7.15.4
     "@babel/helper-plugin-utils": ^7.14.5
     "@babel/helper-validator-option": ^7.14.5
     "@babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining": ^7.15.4
-    "@babel/plugin-proposal-async-generator-functions": ^7.15.4
+    "@babel/plugin-proposal-async-generator-functions": ^7.15.8
     "@babel/plugin-proposal-class-properties": ^7.14.5
     "@babel/plugin-proposal-class-static-block": ^7.15.4
     "@babel/plugin-proposal-dynamic-import": ^7.14.5
@@ -1262,7 +1314,7 @@ __metadata:
     "@babel/plugin-transform-regenerator": ^7.14.5
     "@babel/plugin-transform-reserved-words": ^7.14.5
     "@babel/plugin-transform-shorthand-properties": ^7.14.5
-    "@babel/plugin-transform-spread": ^7.14.6
+    "@babel/plugin-transform-spread": ^7.15.8
     "@babel/plugin-transform-sticky-regex": ^7.14.5
     "@babel/plugin-transform-template-literals": ^7.14.5
     "@babel/plugin-transform-typeof-symbol": ^7.14.5
@@ -1271,13 +1323,13 @@ __metadata:
     "@babel/preset-modules": ^0.1.4
     "@babel/types": ^7.15.6
     babel-plugin-polyfill-corejs2: ^0.2.2
-    babel-plugin-polyfill-corejs3: ^0.2.2
+    babel-plugin-polyfill-corejs3: ^0.2.5
     babel-plugin-polyfill-regenerator: ^0.2.2
     core-js-compat: ^3.16.0
     semver: ^6.3.0
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 096902ac397b6ab53bd6c03c59cc451d98b407d1863c185837f0cb56ff45414aa08ae6b950ef179c66a30c0680d4d1846cda0766a990f850ee477022353daf5b
+  checksum: 1d38e941772c394bfc5ab127132d40a084f0958b7529ca5c336e7136623e8cecd1a74ccab25b369e25a37fcf7db2484de52d8ceeb7b58104a05f9e2242bbb5a2
   languageName: node
   linkType: hard
 
@@ -1679,8 +1731,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
-    "@babel/core": 7.15.5
-    "@babel/preset-env": 7.15.6
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
     "@babel/preset-typescript": 7.15.0
     "@babel/runtime": 7.15.4
@@ -1720,8 +1772,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
   dependencies:
-    "@babel/core": 7.15.5
-    "@babel/preset-env": 7.15.6
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
     "@babel/preset-typescript": 7.15.0
     "@babel/runtime": 7.15.4
@@ -1765,8 +1817,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-utils@workspace:packages/utils"
   dependencies:
-    "@babel/core": 7.15.5
-    "@babel/preset-env": 7.15.6
+    "@babel/core": 7.15.8
+    "@babel/preset-env": 7.15.8
     "@babel/preset-react": 7.14.5
     "@babel/preset-typescript": 7.15.0
     "@babel/runtime": 7.15.4
@@ -2963,7 +3015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-polyfill-corejs3@npm:^0.2.2":
+"babel-plugin-polyfill-corejs3@npm:^0.2.5":
   version: 0.2.5
   resolution: "babel-plugin-polyfill-corejs3@npm:0.2.5"
   dependencies:
