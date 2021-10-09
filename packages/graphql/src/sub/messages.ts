@@ -1,9 +1,9 @@
-import { GqlError, GqlErrorResponse, GqlRequest, GqlResponse, GqlVariables } from '../types';
+import { GqlErrorResponse, GqlRequest, GqlResponse, GqlVariables } from '../types';
 
 // Types
 interface GqlSubscriptionConnectionInit {
   type: 'GQL_CONNECTION_INIT';
-  payload: unknown;
+  payload?: unknown;
 }
 
 interface GqlSubscriptionConnectionTerminate {
@@ -27,7 +27,7 @@ export type GqlSubscriptionClientDataMessage<D = unknown, V extends GqlVariables
 export type GqlSubscriptionClientMessage<D = unknown, V extends GqlVariables = GqlVariables> = GqlSubscriptionClientConnectionMessage | GqlSubscriptionClientDataMessage<D, V>;
 
 interface GqlSubscriptionConnectionError {
-  type: 'GQL_CONNECTION_TERMINATE';
+  type: 'GQL_CONNECTION_ERROR';
   payload: unknown;
 }
 
