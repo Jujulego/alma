@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 
 import {
   buildRequest as _buildRequest,
-  gqlDoc, gqlResource,
+  gqlDoc as _gqlDoc, gqlResource,
   useMutationRequest as _useMutationRequest,
   useQueryRequest as _useQueryRequest
 } from '../src';
@@ -19,6 +19,7 @@ const useMutationRequest = _useMutationRequest as jest.MockedFunction<typeof _us
 
 jest.mock('../src/utils');
 const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
+const gqlDoc = _gqlDoc as jest.MockedFunction<typeof _gqlDoc>;
 
 // Setup
 const query = gql`
@@ -46,6 +47,8 @@ beforeEach(() => {
     update: jest.fn(),
     reload: jest.fn(),
   });
+
+  gqlDoc.mockImplementation((doc) => doc);
 });
 
 // Test suites
