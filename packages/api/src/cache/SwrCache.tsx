@@ -1,18 +1,14 @@
-import { FC, ReactNode, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import { SwrCacheContext, SwrCacheState } from './SwrCacheContext';
 
 // Types
 interface State {
-  [id: string]: SwrCacheState<unknown>
-}
-
-export interface SwrCacheProps {
-  children?: ReactNode
+  [id: string]: SwrCacheState<unknown>;
 }
 
 // Component
-export const SwrCache: FC<SwrCacheProps> = ({ children }) => {
+export const SwrCache: FC = ({ children }) => {
   // State
   const [cache, setCache] = useState<State>({});
 
