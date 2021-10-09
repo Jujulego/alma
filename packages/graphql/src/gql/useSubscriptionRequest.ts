@@ -1,3 +1,4 @@
+import { useDeepMemo } from '@jujulego/alma-utils';
 import { useContext, useEffect, useState } from 'react';
 
 import { GqlSubscriptionContext } from '../sub';
@@ -10,7 +11,10 @@ export interface GqlSubscriptionData<D = unknown> {
 }
 
 // Hook
-export function useSubscriptionRequest<D = unknown, V extends GqlVariables = GqlVariables>(id: string, req: GqlRequest<D, V>): GqlSubscriptionData<D> {
+export function useSubscriptionRequest<D = unknown, V extends GqlVariables = GqlVariables>(id: string, req: GqlRequest<D, V>, vars: V): GqlSubscriptionData<D> {
+  // Stabilise objects
+  const svars = useDeepMemo(vars);
+
   // State
   const [data, setData] = useState<D>();
   const [error, setError] = useState<GqlErrorResponse>();
@@ -20,9 +24,9 @@ export function useSubscriptionRequest<D = unknown, V extends GqlVariables = Gql
 
   // Effects
   useEffect(() => {
-    request(id, req);
+    request(id, { ...req, variables: svars });
     return () => unsubscribe(id);
-  }, [id, req, request, unsubscribe]);
+  }, [id, req, svars, request, unsubscribe]);
 
   useEffect(() => {
     if (!message) return;

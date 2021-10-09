@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "@jujulego/alma-api": "^1.1.3",
-    "@jujulego/alma-utils": "^1.0.6"
+    "@jujulego/alma-utils": "^1.0.6",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.8",
@@ -43,6 +44,7 @@
     "@types/jest": "27.0.2",
     "@types/react": "17.0.27",
     "@types/testing-library__jest-dom": "5.14.1",
+    "@types/uuid": "8.3.1",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "axios": "0.21.4",
