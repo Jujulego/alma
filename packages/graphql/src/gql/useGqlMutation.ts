@@ -13,7 +13,7 @@ import { buildRequest } from '../utils';
  * @param doc: graphql query
  * @param config: axios configuration
  */
-export function useGqlMutation<D, V extends GqlVariables>(url: string, doc: GqlDocument, config?: ApiPostRequestConfig): GqlMutationState<D, V> {
+export function useGqlMutation<D, V extends GqlVariables>(url: string, doc: GqlDocument<D, V>, config?: ApiPostRequestConfig): GqlMutationState<D, V> {
   // Memos
   const req = useDeepMemo(useMemo(() => buildRequest(doc), [doc]));
 

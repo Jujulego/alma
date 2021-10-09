@@ -1,8 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
-import { useGqlQuery, useQueryRequest as _useQueryRequest } from '../../src';
-import { buildRequest as _buildRequest } from '../../src/utils';
+import { buildRequest as _buildRequest, useGqlQuery, useQueryRequest as _useQueryRequest } from '../../src';
 
 // Mocks
 jest.mock('../../src/gql/useQueryRequest');

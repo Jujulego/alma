@@ -16,7 +16,7 @@ export interface GqlMutationState<D, V extends GqlVariables> extends GqlState<D>
 }
 
 // Hook
-export function useMutationRequest<D, V extends GqlVariables = GqlVariables>(url: string, req: GqlRequest, config: ApiPostRequestConfig = {}): GqlMutationState<D, V> {
+export function useMutationRequest<D, V extends GqlVariables = GqlVariables>(url: string, req: GqlRequest<D, V>, config: ApiPostRequestConfig = {}): GqlMutationState<D, V> {
   useDebugValue(req.operationName);
 
   // Stabilise objects

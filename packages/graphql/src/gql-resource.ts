@@ -6,7 +6,6 @@ import { GqlDocument, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
 // Types
-export type Holder<T> = { _: T } | undefined;
 export type GqlMerge<S, R> = (state: S | undefined, res: R) => S | undefined;
 
 export type GqlStateMethods<N extends string, DM, VM extends GqlVariables> = {
@@ -17,22 +16,20 @@ export type GqlHook<D, V extends GqlVariables, S extends GqlQueryState<D>> =
   ((vars: V, config?: ApiGetRequestConfig) => S) & GqlHookMethods<D, V, S>;
 
 export interface GqlHookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>> {
-  mutation<N extends string, DM = D, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<D, DM>, _?: Holder<VM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>>
+  mutation<N extends string, DM = D, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>>
 }
 
 // Utils
-export const gqlVars = <V extends GqlVariables>(): Holder<V> => undefined;
-
 function hookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>>(url: string): GqlHookMethods<D, V, S> {
   return {
-    mutation<N extends string, DM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument, merge: GqlMerge<D, DM>) {
+    mutation<N extends string, DM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>) {
       return addMutateCall<N, D, DM, V, VM, S>(url, name, doc, this, merge);
     }
   };
 }
 
 // Hook modifiers
-function addMutateCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlQueryState<D>>(url: string, name: N, doc: GqlDocument, wrapped: GqlHook<D, V, S>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>> {
+function addMutateCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlQueryState<D>>(url: string, name: N, doc: GqlDocument<DM, VM>, wrapped: GqlHook<D, V, S>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMethods<N, DM, VM>> {
   const req = buildRequest(doc);
 
   // Modified hook
@@ -58,7 +55,7 @@ function addMutateCall<N extends string, D, DM, V extends GqlVariables, VM exten
 }
 
 // Hook builder
-export function gqlResource<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument, _?: Holder<V>): GqlHook<D, V, GqlQueryState<D>> {
+export function gqlResource<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V>): GqlHook<D, V, GqlQueryState<D>> {
   // Build request
   const req = buildRequest(doc);
 

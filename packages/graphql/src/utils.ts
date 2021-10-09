@@ -1,9 +1,13 @@
-import { OperationDefinitionNode, print } from 'graphql';
+import { DocumentNode, OperationDefinitionNode, print } from 'graphql';
 
-import { GqlDocument, GqlRequest } from './types';
+import { GqlDocument, GqlRequest, GqlVariables } from './types';
 
 // Utils
-export function buildRequest(document: GqlDocument): GqlRequest {
+export function gqlDoc<D, V extends GqlVariables = GqlVariables>(doc: string | DocumentNode): GqlDocument<D, V> {
+  return doc;
+}
+
+export function buildRequest<D, V extends GqlVariables>(document: GqlDocument<D, V>): GqlRequest<D, V> {
   if (typeof document === 'string') {
     return { query: document };
   }
