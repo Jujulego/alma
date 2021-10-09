@@ -1,0 +1,5 @@
+releases:
+  "@jujulego/alma-graphql": patch
+
+declined:
+  - "@jujulego/alma-api"
