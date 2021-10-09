@@ -21,7 +21,7 @@ export interface GqlQueryState<D> extends GqlState<D> {
 }
 
 // Hook
-export function useQueryRequest<D, V extends GqlVariables>(url: string, req: GqlRequest, vars: V, config: ApiGetRequestConfig = {}): GqlQueryState<D> {
+export function useQueryRequest<D, V extends GqlVariables>(url: string, req: GqlRequest<D, V>, vars: V, config: ApiGetRequestConfig = {}): GqlQueryState<D> {
   const { load, ...rconfig } = config;
 
   // Stabilise objects

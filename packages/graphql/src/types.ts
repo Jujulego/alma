@@ -1,14 +1,14 @@
-import { ApiPromise, Updator } from '@jujulego/alma-api';
 import { DocumentNode } from 'graphql';
 
 // Types
-export type GqlDocument = string | DocumentNode;
 export type GqlVariables = Record<string, unknown>;
+export type GqlDocument<D = unknown, V extends GqlVariables = GqlVariables> = (string | DocumentNode) & { _d?: D, _v?: V };
 
-export interface GqlRequest {
+export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> {
+  _d?: D,
   query: string;
   operationName?: string;
-  variables?: GqlVariables;
+  variables?: V;
 }
 
 export interface GqlLocation {

@@ -3,12 +3,11 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
 import {
-  gqlResource,
-  gqlVars,
+  buildRequest as _buildRequest,
+  gqlDoc as _gqlDoc, gqlResource,
   useMutationRequest as _useMutationRequest,
   useQueryRequest as _useQueryRequest
 } from '../src';
-import { buildRequest as _buildRequest } from '../src/utils';
 import { TestData } from './types';
 
 // Mocks
@@ -20,6 +19,7 @@ const useMutationRequest = _useMutationRequest as jest.MockedFunction<typeof _us
 
 jest.mock('../src/utils');
 const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
+const gqlDoc = _gqlDoc as jest.MockedFunction<typeof _gqlDoc>;
 
 // Setup
 const query = gql`
@@ -47,6 +47,8 @@ beforeEach(() => {
     update: jest.fn(),
     reload: jest.fn(),
   });
+
+  gqlDoc.mockImplementation((doc) => doc);
 });
 
 // Test suites
@@ -141,7 +143,7 @@ describe('useGqlMutation', () => {
     const spyMerge = jest.fn<{ test: TestData }, [{ test: TestData } | undefined, { success: TestData }]>()
       .mockImplementation((old, res) => ({ test: res.success }));
 
-    const useGqlMTest = useGqlQTest.mutation('success', mutation, spyMerge, gqlVars<{ name: string }>());
+    const useGqlMTest = useGqlQTest.mutation('success', gqlDoc<{ success: TestData }, { name: string }>(mutation), spyMerge);
 
     // Check buildRequest
     expect(buildRequest).toHaveBeenCalledTimes(2);

@@ -2,8 +2,7 @@ import { ApiPromise } from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
 import gql from 'graphql-tag';
 
-import { useGqlMutation, useMutationRequest as _useMutationRequest } from '../../src';
-import { buildRequest as _buildRequest } from '../../src/utils';
+import { buildRequest as _buildRequest, useGqlMutation, useMutationRequest as _useMutationRequest } from '../../src';
 import { TestData } from '../types';
 
 // Mocks
