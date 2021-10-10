@@ -37,6 +37,7 @@ describe('useGetRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       reload: expect.any(Function),
       update: expect.any(Function)
     });
@@ -47,6 +48,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -76,6 +78,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 400,
       error: 'Bad Request',
       reload: expect.any(Function),
@@ -109,6 +112,7 @@ describe('useGetRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
+      cached: true,
       data: 'cached',
       reload: expect.any(Function),
       update: expect.any(Function)
@@ -118,6 +122,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -152,6 +157,7 @@ describe('useGetRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       data: undefined,
       reload: expect.any(Function),
       update: expect.any(Function)
@@ -161,6 +167,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -182,11 +189,12 @@ describe('useGetRequest', () => {
         config: {}
       });
 
-    const { result, waitForNextUpdate } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
+    const { result } = renderHook(() => useGetRequest(spy, 'test-id', { load: false }));
 
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       reload: expect.any(Function),
       update: expect.any(Function)
     });
@@ -211,6 +219,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -221,6 +230,7 @@ describe('useGetRequest', () => {
     act(() => result.current.reload());
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -230,6 +240,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),
@@ -264,6 +275,7 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       reload: expect.any(Function),

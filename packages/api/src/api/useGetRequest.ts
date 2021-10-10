@@ -48,7 +48,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   const [reload, setReload] = useState(load ? 1 : 0);
   const [state, setState] = useState<ApiState<R, E>>({
     loading: false,
-    cached: !disableSwr && (cached !== undefined),
+    cached: disableSwr ? false : (cached !== undefined),
     data: disableSwr ? undefined : cached
   });
 
@@ -97,7 +97,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [state.data, state.cached, setCache, disableSwr]);
 
   useEffect(() => {
-    if (!disableSwr) {
+    if (!disableSwr && cached !== undefined) {
       setState((old) => ({ ...old, cached: true, data: cached }));
     }
   }, [swrId, cached, setState, disableSwr]);
