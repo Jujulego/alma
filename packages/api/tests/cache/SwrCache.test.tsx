@@ -1,7 +1,7 @@
-import { FC } from 'react';
 import { act, renderHook } from '@testing-library/react-hooks';
+import { FC, useContext } from 'react';
 
-import { SwrCache, useSwrCache } from '../../src';
+import { SwrCache, SwrCacheContext } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -12,17 +12,23 @@ beforeEach(() => {
 describe('SwrCache', () => {
   // Tests
   it('should update cache', () => {
+    // Render
     const wrapper: FC = ({ children }) => (
-      <SwrCache>{children}</SwrCache>
+      <SwrCache>{ children }</SwrCache>
     );
 
-    const { result } = renderHook(() => useSwrCache<string>('test'), { wrapper });
+    const { result } = renderHook(() => useContext(SwrCacheContext), { wrapper });
 
     // Checks
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.cache).not.toBeUndefined();
+    expect(result.current.setCache).not.toBeUndefined();
 
     // Change value
-    act(() => result.current.setCache('data'));
-    expect(result.current.data).toBe('data');
+    act(() => result.current.setCache!('test', true));
+    expect(result.current.cache?.test?.data).toBe(true);
+
+    // Change value again
+    act(() => result.current.setCache!('test', 85));
+    expect(result.current.cache?.test?.data).toBe(85);
   });
 });
