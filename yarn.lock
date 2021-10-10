@@ -1802,6 +1802,7 @@ __metadata:
     eslint-plugin-testing-library: 4.12.4
     graphql: 15.6.1
     graphql-tag: 2.12.5
+    graphql-ws: ^5.5.0
     gulp: 4.0.2
     gulp-babel: 8.0.0
     gulp-cli: 2.3.0
@@ -1811,7 +1812,6 @@ __metadata:
     react-dom: 17.0.2
     ts-jest: 27.0.5
     typescript: 4.4.3
-    uuid: ^8.3.2
   peerDependencies:
     axios: ^0.21.4
     graphql: ^15.6.0
@@ -5248,6 +5248,15 @@ fsevents@^2.3.2:
   peerDependencies:
     graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
   checksum: 7afe8b0a261bc81278e8350cbc48a641986665fa88521ece137feb8d1d62aacbe79afd4e159b618d56af106291ae8369592e46584fd8fbaf4f440201ea884fdd
+  languageName: node
+  linkType: hard
+
+"graphql-ws@npm:^5.5.0":
+  version: 5.5.0
+  resolution: "graphql-ws@npm:5.5.0"
+  peerDependencies:
+    graphql: ">=0.11 <=16"
+  checksum: 2a442f6133fb92a07869d299434cf66b8e69568cbc2c46c887af74167c59d0056778881ab8f0f8dd3b8be2819b3de0913b1012fc6f2a785fb00d7ef64a0b0dd7
   languageName: node
   linkType: hard
 
@@ -9695,15 +9704,6 @@ typescript@4.4.3:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^8.3.2":
-  version: 8.3.2
-  resolution: "uuid@npm:8.3.2"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
   languageName: node
   linkType: hard
 
