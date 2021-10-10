@@ -32,7 +32,6 @@ for (const method of GET_METHODS) {
       jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
       useGetRequest.mockReturnValue({
         loading: false,
-        cached: false,
         data: 'test',
         update: jest.fn(),
         reload: jest.fn(),
@@ -47,7 +46,6 @@ for (const method of GET_METHODS) {
       // Checks
       expect(result.current).toEqual({
         loading: false,
-        cached: false,
         data: 'test',
         update: expect.any(Function),
         reload: expect.any(Function),
@@ -87,7 +85,6 @@ describe('useApi.delete', () => {
 
     useDeleteRequest.mockReturnValue({
       loading: false,
-      cached: false,
       data: 'test',
       send: spySend,
     });
@@ -137,7 +134,6 @@ for (const method of POST_METHODS) {
 
       usePostRequest.mockReturnValue({
         loading: false,
-        cached: false,
         data: 'test',
         send: spySend,
       });

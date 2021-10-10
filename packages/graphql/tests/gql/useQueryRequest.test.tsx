@@ -28,7 +28,6 @@ describe('useQueryRequest', () => {
 
     useGetRequest.mockReturnValue({
       loading: true,
-      cached: false,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -67,7 +66,6 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: true,
-      cached: false,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -89,7 +87,6 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: true,
-      cached: false,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -103,7 +100,6 @@ describe('useQueryRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
-      cached: false,
       reload: expect.any(Function),
       update: expect.any(Function)
     });
@@ -113,7 +109,6 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
-      cached: false,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -130,7 +125,6 @@ describe('useQueryRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
-      cached: false,
       data: {
         test: { isSuccessful: true }
       },
@@ -143,7 +137,6 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
-      cached: false,
       data: {
         errors: [
           {
@@ -165,7 +158,6 @@ describe('useQueryRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
-      cached: false,
       error: {
         errors: [
           {
@@ -183,7 +175,6 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
-      cached: false,
       error: {
         errors: [
           {
@@ -205,7 +196,6 @@ describe('useQueryRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
-      cached: false,
       error: {
         errors: [
           {
@@ -224,7 +214,6 @@ describe('useQueryRequest', () => {
     const spy = jest.fn<void, [Updator<GqlResponse<{ test: TestData }>>]>();
     useGetRequest.mockReturnValue({
       loading: false,
-      cached: false,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -260,7 +249,6 @@ describe('useQueryRequest', () => {
     const spy = jest.fn<void, [Updator<GqlResponse<{ test: TestData }>>]>();
     useGetRequest.mockReturnValue({
       loading: false,
-      cached: false,
       data: {
         data: { test: { isSuccessful: true } }
       },

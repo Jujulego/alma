@@ -30,10 +30,10 @@ export function useMutationRequest<D, V extends GqlVariables = GqlVariables>(url
   ), [url, req, sconfig]);
 
   // Api call
-  const { send, loading, cached, data, error } = usePostRequest<V, GqlResponse<D>, ApiParams, GqlErrorResponse>(generator);
+  const { send, loading, data, error } = usePostRequest<V, GqlResponse<D>, ApiParams, GqlErrorResponse>(generator);
 
   return {
-    loading, cached,
+    loading,
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
 

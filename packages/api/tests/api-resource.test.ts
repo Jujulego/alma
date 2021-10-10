@@ -17,7 +17,6 @@ describe('apiResource', () => {
   beforeEach(() => {
     useApi.get.mockReturnValue({
       loading: false,
-      cached: false,
       data: 'test',
       reload: jest.fn(),
       update: jest.fn()
@@ -58,7 +57,6 @@ describe('apiResource.delete', () => {
   beforeEach(() => {
     useApi.get.mockReturnValue({
       loading: false,
-      cached: false,
       data: 'test',
       reload: jest.fn(),
       update: jest.fn()
@@ -67,7 +65,6 @@ describe('apiResource.delete', () => {
     sendDelete = jest.fn().mockResolvedValue('done');
     useApi.delete.mockReturnValue({
       loading: false,
-      cached: false,
       data: 'done',
       send: sendDelete
     });
@@ -140,7 +137,6 @@ for (const method of POST_METHODS) {
       getUpdate = jest.fn();
       useApi.get.mockReturnValue({
         loading: false,
-        cached: false,
         data: 'test',
         reload: jest.fn(),
         update: getUpdate
@@ -149,7 +145,6 @@ for (const method of POST_METHODS) {
       sendPost = jest.fn().mockResolvedValue('done');
       useApi[method].mockReturnValue({
         loading: false,
-        cached: false,
         data: 'done',
         send: sendPost
       });

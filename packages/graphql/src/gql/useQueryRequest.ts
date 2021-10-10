@@ -40,13 +40,13 @@ export function useQueryRequest<D, V extends GqlVariables>(url: string, req: Gql
   ), [url, req, svars, sconfig]);
 
   // Api call
-  const { loading, cached, data, error, update, reload } = useGetRequest<GqlResponse<D>, GqlErrorResponse>(generator, swrId, {
+  const { loading, data, error, update, reload } = useGetRequest<GqlResponse<D>, GqlErrorResponse>(generator, swrId, {
     disableSwr: !req.operationName,
     load
   });
 
   return {
-    loading, cached,
+    loading,
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
 

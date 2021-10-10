@@ -28,7 +28,7 @@ export function makeApiPromise<T>(prom: Promise<T>, cancel: () => void): ApiProm
 export function makeRequestApiPromise<R, E>(promise: Promise<AxiosResponse<R>>, source: CancelTokenSource, setState: Dispatch<SetStateAction<ApiState<R, E>>>): ApiPromise<R> {
   return makeApiPromise(promise, () => source.cancel())
     .then((res): R => {
-      setState({ loading: false, cached: false, status: res.status, data: res.data });
+      setState({ loading: false, status: res.status, data: res.data });
       return res.data;
     })
     .catch((error) => {
@@ -36,7 +36,7 @@ export function makeRequestApiPromise<R, E>(promise: Promise<AxiosResponse<R>>, 
         const { response } = error as AxiosError<E>;
 
         if (response) {
-          setState({ loading: false, cached: false, status: response.status, error: response.data });
+          setState({ loading: false, status: response.status, error: response.data });
           throw error;
         }
       }

@@ -37,7 +37,6 @@ describe('useGqlMutation', () => {
 
     useMutationRequest.mockReturnValue({
       loading: true,
-      cached: false,
       send: spy,
     });
 
@@ -52,7 +51,6 @@ describe('useGqlMutation', () => {
     // Check result
     expect(result.current).toEqual({
       loading: true,
-      cached: false,
       send: expect.any(Function),
     });
 

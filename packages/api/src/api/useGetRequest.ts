@@ -42,14 +42,12 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   const { load = true, disableSwr = false } = config;
 
   // Cache
-  const { data: cached, setCache } = useSwrCache<R>(swrId);
+  const { data, setData } = useSwrCache<R>(swrId, disableSwr);
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
-  const [state, setState] = useState<ApiState<R, E>>({
+  const [state, setState] = useState<Omit<ApiState<R, E>, 'data'>>({
     loading: false,
-    cached: disableSwr ? false : (cached !== undefined),
-    data: disableSwr ? undefined : cached
   });
 
   // Effect
@@ -63,7 +61,8 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
     // Make request
     generator(source)
       .then((res) => {
-        setState({ loading: false, cached: false, status: res.status, data: res.data });
+        setState({ loading: false, status: res.status });
+        setData(res.data);
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
@@ -74,7 +73,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
           const { response } = error as AxiosError<E>;
 
           if (response) {
-            setState({ loading: false, cached: false, status: response.status, error: response.data });
+            setState({ loading: false, status: response.status, error: response.data });
 
             return;
           }
@@ -88,30 +87,11 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
     return () => {
       source.cancel();
     };
-  }, [generator, reload, setCache]);
-
-  useEffect(() => {
-    if (state.data && !state.cached && !disableSwr) {
-      setCache(state.data);
-    }
-  }, [state.data, state.cached, setCache, disableSwr]);
-
-  useEffect(() => {
-    if (!disableSwr && cached !== undefined) {
-      setState((old) => ({ ...old, cached: true, data: cached }));
-    }
-  }, [swrId, cached, setState, disableSwr]);
+  }, [generator, reload, setData, setState]);
 
   return {
-    ...state,
-    update: useCallback(
-      (data: R | Updator<R>) => {
-        const updator: Updator<R> = typeof data === 'function' ? (data as Updator<R>) : () => data;
-
-        setState((old) => ({ ...old, data: updator(old.data) }));
-      },
-      [setState]
-    ),
+    ...state, data,
+    update: setData,
     reload: useCallback(() => setReload((old) => old + 1), [setReload])
   };
 }

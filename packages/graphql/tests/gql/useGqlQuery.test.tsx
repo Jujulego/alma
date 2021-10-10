@@ -25,7 +25,6 @@ beforeEach(() => {
   // Mocks
   useQueryRequest.mockReturnValue({
     loading: true,
-    cached: false,
     update: jest.fn(),
     reload: jest.fn(),
   });
@@ -47,7 +46,6 @@ describe('useGqlQuery', () => {
     // Check result
     expect(result.current).toEqual({
       loading: true,
-      cached: false,
       update: expect.any(Function),
       reload: expect.any(Function),
     });
