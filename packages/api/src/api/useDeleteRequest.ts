@@ -19,7 +19,7 @@ export interface ApiDeleteReturn<P extends ApiParams, R, E = unknown> extends Ap
 // Base hooks
 export function useDeleteRequest<R, P extends ApiParams, E = unknown>(generator: ApiDeleteRequestGenerator<P, R>): ApiDeleteReturn<P, R, E> {
   // State
-  const [state, setState] = useState<ApiState<R, E>>({ loading: false, cached: false });
+  const [state, setState] = useState<ApiState<R, E>>({ loading: false });
 
   // Callback
   const send = useCallback(
