@@ -28,6 +28,7 @@ describe('useMutationRequest', () => {
 
     usePostRequest.mockReturnValue({
       loading: true,
+      cached: false,
       send: jest.fn(),
     });
 
@@ -61,6 +62,7 @@ describe('useMutationRequest', () => {
     // Mocks
     usePostRequest.mockReturnValue({
       loading: true,
+      cached: false,
       send: jest.fn(),
     });
 
@@ -73,6 +75,7 @@ describe('useMutationRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       send: expect.any(Function)
     });
   });
@@ -86,6 +89,7 @@ describe('useMutationRequest', () => {
 
     usePostRequest.mockReturnValue({
       loading: false,
+      cached: false,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -101,6 +105,7 @@ describe('useMutationRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       data: {
         test: { isSuccessful: true }
       },
@@ -122,6 +127,7 @@ describe('useMutationRequest', () => {
     // Mocks
     usePostRequest.mockReturnValue({
       loading: false,
+      cached: false,
       data: {
         errors: [
           {
@@ -142,6 +148,7 @@ describe('useMutationRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       error: {
         errors: [
           {
@@ -158,6 +165,7 @@ describe('useMutationRequest', () => {
     // Mocks
     usePostRequest.mockReturnValue({
       loading: false,
+      cached: false,
       error: {
         errors: [
           {
@@ -178,6 +186,7 @@ describe('useMutationRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       error: {
         errors: [
           {

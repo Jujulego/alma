@@ -44,6 +44,7 @@ beforeEach(() => {
   // Mocks
   useQueryRequest.mockReturnValue({
     loading: true,
+    cached: false,
     update: jest.fn(),
     reload: jest.fn(),
   });
@@ -74,6 +75,7 @@ describe('gqlResource', () => {
     // Check result
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       update: expect.any(Function),
       reload: expect.any(Function),
     });
@@ -113,6 +115,7 @@ describe('useGqlMutation', () => {
 
     useQueryRequest.mockReturnValue({
       loading: true,
+      cached: false,
       update: spyUpdate,
       reload: jest.fn(),
     });
@@ -124,6 +127,7 @@ describe('useGqlMutation', () => {
 
     useMutationRequest.mockReturnValue({
       loading: true,
+      cached: false,
       send: spySend,
     });
 
@@ -156,6 +160,7 @@ describe('useGqlMutation', () => {
     // Check result
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       update: expect.any(Function),
       reload: expect.any(Function),
       success: expect.any(Function),
