@@ -1,52 +1,46 @@
-import { useDeepMemo } from '@jujulego/alma-utils';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import { GqlSubscriptionContext } from '../sub';
 import { GqlErrorResponse, GqlRequest, GqlVariables } from '../types';
 
 // Type
-export interface GqlSubscriptionData<D = unknown> {
+export interface GqlSubscriptionData<D = unknown, V extends GqlVariables = GqlVariables> {
+  completed: boolean;
   data?: D;
   error?: GqlErrorResponse;
+
+  subscribe(vars: V): () => void;
 }
 
 // Hook
-export function useSubscriptionRequest<D = unknown, V extends GqlVariables = GqlVariables>(id: string, req: GqlRequest<D, V>, vars: V): GqlSubscriptionData<D> {
-  // Stabilise objects
-  const svars = useDeepMemo(vars);
-
+export function useSubscriptionRequest<D = unknown, V extends GqlVariables = GqlVariables>(req: GqlRequest<D, V>): GqlSubscriptionData<D, V> {
   // State
+  const [completed, setCompleted] = useState(false);
   const [data, setData] = useState<D>();
   const [error, setError] = useState<GqlErrorResponse>();
 
   // Context
-  const { message, request, unsubscribe } = useContext(GqlSubscriptionContext);
+  const { client } = useContext(GqlSubscriptionContext);
 
-  // Effects
-  useEffect(() => {
-    request(id, { ...req, variables: svars });
-    return () => unsubscribe(id);
-  }, [id, req, svars, request, unsubscribe]);
-
-  useEffect(() => {
-    if (!message) return;
-    if (message.id !== id) return;
-
-    switch (message.type) {
-      case 'GQL_DATA':
-        setData(message.payload.data as D);
-
-        if (message.payload.errors?.length) {
-          setError(message.payload as GqlErrorResponse);
-        }
-
-        break;
-
-      case 'GQL_ERROR':
-        setError(message.payload);
-        break;
+  // Callbacks
+  const subscribe = useCallback((vars: V) => {
+    if (!client) {
+      return () => { return; };
     }
-  }, [id, message, setData, setError]);
 
-  return { data, error };
+    setCompleted(false);
+    return client.subscribe<D>({ ...req, variables: vars }, {
+      next(value) {
+        setData(value.data as D);
+      },
+      complete() {
+        setCompleted(true);
+      },
+      error(error: unknown) {
+        setError(error as GqlErrorResponse);
+      }
+    });
+  }, [req, client, setData, setError]);
+
+  return { completed, data, error, subscribe };
 }

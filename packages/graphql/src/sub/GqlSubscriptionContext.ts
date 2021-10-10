@@ -1,29 +1,10 @@
+import { Client } from 'graphql-ws';
 import { createContext } from 'react';
 
-import { GqlRequest } from '../types';
-import { GqlSubscriptionServerDataMessage } from './messages';
-
 // Types
-export type GqlWsStatus = 'connecting' | 'connected' | 'closed';
-
-export interface GqlSubscriptionState<D = unknown> {
-  status?: GqlWsStatus;
-  message?: GqlSubscriptionServerDataMessage<D>;
-
-  request(id: string, req: GqlRequest<D>): void;
-  unsubscribe(id: string): void;
+export interface GqlSubscriptionState {
+  client?: Client;
 }
 
-// Defaults
-const gqlSubscriptionDefaults: GqlSubscriptionState = {
-  request() {
-    console.warn('useGqlSubscription needs GqlSubscriptionClient');
-  },
-
-  unsubscribe() {
-    console.warn('useGqlSubscription needs GqlSubscriptionClient');
-  }
-};
-
 // Context
-export const GqlSubscriptionContext = createContext(gqlSubscriptionDefaults);
+export const GqlSubscriptionContext = createContext<GqlSubscriptionState>({});
