@@ -6,6 +6,7 @@ export type CombineArg<A1, A2> = A1 extends void ? A2 : (A2 extends void ? A1 : 
 
 export interface ApiState<R, E = unknown> {
   loading: boolean;
+  cached: boolean;
 
   /**
    * Status of the last response

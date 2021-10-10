@@ -34,6 +34,7 @@ export interface GqlErrorResponse {
 
 export interface GqlState<D> {
   loading: boolean;
+  cached: boolean;
   data?: D;
   error?: GqlErrorResponse;
 }

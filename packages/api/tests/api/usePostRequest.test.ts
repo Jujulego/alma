@@ -30,6 +30,7 @@ describe('usePostRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       send: expect.any(Function)
     });
 
@@ -41,6 +42,7 @@ describe('usePostRequest', () => {
 
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       send: expect.any(Function)
     });
 
@@ -55,6 +57,7 @@ describe('usePostRequest', () => {
 
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 200,
       data: 'test',
       send: expect.any(Function)
@@ -83,6 +86,7 @@ describe('usePostRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       send: expect.any(Function)
     });
 
@@ -94,6 +98,7 @@ describe('usePostRequest', () => {
 
     expect(result.current).toEqual({
       loading: true,
+      cached: false,
       send: expect.any(Function)
     });
 
@@ -116,6 +121,7 @@ describe('usePostRequest', () => {
 
     expect(result.current).toEqual({
       loading: false,
+      cached: false,
       status: 400,
       error: 'Bad Request',
       send: expect.any(Function)

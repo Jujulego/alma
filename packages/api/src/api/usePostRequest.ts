@@ -21,7 +21,7 @@ export interface ApiPostReturn<B, P extends ApiParams, R, E = unknown> extends A
 // Base hooks
 export function usePostRequest<B, R, P extends ApiParams, E = unknown>(generator: ApiPostRequestGenerator<B, P, R>): ApiPostReturn<B, P, R, E> {
   // State
-  const [state, setState] = useState<ApiState<R, E>>({ loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({ loading: false, cached: false });
 
   // Callback
   const send = useCallback(
