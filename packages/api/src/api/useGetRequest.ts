@@ -46,7 +46,11 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
-  const [state, setState] = useState<ApiState<R, E>>({ data: disableSwr ? undefined : cached, loading: false });
+  const [state, setState] = useState<ApiState<R, E>>({
+    loading: false,
+    cached: !disableSwr && (cached !== undefined),
+    data: disableSwr ? undefined : cached
+  });
 
   // Effect
   useEffect(() => {
@@ -59,7 +63,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
     // Make request
     generator(source)
       .then((res) => {
-        setState({ loading: false, status: res.status, data: res.data });
+        setState({ loading: false, cached: false, status: res.status, data: res.data });
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
@@ -70,7 +74,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
           const { response } = error as AxiosError<E>;
 
           if (response) {
-            setState({ loading: false, status: response.status, error: response.data });
+            setState({ loading: false, cached: false, status: response.status, error: response.data });
 
             return;
           }
@@ -87,12 +91,16 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [generator, reload, setCache]);
 
   useEffect(() => {
-    if (state.data && !disableSwr) setCache(state.data);
-  }, [state.data, setCache]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (state.data && !state.cached && !disableSwr) {
+      setCache(state.data);
+    }
+  }, [state.data, state.cached, setCache, disableSwr]);
 
   useEffect(() => {
-    if (!disableSwr) setState((old) => ({ ...old, data: cached }));
-  }, [swrId, cached]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (!disableSwr) {
+      setState((old) => ({ ...old, cached: true, data: cached }));
+    }
+  }, [swrId, cached, setState, disableSwr]);
 
   return {
     ...state,
