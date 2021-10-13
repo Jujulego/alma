@@ -1,7 +1,3 @@
-import axios, { AxiosError, AxiosResponse, CancelTokenSource } from 'axios';
-import { Dispatch, SetStateAction } from 'react';
-import { ApiState } from './types';
-
 // Interface
 export type ApiPromiseCallback<A, R> = ((arg: A) => R | PromiseLike<R>) | undefined | null;
 
@@ -25,23 +21,3 @@ export function makeApiPromise<T>(prom: Promise<T>, cancel: () => void): ApiProm
   return api;
 }
 
-export function makeRequestApiPromise<R, E>(promise: Promise<AxiosResponse<R>>, source: CancelTokenSource, setState: Dispatch<SetStateAction<ApiState<R, E>>>): ApiPromise<R> {
-  return makeApiPromise(promise, () => source.cancel())
-    .then((res): R => {
-      setState({ loading: false, status: res.status, data: res.data });
-      return res.data;
-    })
-    .catch((error) => {
-      if (axios.isAxiosError(error)) {
-        const { response } = error as AxiosError<E>;
-
-        if (response) {
-          setState({ loading: false, status: response.status, error: response.data });
-          throw error;
-        }
-      }
-
-      setState((old) => ({ ...old, loading: false }));
-      throw error;
-    });
-}

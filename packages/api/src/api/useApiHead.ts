@@ -1,5 +1,5 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
 import { ApiParams } from '../types';
@@ -18,7 +18,7 @@ export function useApiHead<R, P extends ApiParams = ApiParams, E = unknown>(url:
 
   // Callbacks
   const generator = useCallback(
-    (source: CancelTokenSource) => axios.head<R>(url, { ...rconfig, params, cancelToken: source.token }),
+    (signal: AbortSignal) => axios.head<R>(url, { ...rconfig, params, signal }),
     [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 

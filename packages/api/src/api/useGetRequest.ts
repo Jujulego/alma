@@ -1,11 +1,11 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
 import { ApiState, Updator } from '../types';
 
 // Types
-export type ApiGetRequestGenerator<R> = (source: CancelTokenSource) => Promise<AxiosResponse<R>>
+export type ApiGetRequestGenerator<R> = (signal: AbortSignal) => Promise<AxiosResponse<R>>
 
 export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
   /**
@@ -55,11 +55,10 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
     if (reload === 0) return;
     setState((old) => ({ ...old, loading: true }));
 
-    // Create cancel token
-    const source = axios.CancelToken.source();
-
     // Make request
-    generator(source)
+    const abort = new AbortController();
+
+    generator(abort.signal)
       .then((res) => {
         setState({ loading: false, status: res.status });
         setData(res.data);
@@ -85,7 +84,7 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
 
     // Cancel
     return () => {
-      source.cancel();
+      abort.abort();
     };
   }, [generator, reload, setData, setState]);
 

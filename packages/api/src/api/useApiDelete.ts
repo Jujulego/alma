@@ -1,5 +1,5 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
 import { ApiParams } from '../types';
@@ -18,8 +18,8 @@ export function useApiDelete<R = unknown, P extends ApiParams = ApiParams, E = u
 
   // Callbacks
   const generator = useCallback(
-    (source: CancelTokenSource, _params?: P) =>
-      axios.delete<R>(url, { ...config, params: { ...params, ..._params }, cancelToken: source.token }),
+    (signal: AbortSignal, _params?: P) =>
+      axios.delete<R>(url, { ...config, params: { ...params, ..._params }, signal }),
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
