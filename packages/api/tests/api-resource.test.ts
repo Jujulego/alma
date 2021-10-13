@@ -87,7 +87,7 @@ describe('apiResource.delete', () => {
 
     // Call delete
     await act(async () => {
-      await expect(result.current.remove()).resolves.toEqual('done');
+      await expect(result.current.remove()).resolves.toBe('done');
     });
 
     expect(sendDelete).toHaveBeenCalled();
@@ -166,7 +166,7 @@ for (const method of POST_METHODS) {
 
       // Call delete
       await act(async () => {
-        await expect((result.current as any)[method]('body')).resolves.toEqual('done');
+        await expect((result.current as any)[method]('body')).resolves.toBe('done');
       });
 
       expect(getUpdate).toHaveBeenCalledWith('done');

@@ -85,6 +85,6 @@ describe('buildRequest', () => {
 
 describe('gqlDoc', () => {
   it('should return the given document', () => {
-    expect(gqlDoc('query Test { ... }')).toEqual('query Test { ... }');
+    expect(gqlDoc('query Test { ... }')).toBe('query Test { ... }');
   });
 });

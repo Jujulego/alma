@@ -104,7 +104,7 @@ describe('useApi.delete', () => {
     // Test send
     await act(async () => {
       await expect(result.current.send({ test: 'a' }))
-        .resolves.toEqual('test');
+        .resolves.toBe('test');
     });
 
     expect(spySend).toHaveBeenCalledWith({ test: 'a' });
@@ -155,7 +155,7 @@ for (const method of POST_METHODS) {
       // After send
       await act(async () => {
         await expect(result.current.send('body', { test: 'a' }))
-          .resolves.toEqual('test');
+          .resolves.toBe('test');
       });
 
       expect(spySend).toHaveBeenCalledWith('body', { test: 'a' });

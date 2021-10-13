@@ -49,7 +49,7 @@ describe('useDeleteRequest', () => {
     // After receive
     await act(async () => {
       resolve('test');
-      await expect(prom).resolves.toEqual('test');
+      await expect(prom).resolves.toBe('test');
     });
 
     expect(result.current).toEqual({
