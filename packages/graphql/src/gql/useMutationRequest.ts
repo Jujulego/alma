@@ -1,6 +1,6 @@
 import { ApiParams, ApiPostRequestConfig, ApiPromise, usePostRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
 import { GqlErrorResponse, GqlRequest, GqlResponse, GqlState, GqlVariables } from '../types';
@@ -23,10 +23,10 @@ export function useMutationRequest<D, V extends GqlVariables = GqlVariables>(url
   const sconfig = useDeepMemo(config);
 
   // Request generator
-  const generator = useCallback((vars: V, source: CancelTokenSource) => axios.post<GqlResponse<D>>(
+  const generator = useCallback((vars: V, signal: AbortSignal) => axios.post<GqlResponse<D>>(
     url,
     { ...req, variables: vars },
-    { ...sconfig, cancelToken: source.token }
+    { ...sconfig, signal }
   ), [url, req, sconfig]);
 
   // Api call

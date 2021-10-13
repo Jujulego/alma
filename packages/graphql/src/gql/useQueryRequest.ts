@@ -1,6 +1,6 @@
 import { ApiGetRequestConfig, Updator, useGetRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useDebugValue, useMemo } from 'react';
 
 import { GqlErrorResponse, GqlRequest, GqlResponse, GqlState, GqlVariables } from '../types';
@@ -33,10 +33,10 @@ export function useQueryRequest<D, V extends GqlVariables>(url: string, req: Gql
   useDebugValue(swrId);
 
   // Request generator
-  const generator = useCallback((source: CancelTokenSource) => axios.post<GqlResponse<D>>(
+  const generator = useCallback((signal: AbortSignal) => axios.post<GqlResponse<D>>(
     url,
     { ...req, variables: svars },
-    { ...sconfig, cancelToken: source.token }
+    { ...sconfig, signal }
   ), [url, req, svars, sconfig]);
 
   // Api call

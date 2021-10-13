@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "axios": "^0.21.4 || ^0.23.0",
+    "axios": "^0.23.0",
     "graphql": "^15.6.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
