@@ -42,8 +42,9 @@ describe('useMutationRequest', () => {
 
     // Check generator
     const generator = usePostRequest.mock.calls[0][0];
+    const abort = new AbortController();
 
-    await expect(generator({ name: 'name' }, axios.CancelToken.source()))
+    await expect(generator({ name: 'name' }, abort.signal))
       .resolves.toEqual({
         data: {
           test: { isSuccessful: true }
@@ -54,7 +55,7 @@ describe('useMutationRequest', () => {
       query: 'mutation',
       operationName: 'Test',
       variables: { name: 'name' }
-    }, { cancelToken: expect.any(axios.CancelToken) });
+    }, { signal: abort.signal });
   });
 
   it('should call usePostRequest and return it\'s state', () => {
