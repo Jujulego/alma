@@ -47,8 +47,9 @@ describe('useQueryRequest', () => {
 
     // Check generator
     const generator = useGetRequest.mock.calls[0][0];
+    const abort = new AbortController();
 
-    await expect(generator(axios.CancelToken.source()))
+    await expect(generator(abort.signal))
       .resolves.toEqual({
         data: {
           test: { isSuccessful: true }
@@ -59,7 +60,7 @@ describe('useQueryRequest', () => {
       query: 'query',
       operationName: 'Test',
       variables: { name: 'name' }
-    }, { cancelToken: expect.any(axios.CancelToken) });
+    }, { signal: abort.signal });
   });
 
   it('should not cache request without operation name', () => {

@@ -1,11 +1,12 @@
-import axios, { AxiosResponse, CancelTokenSource } from 'axios';
+import { AxiosResponse } from 'axios';
 import { useCallback, useState } from 'react';
 
-import { ApiPromise, makeRequestApiPromise } from '../api-promise';
+import { ApiPromise} from '../api-promise';
 import { ApiParams, ApiState } from '../types';
+import { makeRequestApiPromise } from './request-api-promise';
 
 // Types
-export type ApiDeleteRequestGenerator<P extends ApiParams, R> = (source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
+export type ApiDeleteRequestGenerator<P extends ApiParams, R> = (signal: AbortSignal, params?: P) => Promise<AxiosResponse<R>>;
 
 export interface ApiDeleteReturn<P extends ApiParams, R, E = unknown> extends ApiState<R, E> {
   /**
@@ -26,11 +27,10 @@ export function useDeleteRequest<R, P extends ApiParams, E = unknown>(generator:
     (params?: P) => {
       setState((old) => ({ ...old, loading: true }));
 
-      // Create cancel token
-      const source = axios.CancelToken.source();
-
       // Make request
-      return makeRequestApiPromise(generator(source, params), source, setState);
+      const abort = new AbortController();
+
+      return makeRequestApiPromise(generator(abort.signal, params), abort, setState);
     },
     [generator]
   );

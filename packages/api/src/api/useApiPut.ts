@@ -1,5 +1,5 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
 import { ApiParams } from '../types';
@@ -17,8 +17,8 @@ export function useApiPut<B, R = unknown, P extends ApiParams = ApiParams, E = u
 
   // Callbacks
   const generator = useCallback(
-    (body: B, source: CancelTokenSource, _params?: P) =>
-      axios.put<R>(url, body, { ...config, params: { ...params, ..._params }, cancelToken: source.token }),
+    (body: B, signal: AbortSignal, _params?: P) =>
+      axios.put<R>(url, body, { ...config, params: { ...params, ..._params }, signal }),
     [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
   );
 

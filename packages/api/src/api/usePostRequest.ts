@@ -1,12 +1,13 @@
-import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useState } from 'react';
 
+import { ApiPromise } from '../api-promise';
+import { makeRequestApiPromise } from './request-api-promise';
 import { ApiParams, ApiState } from '../types';
-import { ApiPromise, makeRequestApiPromise } from '../api-promise';
 
 // Types
 export type ApiPostRequestConfig = Omit<AxiosRequestConfig, 'cancelToken'>
-export type ApiPostRequestGenerator<B, P extends ApiParams, R> = (body: B, source: CancelTokenSource, params?: P) => Promise<AxiosResponse<R>>;
+export type ApiPostRequestGenerator<B, P extends ApiParams, R> = (body: B, signal: AbortSignal, params?: P) => Promise<AxiosResponse<R>>;
 
 export interface ApiPostReturn<B, P extends ApiParams, R, E = unknown> extends ApiState<R, E> {
   /**
@@ -28,11 +29,10 @@ export function usePostRequest<B, R, P extends ApiParams, E = unknown>(generator
     (body: B, params?: P) => {
       setState((old) => ({ ...old, loading: true }));
 
-      // Create cancel token
-      const source = axios.CancelToken.source();
-
       // Make request
-      return makeRequestApiPromise(generator(body, source, params), source, setState);
+      const abort = new AbortController();
+
+      return makeRequestApiPromise(generator(body, abort.signal, params), abort, setState);
     },
     [generator]
   );

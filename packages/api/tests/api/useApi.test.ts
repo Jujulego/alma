@@ -30,6 +30,7 @@ for (const method of GET_METHODS) {
     beforeEach(() => {
       // Mocks
       jest.spyOn(axios, method).mockResolvedValue({ data: 'test' });
+
       useGetRequest.mockReturnValue({
         loading: false,
         data: 'test',
@@ -60,12 +61,14 @@ for (const method of GET_METHODS) {
 
       // Test generator
       const generator = useGetRequest.mock.calls[0][0];
-      await expect(generator(axios.CancelToken.source()))
+      const abort = new AbortController();
+
+      await expect(generator(abort.signal))
         .resolves.toEqual({ data: 'test' });
 
       expect(axios[method]).toHaveBeenCalledTimes(1);
       expect(axios[method]).toHaveBeenCalledWith('/api/test', {
-        cancelToken: expect.any(axios.CancelToken)
+        signal: abort.signal
       });
     });
   });
@@ -108,12 +111,14 @@ describe('useApi.delete', () => {
 
     // Test generator
     const generator = useDeleteRequest.mock.calls[0][0];
-    await expect(generator(axios.CancelToken.source(), { test: 'a' }))
+    const abort = new AbortController();
+
+    await expect(generator(abort.signal, { test: 'a' }))
       .resolves.toEqual({ data: 'test' });
 
     expect(axios.delete).toHaveBeenCalledTimes(1);
     expect(axios.delete).toHaveBeenCalledWith('/api/test', {
-      cancelToken: expect.any(axios.CancelToken),
+      signal: abort.signal,
       params: { test: 'a' },
     });
   });
@@ -157,12 +162,14 @@ for (const method of POST_METHODS) {
 
       // Test generator
       const generator = usePostRequest.mock.calls[0][0];
-      await expect(generator('body', axios.CancelToken.source(), { test: 'a' }))
+      const abort = new AbortController();
+
+      await expect(generator('body', abort.signal, { test: 'a' }))
         .resolves.toEqual({ data: 'test' });
 
       expect(axios[method]).toHaveBeenCalledTimes(1);
       expect(axios[method]).toHaveBeenCalledWith('/api/test', 'body', {
-        cancelToken: expect.any(axios.CancelToken),
+        signal: abort.signal,
         params: { test: 'a' },
       });
     });

@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { AxiosResponse, CancelTokenSource } from 'axios';
+import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 
 import { useGetRequest, useSwrCache as _useSwrCache } from '../../src';
@@ -24,7 +24,7 @@ describe('useGetRequest', () => {
   // Tests
   it('should return api call result', async () => {
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockResolvedValue({
         status: 200,
         statusText: 'OK',
@@ -59,7 +59,7 @@ describe('useGetRequest', () => {
 
   it('should return api call error', async () => {
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockRejectedValue({
         isAxiosError: true,
         response: {
@@ -96,7 +96,7 @@ describe('useGetRequest', () => {
     });
 
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockResolvedValue({
         status: 200,
         statusText: 'OK',
@@ -121,7 +121,7 @@ describe('useGetRequest', () => {
 
   it('should not run api call', async () => {
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockResolvedValue({
         status: 200,
         statusText: 'OK',
@@ -144,7 +144,7 @@ describe('useGetRequest', () => {
 
   it('should run another api call on reload', async () => {
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockResolvedValue({
         status: 200,
         statusText: 'OK',
@@ -197,7 +197,7 @@ describe('useGetRequest', () => {
     });
 
     // Render
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockResolvedValue({
         status: 200,
         statusText: 'OK',

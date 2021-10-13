@@ -1,4 +1,4 @@
-import { AxiosResponse, CancelTokenSource } from 'axios';
+import { AxiosResponse } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
 import { ApiPromise, useDeleteRequest } from '../../src';
@@ -14,7 +14,7 @@ describe('useDeleteRequest', () => {
   it('should return api call result', async () => {
     // Render
     let resolve: (data: string) => void;
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockReturnValue(new Promise<AxiosResponse<string>>((res) => {
         resolve = (data) => res({
           status: 200,
@@ -63,7 +63,7 @@ describe('useDeleteRequest', () => {
   it('should return api call error', async () => {
     // Render
     let reject: () => void;
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
       .mockReturnValue(new Promise<AxiosResponse<string>>((_, rej) => {
         reject = () => rej({
           isAxiosError: true,
@@ -122,16 +122,11 @@ describe('useDeleteRequest', () => {
   });
 
   it('should cancel api call result', async () => {
+    // Mocks
+    const spy = jest.fn<Promise<AxiosResponse<string>>, [AbortSignal]>()
+      .mockReturnValue(new Promise<AxiosResponse<string>>(() => undefined));
+
     // Render
-    let cancel: CancelTokenSource;
-
-    const spy = jest.fn<Promise<AxiosResponse<string>>, [CancelTokenSource]>()
-      .mockImplementation((cnl) => {
-        cancel = cnl;
-
-        return new Promise<AxiosResponse<string>>(() => undefined);
-      });
-
     const { result } = renderHook(() => useDeleteRequest(spy));
 
     // Checks
@@ -142,12 +137,12 @@ describe('useDeleteRequest', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
 
-    // Cancel
-    jest.spyOn(cancel!, 'cancel');
+    // Abort
     act(() => {
       prom.cancel();
     });
 
-    expect(cancel!.cancel).toHaveBeenCalled();
+    const abort = spy.mock.calls[0][0];
+    expect(abort.aborted).toBe(true);
   });
 });
