@@ -19,7 +19,7 @@ describe('ApiPromise', () => {
 
     // Should be a usable
     resolve('test');
-    await expect(api).resolves.toEqual('test');
+    await expect(api).resolves.toBe('test');
   });
 
   it('should have cancel method', async () => {
@@ -36,7 +36,7 @@ describe('ApiPromise.then', () => {
 
     // Should be a usable
     resolve('test');
-    await expect(api).resolves.toEqual('working test');
+    await expect(api).resolves.toBe('working test');
   });
 
   it('should propagate cancel method', async () => {
@@ -53,7 +53,7 @@ describe('ApiPromise.catch', () => {
 
     // Should be a usable
     resolve('test');
-    await expect(api).resolves.toEqual('test');
+    await expect(api).resolves.toBe('test');
   });
 
   it('should propagate cancel method', async () => {

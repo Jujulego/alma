@@ -20,8 +20,8 @@ describe('SwrCache', () => {
     const { result } = renderHook(() => useContext(SwrCacheContext), { wrapper });
 
     // Checks
-    expect(result.current.cache).not.toBeUndefined();
-    expect(result.current.setCache).not.toBeUndefined();
+    expect(result.current.cache).toBeDefined();
+    expect(result.current.setCache).toBeDefined();
 
     // Change value
     act(() => result.current.setCache!('test', true));
