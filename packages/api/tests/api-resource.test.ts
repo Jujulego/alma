@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, apiResource, Updator, useApi as _useApi } from '../src';
+import { ApiPromise, apiResource, ApiResult, Updator, useApi as _useApi } from '../src';
 import { POST_METHODS } from './utils';
 
 jest.mock('../src/api/useApi');
@@ -17,6 +17,7 @@ describe('apiResource', () => {
   beforeEach(() => {
     useApi.get.mockReturnValue({
       loading: false,
+      status: 200,
       data: 'test',
       reload: jest.fn(),
       update: jest.fn()
@@ -31,8 +32,9 @@ describe('apiResource', () => {
 
     // Check
     expect(result.current).toEqual({
-      data: 'test',
       loading: false,
+      status: 200,
+      data: 'test',
       reload: expect.any(Function),
       update: expect.any(Function),
     });
@@ -52,20 +54,20 @@ describe('apiResource', () => {
 
 describe('apiResource.delete', () => {
   // Mocks
-  let sendDelete: () => ApiPromise<string>;
+  let sendDelete: () => ApiPromise<ApiResult<string>>;
 
   beforeEach(() => {
     useApi.get.mockReturnValue({
       loading: false,
+      status: 200,
       data: 'test',
       reload: jest.fn(),
       update: jest.fn()
     });
 
-    sendDelete = jest.fn().mockResolvedValue('done');
+    sendDelete = jest.fn().mockResolvedValue({ status: 200, data: 'done' });
     useApi.delete.mockReturnValue({
       loading: false,
-      data: 'done',
       send: sendDelete
     });
   });
@@ -87,7 +89,8 @@ describe('apiResource.delete', () => {
 
     // Call delete
     await act(async () => {
-      await expect(result.current.remove()).resolves.toBe('done');
+      await expect(result.current.remove())
+        .resolves.toEqual({ status: 200, data: 'done' });
     });
 
     expect(sendDelete).toHaveBeenCalled();
@@ -131,21 +134,21 @@ for (const method of POST_METHODS) {
   describe(`apiResource.${method}`, () => {
     // Mocks
     let getUpdate: (upd: string | Updator<string>) => void;
-    let sendPost: (body: string) => ApiPromise<string>;
+    let sendPost: (body: string) => ApiPromise<ApiResult<string>>;
 
     beforeEach(() => {
       getUpdate = jest.fn();
       useApi.get.mockReturnValue({
         loading: false,
+        status: 200,
         data: 'test',
         reload: jest.fn(),
         update: getUpdate
       });
 
-      sendPost = jest.fn().mockResolvedValue('done');
+      sendPost = jest.fn().mockResolvedValue({ status: 200, data: 'done' });
       useApi[method].mockReturnValue({
         loading: false,
-        data: 'done',
         send: sendPost
       });
     });
@@ -166,7 +169,8 @@ for (const method of POST_METHODS) {
 
       // Call delete
       await act(async () => {
-        await expect((result.current as any)[method]('body')).resolves.toBe('done');
+        await expect((result.current as any)[method]('body'))
+          .resolves.toEqual({ status: 200, data: 'done' });
       });
 
       expect(getUpdate).toHaveBeenCalledWith('done');

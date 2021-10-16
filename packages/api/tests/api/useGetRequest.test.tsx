@@ -44,7 +44,7 @@ describe('useGetRequest', () => {
       update: expect.any(Function)
     });
 
-    expect(useSwrCache).toHaveBeenCalledWith('test-id', false, { status: 0 });
+    expect(useSwrCache).toHaveBeenCalledWith('test-id', { status: 0 }, false);
 
     // After receive
     await waitForNextUpdate();
