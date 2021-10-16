@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, usePostRequest } from '../../src';
+import { usePostRequest } from '../../src/api/usePostRequest';
+import { ApiPromise } from '../../src/api-promise';
+import { ApiResult } from '../../src/types';
 
 // Setup
 beforeEach(() => {
@@ -34,7 +36,7 @@ describe('usePostRequest', () => {
     });
 
     // After send
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send('body');
     });
@@ -45,18 +47,16 @@ describe('usePostRequest', () => {
     });
 
     expect(spy).toHaveBeenCalledTimes(1);
-    expect(spy).toHaveBeenCalledWith('body', expect.anything(), undefined);
+    expect(spy).toHaveBeenCalledWith('body', expect.any(AbortSignal), undefined);
 
     // After receive
     await act(async () => {
       resolve('test');
-      await expect(prom).resolves.toBe('test');
+      await expect(prom).resolves.toEqual({ status: 200, data: 'test' });
     });
 
     expect(result.current).toEqual({
       loading: false,
-      status: 200,
-      data: 'test',
       send: expect.any(Function)
     });
   });
@@ -87,7 +87,7 @@ describe('usePostRequest', () => {
     });
 
     // After send
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send('body');
     });
@@ -103,21 +103,13 @@ describe('usePostRequest', () => {
     await act(async () => {
       reject();
       await expect(prom).rejects.toEqual({
-        isAxiosError: true,
-        response: {
-          status: 400,
-          statusText: 'Bad Request',
-          data: 'Bad Request',
-          headers: {},
-          config: {}
-        }
+        status: 400,
+        error: 'Bad Request',
       });
     });
 
     expect(result.current).toEqual({
       loading: false,
-      status: 400,
-      error: 'Bad Request',
       send: expect.any(Function)
     });
   });
@@ -130,7 +122,7 @@ describe('usePostRequest', () => {
     const { result } = renderHook(() => usePostRequest(spy));
 
     // Checks
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send('body');
     });

@@ -1,4 +1,4 @@
-import { ApiGetRequestConfig, Updator, useGetRequest } from '@jujulego/alma-api';
+import { ApiGetRequestConfig, normalizeUpdator, Updator, useGetRequest } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import axios from 'axios';
 import { useCallback, useDebugValue, useMemo } from 'react';
@@ -6,13 +6,15 @@ import { useCallback, useDebugValue, useMemo } from 'react';
 import { GqlErrorResponse, GqlRequest, GqlResponse, GqlState, GqlVariables } from '../types';
 
 // Types
+export type GqlQueryUpdate<D> = (data: D | Updator<D>) => void;
+
 export interface GqlQueryState<D> extends GqlState<D> {
   /**
    * Update cached result
    *
    * @param data: value to store or updator
    */
-  update: (data: D | Updator<D>) => void;
+  update: GqlQueryUpdate<D>;
 
   /**
    * Force request reload
@@ -50,10 +52,8 @@ export function useQueryRequest<D, V extends GqlVariables>(url: string, req: Gql
     data: data?.data,
     error: error || (data?.errors?.length ? data as GqlErrorResponse : undefined),
 
-    update: useCallback((data: D | Updator<D>) => {
-      const updator: Updator<D> = typeof data === 'function' ? (data as Updator<D>) : () => data;
-
-      update((old) => ({ ...old, data: updator(old?.data) as D }));
+    update: useCallback((arg: D | Updator<D>) => {
+      update((old) => old && ({ data: normalizeUpdator(arg)(old.data) }));
     }, [update]),
     reload,
   };

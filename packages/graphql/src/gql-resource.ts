@@ -6,7 +6,7 @@ import { GqlDocument, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
 // Types
-export type GqlMerge<S, R> = (state: S | undefined, res: R) => S | undefined;
+export type GqlMerge<S, R> = (state: S | undefined, res: R | undefined) => S | undefined;
 
 export type GqlStateMutateMethods<N extends string, DM, VM extends GqlVariables> = {
   [key in N]: (vars: VM) => ApiPromise<DM>;

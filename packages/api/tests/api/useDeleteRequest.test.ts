@@ -1,7 +1,9 @@
 import { AxiosResponse } from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, useDeleteRequest } from '../../src';
+import { useDeleteRequest } from '../../src/api/useDeleteRequest';
+import { ApiPromise } from '../../src/api-promise';
+import { ApiResult } from '../../src/types';
 
 // Setup
 beforeEach(() => {
@@ -34,7 +36,7 @@ describe('useDeleteRequest', () => {
     });
 
     // After send
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send();
     });
@@ -49,13 +51,11 @@ describe('useDeleteRequest', () => {
     // After receive
     await act(async () => {
       resolve('test');
-      await expect(prom).resolves.toBe('test');
+      await expect(prom).resolves.toEqual({ status: 200, data: 'test' });
     });
 
     expect(result.current).toEqual({
       loading: false,
-      status: 200,
-      data: 'test',
       send: expect.any(Function)
     });
   });
@@ -86,7 +86,7 @@ describe('useDeleteRequest', () => {
     });
 
     // After send
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send();
     });
@@ -102,21 +102,13 @@ describe('useDeleteRequest', () => {
     await act(async () => {
       reject();
       await expect(prom).rejects.toEqual({
-        isAxiosError: true,
-        response: {
-          status: 400,
-          statusText: 'Bad Request',
-          data: 'Bad Request',
-          headers: {},
-          config: {}
-        }
+        status: 400,
+        error: 'Bad Request'
       });
     });
 
     expect(result.current).toEqual({
       loading: false,
-      status: 400,
-      error: 'Bad Request',
       send: expect.any(Function)
     });
   });
@@ -130,7 +122,7 @@ describe('useDeleteRequest', () => {
     const { result } = renderHook(() => useDeleteRequest(spy));
 
     // Checks
-    let prom: ApiPromise<string>;
+    let prom: ApiPromise<ApiResult<string>>;
     act(() => {
       prom = result.current.send();
     });

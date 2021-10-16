@@ -2,10 +2,11 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
-import { ApiState, Updator } from '../types';
+import { ApiResult, ApiState, normalizeUpdator, Updator } from '../types';
 
 // Types
 export type ApiGetRequestGenerator<R> = (signal: AbortSignal) => Promise<AxiosResponse<R>>
+export type ApiGetUpdate<R> = (data?: R | Updator<R | undefined>) => void;
 
 export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
   /**
@@ -23,13 +24,13 @@ export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
   disableSwr?: boolean;
 }
 
-export interface ApiGetReturn<R, E = unknown> extends ApiState<R, E> {
+export type ApiGetReturn<R, E = unknown> = ApiState & ApiResult<R, E> & {
   /**
    * Update cached result
    *
    * @param data: value to store or updator
    */
-  update: (data: R | Updator<R>) => void;
+  update: ApiGetUpdate<R>;
 
   /**
    * Force request reload
@@ -42,11 +43,11 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   const { load = true, disableSwr = false } = config;
 
   // Cache
-  const { data, setData } = useSwrCache<R>(swrId, disableSwr);
+  const { data, setData } = useSwrCache<ApiResult<R, E>>(swrId, { status: 0 }, disableSwr);
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
-  const [state, setState] = useState<Omit<ApiState<R, E>, 'data'>>({
+  const [state, setState] = useState<ApiState>({
     loading: false,
   });
 
@@ -60,25 +61,26 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
 
     generator(abort.signal)
       .then((res) => {
-        setState({ loading: false, status: res.status });
-        setData(res.data);
+        setState({ loading: false });
+        setData({ status: res.status, data: res.data });
       })
       .catch((error) => {
         if (axios.isCancel(error)) {
           return;
         }
 
+        setState({ loading: false });
+
         if (axios.isAxiosError(error)) {
           const { response } = error as AxiosError<E>;
 
           if (response) {
-            setState({ loading: false, status: response.status, error: response.data });
+            setData({ status: response.status, error: response.data });
 
             return;
           }
         }
 
-        setState((old) => ({ ...old, loading: false }));
         throw error;
       });
 
@@ -89,8 +91,10 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
   }, [generator, reload, setData, setState]);
 
   return {
-    ...state, data,
-    update: setData,
+    ...state, ...data,
+    update: useCallback((arg?: R | Updator<R | undefined>) => {
+      setData((old) => ({ status: old?.status ?? 0, data: normalizeUpdator(arg)(old?.data) }));
+    }, [setData]),
     reload: useCallback(() => setReload((old) => old + 1), [setReload])
   };
 }

@@ -189,13 +189,5 @@ describe('useGqlMutation', () => {
       { test: { isSuccessful: false }},
       { success: { isSuccessful: true } }
     );
-
-    expect(updator(undefined))
-      .toEqual({ test: { isSuccessful: true }});
-
-    expect(spyMerge).toHaveBeenCalledWith(
-      undefined,
-      { success: { isSuccessful: true } }
-    );
   });
 });

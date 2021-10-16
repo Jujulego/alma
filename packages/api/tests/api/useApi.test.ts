@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
 import {
-  ApiParams, ApiPromise, useApi,
+  ApiParams, ApiPromise, ApiResult, useApi,
   useDeleteRequest as _useDeleteRequest,
   useGetRequest as _useGetRequest,
   usePostRequest as _usePostRequest
@@ -33,6 +33,7 @@ for (const method of GET_METHODS) {
 
       useGetRequest.mockReturnValue({
         loading: false,
+        status: 200,
         data: 'test',
         update: jest.fn(),
         reload: jest.fn(),
@@ -47,6 +48,7 @@ for (const method of GET_METHODS) {
       // Checks
       expect(result.current).toEqual({
         loading: false,
+        status: 200,
         data: 'test',
         update: expect.any(Function),
         reload: expect.any(Function),
@@ -83,12 +85,11 @@ describe('useApi.delete', () => {
   // Tests
   it('should return api call result', async () => {
     // Mocks
-    const spySend = jest.fn<ApiPromise<string>, [ApiParams]>()
-      .mockResolvedValue('test');
+    const spySend = jest.fn<ApiPromise<ApiResult<string>>, [ApiParams]>()
+      .mockResolvedValue({ status: 200, data: 'test' });
 
     useDeleteRequest.mockReturnValue({
       loading: false,
-      data: 'test',
       send: spySend,
     });
 
@@ -104,7 +105,7 @@ describe('useApi.delete', () => {
     // Test send
     await act(async () => {
       await expect(result.current.send({ test: 'a' }))
-        .resolves.toBe('test');
+        .resolves.toEqual({ status: 200, data: 'test' });
     });
 
     expect(spySend).toHaveBeenCalledWith({ test: 'a' });
@@ -134,12 +135,11 @@ for (const method of POST_METHODS) {
     // Tests
     it('should return api call result', async () => {
       // Mocks
-      const spySend = jest.fn<ApiPromise<string>, [string, ApiParams]>()
-        .mockResolvedValue('test');
+      const spySend = jest.fn<ApiPromise<ApiResult<string>>, [string, ApiParams]>()
+        .mockResolvedValue({ status: 200, data: 'test' });
 
       usePostRequest.mockReturnValue({
         loading: false,
-        data: 'test',
         send: spySend,
       });
 
@@ -155,7 +155,7 @@ for (const method of POST_METHODS) {
       // After send
       await act(async () => {
         await expect(result.current.send('body', { test: 'a' }))
-          .resolves.toBe('test');
+          .resolves.toEqual({ status: 200, data: 'test' });
       });
 
       expect(spySend).toHaveBeenCalledWith('body', { test: 'a' });
