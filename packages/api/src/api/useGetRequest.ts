@@ -1,11 +1,13 @@
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
-import { ApiResult, ApiState, normalizeUpdator, Updator } from '../types';
+import { ApiParams, ApiResult, ApiState, normalizeUpdator, Updator } from '../types';
+import { makeRequestApiPromise } from './request-api-promise';
+import { ApiPromise } from '../api-promise';
 
 // Types
-export type ApiGetRequestGenerator<R> = (signal: AbortSignal) => Promise<AxiosResponse<R>>
+export type ApiGetRequestGenerator<R, P extends ApiParams> = (signal: AbortSignal, params?: P) => Promise<AxiosResponse<R>>
 export type ApiGetUpdate<R> = (data?: R | Updator<R | undefined>) => void;
 
 export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelToken'> {
@@ -24,7 +26,14 @@ export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
   disableSwr?: boolean;
 }
 
-export type ApiGetReturn<R, E = unknown> = ApiState & ApiResult<R, E> & {
+export type ApiGetReturn<R, P extends ApiParams, E = unknown> = ApiState & ApiResult<R, E> & {
+  /**
+   * Send get request
+   *
+   * @param params: custom query parameters
+   */
+  send: (params?: P) => ApiPromise<ApiResult<R, E>>;
+
   /**
    * Update cached result
    *
@@ -39,7 +48,7 @@ export type ApiGetReturn<R, E = unknown> = ApiState & ApiResult<R, E> & {
 }
 
 // Base hooks
-export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<R>, swrId: string, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
+export function useGetRequest<R, P extends ApiParams = ApiParams, E = unknown>(generator: ApiGetRequestGenerator<R, P>, swrId: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, P, E> {
   const { load = true, disableSwr = false } = config;
 
   // Cache
@@ -51,50 +60,33 @@ export function useGetRequest<R, E = unknown>(generator: ApiGetRequestGenerator<
     loading: false,
   });
 
-  // Effect
-  useEffect(() => {
-    if (reload === 0) return;
-    setState((old) => ({ ...old, loading: true }));
+  // Callback
+  const send = useCallback((params?: P) => {
+    setState({ loading: true });
 
     // Make request
     const abort = new AbortController();
+    return makeRequestApiPromise<R, E>(generator(abort.signal, params), abort, setState);
+  }, [generator]);
 
-    generator(abort.signal)
+  // Effect
+  useEffect(() => {
+    if (reload === 0) return;
+
+    const prom = send(params)
       .then((res) => {
-        setState({ loading: false });
-        setData({ status: res.status, data: res.data });
-      })
-      .catch((error) => {
-        if (axios.isCancel(error)) {
-          return;
-        }
-
-        setState({ loading: false });
-
-        if (axios.isAxiosError(error)) {
-          const { response } = error as AxiosError<E>;
-
-          if (response) {
-            setData({ status: response.status, error: response.data });
-
-            return;
-          }
-        }
-
-        throw error;
+        setData(res);
       });
 
     // Cancel
-    return () => {
-      abort.abort();
-    };
-  }, [generator, reload, setData, setState]);
+    return () => prom.cancel();
+  }, [send, reload, params, setData]);
 
   return {
-    ...state, ...data,
+    ...state, ...data, send,
     update: useCallback((arg?: R | Updator<R | undefined>) => {
-      setData((old) => ({ status: old?.status ?? 0, data: normalizeUpdator(arg)(old?.data) }));
+      setData((old) => ({ status: old.status ?? 0, data: normalizeUpdator(arg)(old.data) }));
     }, [setData]),
-    reload: useCallback(() => setReload((old) => old + 1), [setReload])
+    reload: useCallback(() => setReload((old) => old + 1), [])
   };
 }

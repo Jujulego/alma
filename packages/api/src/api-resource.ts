@@ -3,9 +3,11 @@ import { useCallback, useMemo } from 'react';
 
 import { ApiGetReturn, useApi } from './api';
 import { ApiPromise } from './api-promise';
-import { ApiResult, CombineArg } from './types';
+import { ApiParams, ApiResult, CombineArg } from './types';
 
 // Types
+export type ApiResourceGetState<T, E = unknown> = Omit<ApiGetReturn<T, ApiParams, E>, 'send'>;
+
 export interface IApiResourceDeleteState<T> {
   remove: () => ApiPromise<ApiResult<T>>;
 }
@@ -17,7 +19,7 @@ export type IApiResourcePostState<M extends IApiPostMethod, B, T> = {
 
 export type IApiResourceUrlBuilder<A> = A extends void ? string : (arg: A) => string;
 
-export type IApiResourceHookMethods<T, A, S extends ApiGetReturn<T>> = {
+export type IApiResourceHookMethods<T, A, S extends ApiResourceGetState<T>> = {
   url: (arg: A) => string;
   delete: <NA = A>(url?: IApiResourceUrlBuilder<NA>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourceDeleteState<T>>;
   patch: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePostState<'patch', NB, T>>;
@@ -25,10 +27,10 @@ export type IApiResourceHookMethods<T, A, S extends ApiGetReturn<T>> = {
   put: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePostState<'put', NB, T>>;
 }
 
-export type IApiResourceHook<T, A, S extends ApiGetReturn<T>> = ((arg: A) => S) & IApiResourceHookMethods<T, A, S>;
+export type IApiResourceHook<T, A, S extends ApiResourceGetState<T>> = ((arg: A) => S) & IApiResourceHookMethods<T, A, S>;
 
 // Utils
-function hookMethods<T, A, S extends ApiGetReturn<T>>(url: (arg: A) => string): IApiResourceHookMethods<T, A, S> {
+function hookMethods<T, A, S extends ApiResourceGetState<T>>(url: (arg: A) => string): IApiResourceHookMethods<T, A, S> {
   return {
     url,
     delete<NA = A>(url?: IApiResourceUrlBuilder<NA>) {
@@ -47,7 +49,7 @@ function hookMethods<T, A, S extends ApiGetReturn<T>>(url: (arg: A) => string): 
 }
 
 // Hook modifiers
-function addDeleteCall<T, A, S extends ApiGetReturn<T>>(wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourceDeleteState<T>> {
+function addDeleteCall<T, A, S extends ApiResourceGetState<T>>(wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourceDeleteState<T>> {
   const deleteUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
 
   // new hook
@@ -76,7 +78,7 @@ function addDeleteCall<T, A, S extends ApiGetReturn<T>>(wrapped: IApiResourceHoo
   return Object.assign(useApiResource, hookMethods<T, A, S & IApiResourceDeleteState<T>>(wrapped.url));
 }
 
-function addPostCall<M extends IApiPostMethod, B, T, A, S extends ApiGetReturn<T>>(method: M, wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourcePostState<M, B, T>> {
+function addPostCall<M extends IApiPostMethod, B, T, A, S extends ApiResourceGetState<T>>(method: M, wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourcePostState<M, B, T>> {
   const postUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
 
   // new hook
@@ -106,11 +108,11 @@ function addPostCall<M extends IApiPostMethod, B, T, A, S extends ApiGetReturn<T
 }
 
 // Hook builder
-export function apiResource<T, A = void>(url: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, ApiGetReturn<T>> {
+export function apiResource<T, A = void>(url: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, ApiResourceGetState<T>> {
   const getUrl: (arg: A) => string = typeof url === 'string' ? () => url : url;
 
   // hook
-  function useApiResource(arg: A): ApiGetReturn<T> {
+  function useApiResource(arg: A): ApiResourceGetState<T> {
     // Memo
     const url = useMemo(() => getUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -118,5 +120,5 @@ export function apiResource<T, A = void>(url: IApiResourceUrlBuilder<A>): IApiRe
     return useApi.get<T>(url);
   }
 
-  return Object.assign(useApiResource, hookMethods<T, A, ApiGetReturn<T>>(getUrl));
+  return Object.assign(useApiResource, hookMethods<T, A, ApiResourceGetState<T>>(getUrl));
 }

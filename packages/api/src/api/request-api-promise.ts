@@ -11,16 +11,16 @@ export function makeRequestApiPromise<R, E = unknown>(promise: Promise<AxiosResp
       return { status: res.status, data: res.data };
     })
     .catch((error) => {
+      setState({ loading: false });
+
       if (axios.isAxiosError(error)) {
         const { response } = error as AxiosError<E>;
 
         if (response) {
-          setState({ loading: false });
-          throw { status: response.status, error: response.data };
+          return { status: response.status, error: response.data };
         }
       }
 
-      setState({ loading: false });
       throw error;
     });
 }

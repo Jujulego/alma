@@ -23,17 +23,14 @@ export function useDeleteRequest<R, P extends ApiParams, E = unknown>(generator:
   const [state, setState] = useState<ApiState>({ loading: false });
 
   // Callback
-  const send = useCallback(
-    (params?: P) => {
-      setState({ loading: true });
+  const send = useCallback((params?: P) => {
+    setState({ loading: true });
 
-      // Make request
-      const abort = new AbortController();
+    // Make request
+    const abort = new AbortController();
 
-      return makeRequestApiPromise<R, E>(generator(abort.signal, params), abort, setState);
-    },
-    [generator]
-  );
+    return makeRequestApiPromise<R, E>(generator(abort.signal, params), abort, setState);
+  }, [generator]);
 
   return {
     ...state,

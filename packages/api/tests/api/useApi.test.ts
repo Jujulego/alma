@@ -35,6 +35,7 @@ for (const method of GET_METHODS) {
         loading: false,
         status: 200,
         data: 'test',
+        send: jest.fn(),
         update: jest.fn(),
         reload: jest.fn(),
       });

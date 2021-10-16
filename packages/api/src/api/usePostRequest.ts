@@ -25,17 +25,14 @@ export function usePostRequest<B, R, P extends ApiParams, E = unknown>(generator
   const [state, setState] = useState<ApiState>({ loading: false });
 
   // Callback
-  const send = useCallback(
-    (body: B, params?: P) => {
-      setState({ loading: true });
+  const send = useCallback((body: B, params?: P) => {
+    setState({ loading: true });
 
-      // Make request
-      const abort = new AbortController();
+    // Make request
+    const abort = new AbortController();
 
-      return makeRequestApiPromise<R, E>(generator(body, abort.signal, params), abort, setState);
-    },
-    [generator]
-  );
+    return makeRequestApiPromise<R, E>(generator(body, abort.signal, params), abort, setState);
+  }, [generator]);
 
   return {
     ...state,

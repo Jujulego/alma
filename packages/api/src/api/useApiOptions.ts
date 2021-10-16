@@ -12,15 +12,19 @@ import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetReques
  * @param params: query parameters
  * @param config: axios configuration
  */
-export function useApiOptions<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
+export function useApiOptions<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, P, E> {
   useDebugValue(url);
   const { load, disableSwr, ...rconfig } = config;
 
+  // Stabilise objects
+  const sconfig = useDeepMemo(rconfig);
+  const sparams = useDeepMemo(params);
+
   // Callbacks
   const generator = useCallback(
-    (signal: AbortSignal) => axios.options<R>(url, { ...rconfig, params, signal }),
-    [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
+    (signal: AbortSignal, params?: P) => axios.options<R>(url, { ...sconfig, params, signal }),
+    [url, sconfig]
   );
 
-  return useGetRequest<R, E>(generator, `api-options:${url}`, { load, disableSwr });
+  return useGetRequest<R, P, E>(generator, `api-options:${url}`, sparams, { load, disableSwr });
 }
