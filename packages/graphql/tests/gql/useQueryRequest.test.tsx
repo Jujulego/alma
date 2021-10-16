@@ -3,16 +3,19 @@ import * as almaApi from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
-import { GqlResponse, useQueryRequest } from '../../src';
+import { useQueryRequest } from '../../src/gql/useQueryRequest';
+import { GqlResponse } from '../../src/types';
 import { TestData } from '../types';
 
 // Mocks
 jest.mock('@jujulego/alma-api');
-const { useGetRequest } = almaApi as jest.Mocked<typeof almaApi>;
+const { useGetRequest, normalizeUpdator } = almaApi as jest.Mocked<typeof almaApi>;
 
 // Setup
 beforeEach(() => {
   jest.resetAllMocks();
+
+  normalizeUpdator.mockImplementation((arg) => typeof arg === 'function' ? arg as Updator: () => arg);
 });
 
 // Test suites
@@ -28,6 +31,7 @@ describe('useQueryRequest', () => {
 
     useGetRequest.mockReturnValue({
       loading: true,
+      status: 0,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -67,6 +71,7 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: true,
+      status: 0,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -88,6 +93,7 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: true,
+      status: 0,
       update: jest.fn(),
       reload: jest.fn(),
     });
@@ -110,6 +116,7 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
+      status: 200,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -138,6 +145,7 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
+      status: 200,
       data: {
         errors: [
           {
@@ -176,6 +184,7 @@ describe('useQueryRequest', () => {
     // Mocks
     useGetRequest.mockReturnValue({
       loading: false,
+      status: 200,
       error: {
         errors: [
           {
@@ -215,6 +224,7 @@ describe('useQueryRequest', () => {
     const spy = jest.fn<void, [Updator<GqlResponse<{ test: TestData }>>]>();
     useGetRequest.mockReturnValue({
       loading: false,
+      status: 200,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -240,9 +250,6 @@ describe('useQueryRequest', () => {
 
     expect(updator({ data: { test: { isSuccessful: true }}}))
       .toEqual({ data: { test: { isSuccessful: false }}});
-
-    expect(updator(undefined))
-      .toEqual({ data: { test: { isSuccessful: false }}});
   });
 
   it('should update state (updator)', () => {
@@ -250,6 +257,7 @@ describe('useQueryRequest', () => {
     const spy = jest.fn<void, [Updator<GqlResponse<{ test: TestData }>>]>();
     useGetRequest.mockReturnValue({
       loading: false,
+      status: 200,
       data: {
         data: { test: { isSuccessful: true } }
       },
@@ -275,8 +283,5 @@ describe('useQueryRequest', () => {
 
     expect(updator({ data: { test: { isSuccessful: true }}}))
       .toEqual({ data: { test: { isSuccessful: false }}});
-
-    expect(updator(undefined))
-      .toEqual({ data: { test: { isSuccessful: true }}});
   });
 });
