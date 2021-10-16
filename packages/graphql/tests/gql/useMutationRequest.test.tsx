@@ -1,9 +1,10 @@
-import { ApiPromise } from '@jujulego/alma-api';
+import { ApiPromise, ApiResult } from '@jujulego/alma-api';
 import * as almaApi from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
 
-import { GqlResponse, useMutationRequest } from '../../src';
+import { useMutationRequest } from '../../src/gql/useMutationRequest';
+import { GqlResponse } from '../../src/types';
 import { TestData } from '../types';
 
 // Mocks
@@ -80,16 +81,16 @@ describe('useMutationRequest', () => {
 
   it('should return api call result', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<GqlResponse<{ test: TestData }>>, [{ name: string }]>()
+    const spy = jest.fn<ApiPromise<ApiResult<GqlResponse<{ test: TestData }>>>, [{ name: string }]>()
       .mockResolvedValue({
-        data: { test: { isSuccessful: true } }
+        status: 200,
+        data: {
+          data: { test: { isSuccessful: true } }
+        }
       });
 
     usePostRequest.mockReturnValue({
       loading: false,
-      data: {
-        data: { test: { isSuccessful: true } }
-      },
       send: spy
     });
 
@@ -102,9 +103,6 @@ describe('useMutationRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: false,
-      data: {
-        test: { isSuccessful: true }
-      },
       send: expect.any(Function)
     });
 
@@ -117,77 +115,5 @@ describe('useMutationRequest', () => {
     });
 
     expect(spy).toHaveBeenCalledWith({ name: 'name' });
-  });
-
-  it('should return api call error (request succeed)', () => {
-    // Mocks
-    usePostRequest.mockReturnValue({
-      loading: false,
-      data: {
-        errors: [
-          {
-            message: 'Error in test',
-            location: { column: 1, line: 1 }
-          }
-        ]
-      },
-      send: jest.fn(),
-    });
-
-    // Render
-    const { result } = renderHook(() => useMutationRequest<{ test: TestData }, { name: string }>('/graphql', {
-      query: 'query',
-      operationName: 'Test'
-    }));
-
-    // Checks
-    expect(result.current).toEqual({
-      loading: false,
-      error: {
-        errors: [
-          {
-            message: 'Error in test',
-            location: { column: 1, line: 1 }
-          }
-        ]
-      },
-      send: expect.any(Function)
-    });
-  });
-
-  it('should return api call error (request failed)', () => {
-    // Mocks
-    usePostRequest.mockReturnValue({
-      loading: false,
-      error: {
-        errors: [
-          {
-            message: 'Error in test',
-            location: { column: 1, line: 1 }
-          }
-        ]
-      },
-      send: jest.fn(),
-    });
-
-    // Render
-    const { result } = renderHook(() => useMutationRequest<{ test: TestData }, { name: string }>('/graphql', {
-      query: 'query',
-      operationName: 'Test'
-    }));
-
-    // Checks
-    expect(result.current).toEqual({
-      loading: false,
-      error: {
-        errors: [
-          {
-            message: 'Error in test',
-            location: { column: 1, line: 1 }
-          }
-        ]
-      },
-      send: expect.any(Function)
-    });
   });
 });
