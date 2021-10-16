@@ -2,7 +2,9 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 
-import { useGetRequest, useSwrCache as _useSwrCache } from '../../src';
+import { useGetRequest } from '../../src/api/useGetRequest';
+import { useSwrCache as _useSwrCache } from '../../src/cache/useSwrCache';
+import { ApiResult, Updator } from '../../src/types';
 
 // Mocks
 jest.mock('../../src/cache/useSwrCache');
@@ -42,7 +44,7 @@ describe('useGetRequest', () => {
       update: expect.any(Function)
     });
 
-    expect(useSwrCache).toHaveBeenCalledWith('test-id', false);
+    expect(useSwrCache).toHaveBeenCalledWith('test-id', false, { status: 0 });
 
     // After receive
     await waitForNextUpdate();
@@ -91,7 +93,7 @@ describe('useGetRequest', () => {
     const spyCache = jest.fn<void, [string]>();
 
     useSwrCache.mockReturnValue({
-      data: 'cached',
+      data: { status: 200, data: 'cached' },
       setData: spyCache,
     });
 
@@ -110,6 +112,7 @@ describe('useGetRequest', () => {
     // Checks
     expect(result.current).toEqual({
       loading: true,
+      status: 200,
       data: 'cached',
       reload: expect.any(Function),
       update: expect.any(Function)
@@ -187,7 +190,7 @@ describe('useGetRequest', () => {
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
-  it('should update state value', async () => {
+  it('should update state data value', async () => {
     // Mocks
     const spyCache = jest.fn<void, [string]>();
 
@@ -210,8 +213,17 @@ describe('useGetRequest', () => {
     await waitForNextUpdate();
 
     // Checks
-    act(() => result.current.update('it\'s'));
-    expect(spyCache).toHaveBeenCalledWith('it\'s');
+    spyCache.mockReset();
+
+    act(() => result.current.update('updated'));
+    expect(spyCache).toHaveBeenCalledWith(expect.any(Function));
+
+    const updator = spyCache.mock.calls[0][0] as unknown as Updator<ApiResult<string>>;
+
+    // Check data update cases
+    expect(updator({ status: 200, data: 'test' })).toEqual({ status: 200, data: 'updated' });
+    expect(updator({ status: 0 })).toEqual({ status: 0, data: 'updated' });
+    expect(updator({ status: 400, error: 'failed' })).toEqual({ status: 400, data: 'updated' });
 
     expect(spy).toHaveBeenCalledTimes(1);
   });

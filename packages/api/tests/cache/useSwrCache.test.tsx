@@ -1,7 +1,8 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { FC } from 'react';
 
-import { SwrCacheContext, Updator, useSwrCache } from '../../src';
+import { SwrCacheContext, useSwrCache } from '../../src/cache';
+import { Updator } from '../../src/types';
 
 // Setup
 beforeEach(() => {
@@ -26,7 +27,7 @@ describe('useSwrCache', () => {
       </SwrCacheContext.Provider>
     );
 
-    const { result, rerender } = renderHook(() => useSwrCache('test'), {
+    const { result, rerender } = renderHook(() => useSwrCache('test', 0), {
       wrapper,
       initialProps: { value: 1 }
     });
@@ -54,10 +55,10 @@ describe('useSwrCache', () => {
       </SwrCacheContext.Provider>
     );
 
-    const { result } = renderHook(() => useSwrCache<number>('test'), { wrapper });
+    const { result } = renderHook(() => useSwrCache('test', 0), { wrapper });
 
     // Checks
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.data).toBe(0);
 
     // Set cache data
     act(() => {
@@ -69,10 +70,10 @@ describe('useSwrCache', () => {
 
   it('should return and update local value', () => {
     // Render
-    const { result } = renderHook(() => useSwrCache('test'));
+    const { result } = renderHook(() => useSwrCache('test', 0));
 
     // Checks
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.data).toBe(0);
 
     // Change value
     act(() => {
@@ -98,10 +99,10 @@ describe('useSwrCache', () => {
       </SwrCacheContext.Provider>
     );
 
-    const { result } = renderHook(() => useSwrCache<number>('test', true), { wrapper });
+    const { result } = renderHook(() => useSwrCache('test', 0, true), { wrapper });
 
     // Checks
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.data).toBe(0);
 
     // Set cache data
     act(() => {

@@ -1,20 +1,21 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 
-import { SwrCacheContext, SwrCacheState } from './SwrCacheContext';
+import { SwrCacheContext } from './SwrCacheContext';
 import { Updator } from '../types';
 
 // Types
-export interface SwrCacheResult<R> extends SwrCacheState<R> {
+export interface SwrCacheResult<R> {
+  data: R,
   setData: (data: R | Updator<R>) => void;
 }
 
 // Hook
-export function useSwrCache<R = unknown>(id: string, disableSwr = false): SwrCacheResult<R> {
+export function useSwrCache<R = unknown>(id: string, initial: R, disableSwr = false): SwrCacheResult<R> {
   // Context
   const { cache, setCache } = useContext(SwrCacheContext);
 
   // State
-  const [local, setLocal] = useState<R>();
+  const [local, setLocal] = useState<R>(initial);
 
   // Memo
   const data = useMemo(() => {
@@ -22,7 +23,7 @@ export function useSwrCache<R = unknown>(id: string, disableSwr = false): SwrCac
       return local;
     }
 
-    return (cache[id]?.data) as R | undefined;
+    return (cache[id]?.data ?? initial) as R;
   }, [cache, local, id, disableSwr]);
 
   // Callback
