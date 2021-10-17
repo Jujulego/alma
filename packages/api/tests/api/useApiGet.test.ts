@@ -1,7 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiGet } from '../../src/api/useApiGet';
-import { useApiRequest as _useApiRequest } from '../../src/api/useApiRequest';
+import { useApiGet, useApiRequest as _useApiRequest } from '../../src/api';
 import { ApiPromise } from '../../src/api-promise';
 import { ApiRequest, ApiResponse } from '../../src/types';
 

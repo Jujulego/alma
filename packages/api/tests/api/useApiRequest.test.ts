@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiRequest } from '../../src/api/useApiRequest';
+import { useApiRequest } from '../../src/api';
 import { ApiPromise } from '../../src/api-promise';
 import { ApiResponse } from '../../src/types';
 

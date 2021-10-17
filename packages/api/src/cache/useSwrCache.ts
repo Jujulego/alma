@@ -2,6 +2,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 
 import { SwrCacheContext } from './SwrCacheContext';
 import { Updator } from '../utils';
+import { useDeepMemo } from '../../../utils';
 
 // Types
 export interface SwrCacheResult<R> {
@@ -11,6 +12,9 @@ export interface SwrCacheResult<R> {
 
 // Hook
 export function useSwrCache<R = unknown>(id: string, initial: R, disableSwr = false): SwrCacheResult<R> {
+  // Stabilise objects
+  const sInitial = useDeepMemo(initial);
+
   // Context
   const { cache, setCache } = useContext(SwrCacheContext);
 
@@ -23,8 +27,8 @@ export function useSwrCache<R = unknown>(id: string, initial: R, disableSwr = fa
       return local;
     }
 
-    return (cache[id]?.data ?? initial) as R;
-  }, [cache, local, id, disableSwr]);
+    return (cache[id]?.data ?? sInitial) as R;
+  }, [cache, local, id, disableSwr, sInitial]);
 
   // Callback
   const setData = useCallback((data: R | Updator<R>) => {

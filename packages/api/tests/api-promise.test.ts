@@ -1,4 +1,4 @@
-import { makeApiPromise } from '../src';
+import { makeApiPromise } from '../src/api-promise';
 
 // Setup
 let prom: Promise<string>;
