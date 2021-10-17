@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiGet } from '../../src/api/useApiGet';
+import { useApiOptions } from '../../src/api/useApiOptions';
 import { useApiRequest as _useApiRequest } from '../../src/api/useApiRequest';
 import { ApiPromise } from '../../src/api-promise';
 import { ApiRequest, ApiResponse } from '../../src/types';
@@ -15,11 +15,11 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useApiGet', () => {
+describe('useApiOptions', () => {
   // Tests
   it('should call useApiRequest and generate a get request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'get'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'options'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -28,7 +28,7 @@ describe('useApiGet', () => {
     });
 
     // Render
-    const { result } = renderHook(() => useApiGet<string>('/api/test'));
+    const { result } = renderHook(() => useApiOptions<string>('/api/test'));
 
     expect(result.current).toEqual({
       loading: false,
@@ -44,7 +44,7 @@ describe('useApiGet', () => {
     });
 
     expect(spy).toHaveBeenCalledWith({
-      method: 'get',
+      method: 'options',
       url: '/api/test',
       headers: {},
     });
