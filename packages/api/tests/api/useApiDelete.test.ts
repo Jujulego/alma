@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiHead } from '../../src/api/useApiHead';
+import { useApiDelete } from '../../src/api/useApiDelete';
 import { useApiRequest as _useApiRequest } from '../../src/api/useApiRequest';
 import { ApiPromise } from '../../src/api-promise';
 import { ApiRequest, ApiResponse } from '../../src/types';
@@ -15,11 +15,11 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useApiHead', () => {
+describe('useApiDelete', () => {
   // Tests
-  it('should call useApiRequest and generate a head request', async () => {
+  it('should call useApiRequest and generate a delete request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'head'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'get'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -28,7 +28,7 @@ describe('useApiHead', () => {
     });
 
     // Render
-    const { result } = renderHook(() => useApiHead<string>('/api/test'));
+    const { result } = renderHook(() => useApiDelete<string>('/api/test'));
 
     expect(result.current).toEqual({
       loading: false,
@@ -44,7 +44,7 @@ describe('useApiHead', () => {
     });
 
     expect(spy).toHaveBeenCalledWith({
-      method: 'head',
+      method: 'delete',
       url: '/api/test',
       headers: {},
     });

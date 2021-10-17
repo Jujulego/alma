@@ -17,7 +17,7 @@ beforeEach(() => {
 // Test suites
 describe('useApiOptions', () => {
   // Tests
-  it('should call useApiRequest and generate a get request', async () => {
+  it('should call useApiRequest and generate a options request', async () => {
     // Mocks
     const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'options'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
