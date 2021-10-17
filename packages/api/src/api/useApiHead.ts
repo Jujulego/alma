@@ -3,11 +3,10 @@ import { useCallback } from 'react';
 
 import { ApiPromise } from '../api-promise';
 import { ApiHeaders, ApiResponse } from '../types';
-import { ApiLoadableHookState } from './useApiAutoLoad';
 import { useApiRequest } from './useApiRequest';
 
 // Types
-export interface ApiHeadRequestState<D> extends ApiLoadableHookState<D> {
+export interface ApiHeadRequestState<D> {
   /**
    * Indicates if the request is running.
    */
