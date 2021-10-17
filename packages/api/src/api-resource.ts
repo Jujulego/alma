@@ -1,7 +1,7 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useMemo } from 'react';
 
-import { ApiAutoLoadState, useApiAutoLoad, useApiGet } from './api';
+import { ApiAutoLoadState, ApiLoadableHook, useApiAutoLoad, useApiGet } from './api';
 import { ApiPromise } from './api-promise';
 import { ApiResponse } from './types';
 
@@ -126,18 +126,18 @@ function addGetCall<N extends string, R, RM, A, S extends ApiAutoLoadState<R>>(n
 // }
 
 // Hook builder
-export function apiResource<R, A = void>(url: string | ApiUrlBuilder<A>): ApiHook<R, A, ApiAutoLoadState<R>> {
+export function apiResource<D, A = void>(hook: ApiLoadableHook<D>, url: string | ApiUrlBuilder<A>): ApiHook<D, A, ApiAutoLoadState<D>> {
   const builder = typeof url === 'string' ? () => url : url;
 
   // Hook
-  function useApiResource(args: A): ApiAutoLoadState<R> {
+  function useApiResource(args: A): ApiAutoLoadState<D> {
     // Url
     const sargs = useDeepMemo(args);
     const url = useMemo(() => builder(sargs), [sargs]);
 
     // Api
-    return useApiAutoLoad<'get', R>(useApiGet, url);
+    return useApiAutoLoad<D>(hook, url);
   }
 
-  return Object.assign(useApiResource, hookMethods<R, A, ApiAutoLoadState<R>>(builder));
+  return Object.assign(useApiResource, hookMethods<D, A, ApiAutoLoadState<D>>(builder));
 }

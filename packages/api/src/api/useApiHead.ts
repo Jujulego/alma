@@ -1,12 +1,13 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback } from 'react';
 
-import { useApiRequest } from './useApiRequest';
 import { ApiPromise } from '../api-promise';
 import { ApiHeaders, ApiResponse } from '../types';
+import { ApiLoadableHookState } from './useApiAutoLoad';
+import { useApiRequest } from './useApiRequest';
 
 // Types
-export interface ApiHeadRequestState<D> {
+export interface ApiHeadRequestState<D> extends ApiLoadableHookState<D> {
   /**
    * Indicates if the request is running.
    */

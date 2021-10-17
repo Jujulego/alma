@@ -1,19 +1,17 @@
-import type {
-  ApiGetRequestState,
-  ApiHeadRequestState,
-  ApiOptionsRequestState,
-} from './index';
-import { useSwrCache } from '../cache';
-import { ApiHeaders } from '../types';
-import { Updator } from '../utils';
 import { useCallback, useDebugValue, useEffect, useState } from 'react';
 
+import { useSwrCache } from '../cache';
+import { ApiHeaders, ApiResponse } from '../types';
+import { Updator } from '../utils';
+import { ApiPromise } from '../api-promise';
+
 // Types
-interface ApiMethodHookMap<D> {
-  get: (url: string, headers?: ApiHeaders) => ApiGetRequestState<D>,
-  head: (url: string, headers?: ApiHeaders) => ApiHeadRequestState<D>,
-  options: (url: string, headers?: ApiHeaders) => ApiOptionsRequestState<D>,
+export interface ApiLoadableHookState<D> {
+  loading: boolean;
+  send: () => ApiPromise<ApiResponse<D>>;
 }
+
+export type ApiLoadableHook<D> = (url: string, headers?: ApiHeaders) => ApiLoadableHookState<D>;
 
 export interface ApiAutoLoadConfig {
   /**
@@ -30,10 +28,11 @@ export interface ApiAutoLoadConfig {
    */
   disableSwr?: boolean;
 
+  /**
+   * Request headers
+   */
   headers?: ApiHeaders;
 }
-
-export type ApiAutoLoadUpdate<D> = (data?: D | Updator<D | undefined>) => void;
 
 export interface ApiAutoLoadState<D> {
   /**
@@ -41,15 +40,24 @@ export interface ApiAutoLoadState<D> {
    */
   loading: boolean;
 
+  /**
+   * Result of the request
+   */
   data?: D;
 
+  /**
+   * Forces request reload
+   */
   reload: () => void;
 
-  update: ApiAutoLoadUpdate<D>;
+  /**
+   * Update cached data
+   */
+  update: (data?: D | Updator<D | undefined>) => void;
 }
 
 // Hook
-export function useApiAutoLoad<M extends keyof ApiMethodHookMap<D>, D>(hook: ApiMethodHookMap<D>[M], url: string, config: ApiAutoLoadConfig = {}): ApiAutoLoadState<D> {
+export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config: ApiAutoLoadConfig = {}): ApiAutoLoadState<D> {
   const { load = true, disableSwr = false, headers } = config;
 
   // Cache

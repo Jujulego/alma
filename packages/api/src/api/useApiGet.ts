@@ -1,12 +1,13 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback } from 'react';
 
-import { useApiRequest } from './useApiRequest';
 import { ApiPromise } from '../api-promise';
 import { ApiHeaders, ApiResponse } from '../types';
+import { ApiLoadableHookState } from './useApiAutoLoad';
+import { useApiRequest } from './useApiRequest';
 
 // Types
-export interface ApiGetRequestState<D> {
+export interface ApiGetRequestState<D> extends ApiLoadableHookState<D> {
   /**
    * Indicates if the request is running.
    */
@@ -22,20 +23,21 @@ export interface ApiGetRequestState<D> {
 /**
  * Send a get request with axios, returns the current status of the request.
  *
- * @param defaultUrl: Default URL of the request (could be overridden by send call)
- * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
+ * @param url: Default URL of the request (could be overridden by send call)
+ * @param headers: Default Headers of the request (could be overridden by send call)
  */
-export function useApiGet<D>(defaultUrl: string, defaultHeaders: ApiHeaders = {}): ApiGetRequestState<D> {
+export function useApiGet<D>(url: string, headers: ApiHeaders = {}): ApiGetRequestState<D> {
   // Stabilise objects
-  const sDefaultHeaders = useDeepMemo(defaultHeaders);
+  const sUrl = url;
+  const sHeaders = useDeepMemo(headers);
 
   // Api call
   const { loading, send } = useApiRequest<'get', unknown, D>();
 
   return {
     loading,
-    send: useCallback((url = defaultUrl, headers= sDefaultHeaders) => {
+    send: useCallback((url = sUrl, headers= sHeaders) => {
       return send({ method: 'get', url: url, headers });
-    }, [send, defaultUrl, sDefaultHeaders])
+    }, [send, sUrl, sHeaders])
   };
 }
