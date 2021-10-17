@@ -1,20 +1,18 @@
 import type {
-  ApiDeleteRequestState,
   ApiGetRequestState,
   ApiHeadRequestState,
   ApiOptionsRequestState,
-} from './api';
-import { useSwrCache } from './cache';
-import { ApiHeaders, ApiResponse } from './types';
-import { Updator } from './utils';
+} from './index';
+import { useSwrCache } from '../cache';
+import { ApiHeaders } from '../types';
+import { Updator } from '../utils';
 import { useCallback, useDebugValue, useEffect, useState } from 'react';
 
 // Types
-export interface ApiMethodHookMap<D> {
+interface ApiMethodHookMap<D> {
   get: (url: string, headers?: ApiHeaders) => ApiGetRequestState<D>,
   head: (url: string, headers?: ApiHeaders) => ApiHeadRequestState<D>,
   options: (url: string, headers?: ApiHeaders) => ApiOptionsRequestState<D>,
-  delete: (url: string, headers?: ApiHeaders) => ApiDeleteRequestState<D>,
 }
 
 export interface ApiAutoLoadConfig {

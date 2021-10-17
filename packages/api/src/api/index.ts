@@ -1,4 +1,5 @@
 export * as useApi from './useApi';
+export * from './useApiAutoLoad';
 export * from './useApiDelete';
 export * from './useApiGet';
 export * from './useApiHead';
