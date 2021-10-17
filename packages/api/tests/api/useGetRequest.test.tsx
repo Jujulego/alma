@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useGetRequest } from '../../src/api/useGetRequest';
 import { ApiPromise } from '../../src/api-promise';
 import { useSwrCache as _useSwrCache } from '../../src/cache/useSwrCache';
-import { ApiResult, Updator } from '../../src/types';
+import { ApiResult} from '../../src/types';
+import { Updator } from '../../src/utils';
 
 // Mocks
 jest.mock('../../src/cache/useSwrCache');

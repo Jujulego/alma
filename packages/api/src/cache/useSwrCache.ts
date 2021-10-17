@@ -1,7 +1,7 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
 
 import { SwrCacheContext } from './SwrCacheContext';
-import { Updator } from '../types';
+import { Updator } from '../utils';
 
 // Types
 export interface SwrCacheResult<R> {

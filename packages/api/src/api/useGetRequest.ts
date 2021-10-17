@@ -2,9 +2,10 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
-import { ApiParams, ApiResult, ApiState, normalizeUpdator, Updator } from '../types';
+import { ApiParams, ApiResult, ApiState} from '../types';
 import { makeRequestApiPromise } from './request-api-promise';
 import { ApiPromise } from '../api-promise';
+import { normalizeUpdator, Updator } from '../utils';
 
 // Types
 export type ApiGetRequestGenerator<R, P extends ApiParams> = (signal: AbortSignal, params?: P) => Promise<AxiosResponse<R>>

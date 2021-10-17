@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react-hooks';
 import { FC } from 'react';
 
 import { SwrCacheContext, useSwrCache } from '../../src/cache';
-import { Updator } from '../../src/types';
+import { Updator } from '../../src/utils';
 
 // Setup
 beforeEach(() => {

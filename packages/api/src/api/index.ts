@@ -1,3 +1,6 @@
+export * from './useApiRequest';
+
+// ================ OLD ===================
 export * as useApi from './useApi';
 export * from './useApiDelete';
 export * from './useApiGet';
