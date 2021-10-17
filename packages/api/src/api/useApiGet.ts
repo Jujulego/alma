@@ -22,21 +22,20 @@ export interface ApiGetRequestState<D> {
 /**
  * Send a get request with axios, returns the current status of the request.
  *
- * @param url: Default URL of the request (could be overridden by send call)
- * @param headers: Default Headers of the request (could be overridden by send call)
+ * @param defaultUrl: Default URL of the request (could be overridden by send call)
+ * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
  */
-export function useApiGet<D>(url: string, headers: ApiHeaders = {}): ApiGetRequestState<D> {
+export function useApiGet<D>(defaultUrl: string, defaultHeaders: ApiHeaders = {}): ApiGetRequestState<D> {
   // Stabilise objects
-  const sUrl = url;
-  const sHeaders = useDeepMemo(headers);
+  const sDefaultHeaders = useDeepMemo(defaultHeaders);
 
   // Api call
   const { loading, send } = useApiRequest<'get', unknown, D>();
 
   return {
     loading,
-    send: useCallback((url = sUrl, headers= sHeaders) => {
+    send: useCallback((url = defaultUrl, headers= sDefaultHeaders) => {
       return send({ method: 'get', url: url, headers });
-    }, [send, sUrl, sHeaders])
+    }, [send, defaultUrl, sDefaultHeaders])
   };
 }
