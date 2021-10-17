@@ -26,7 +26,7 @@ export interface ApiGetRequestConfig extends Omit<AxiosRequestConfig, 'cancelTok
   disableSwr?: boolean;
 }
 
-export type ApiGetReturn<R, P extends ApiParams, E = unknown> = ApiState & ApiResult<R, E> & {
+export type ApiGetState<R, P extends ApiParams, E = unknown> = ApiState & ApiResult<R, E> & {
   /**
    * Send get request
    *
@@ -48,7 +48,7 @@ export type ApiGetReturn<R, P extends ApiParams, E = unknown> = ApiState & ApiRe
 }
 
 // Base hooks
-export function useGetRequest<R, P extends ApiParams = ApiParams, E = unknown>(generator: ApiGetRequestGenerator<R, P>, swrId: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, P, E> {
+export function useGetRequest<R, P extends ApiParams = ApiParams, E = unknown>(generator: ApiGetRequestGenerator<R, P>, swrId: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetState<R, P, E> {
   const { load = true, disableSwr = false } = config;
 
   // Cache

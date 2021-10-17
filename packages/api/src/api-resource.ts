@@ -1,124 +1,151 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useMemo } from 'react';
 
-import { ApiGetReturn, useApi } from './api';
+import {
+  ApiGetState,
+  useApiDelete,
+  useApiGet,
+  useApiHead,
+  useApiOptions,
+  useApiPatch,
+  useApiPost, useApiPut
+} from './api';
 import { ApiPromise } from './api-promise';
-import { ApiParams, ApiResult, CombineArg } from './types';
+import { ApiParams, ApiResult } from './types';
+
+// Constants
+const API_GET_HOOKS = {
+  get: useApiGet,
+  head: useApiHead,
+  options: useApiOptions,
+  delete: useApiDelete,
+};
+
+const API_POST_HOOKS = {
+  post: useApiPost,
+  patch: useApiPatch,
+  put: useApiPut,
+};
 
 // Types
-export type ApiResourceGetState<T, E = unknown> = Omit<ApiGetReturn<T, ApiParams, E>, 'send'>;
+export type ApiUrlBuilder<A> = (args: A) => string;
+export type ApiMerge<S, R> = (state: S | undefined, res: R | undefined) => S | undefined;
 
-export interface IApiResourceDeleteState<T> {
-  remove: () => ApiPromise<ApiResult<T>>;
+export type ApiStateGetMethod<N extends string, RM, PM extends ApiParams> = {
+  [key in N]: (params?: PM) => ApiPromise<ApiResult<RM>>
 }
 
-export type IApiPostMethod = 'patch' | 'post' | 'put';
-export type IApiResourcePostState<M extends IApiPostMethod, B, T> = {
-  [key in M]: (body: B) => ApiPromise<ApiResult<T>>;
+export type ApiStatePostMethod<N extends string, BM, RM, PM extends ApiParams> = {
+  [key in N]: (body: BM, params?: PM) => ApiPromise<ApiResult<RM>>
 }
 
-export type IApiResourceUrlBuilder<A> = A extends void ? string : (arg: A) => string;
+export type ApiHook<R, P extends ApiParams, A, S extends ApiGetState<R, P>> = ((arg: A, params?: P) => S) & ApiHookMethods<R, P, A, S>;
 
-export type IApiResourceHookMethods<T, A, S extends ApiResourceGetState<T>> = {
-  url: (arg: A) => string;
-  delete: <NA = A>(url?: IApiResourceUrlBuilder<NA>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourceDeleteState<T>>;
-  patch: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePostState<'patch', NB, T>>;
-  post: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePostState<'post', NB, T>>;
-  put: <NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) => IApiResourceHook<T, CombineArg<A, NA>, S & IApiResourcePostState<'put', NB, T>>;
+export interface ApiHookMethods<R, P extends ApiParams, A, S extends ApiGetState<R, P>> {
+  get<N extends string, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStateGetMethod<N, RM, PM>>;
+  head<N extends string, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStateGetMethod<N, RM, PM>>;
+  options<N extends string, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStateGetMethod<N, RM, PM>>;
+  delete<N extends string, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStateGetMethod<N, RM, PM>>;
+  patch<N extends string, BM, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStatePostMethod<N, BM, RM, PM>>;
+  post<N extends string, BM, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStatePostMethod<N, BM, RM, PM>>;
+  put<N extends string, BM, RM = R, PM extends ApiParams = P>(name: N, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStatePostMethod<N, BM, RM, PM>>;
 }
-
-export type IApiResourceHook<T, A, S extends ApiResourceGetState<T>> = ((arg: A) => S) & IApiResourceHookMethods<T, A, S>;
 
 // Utils
-function hookMethods<T, A, S extends ApiResourceGetState<T>>(url: (arg: A) => string): IApiResourceHookMethods<T, A, S> {
+function hookMethods<R, P extends ApiParams, A, S extends ApiGetState<R, P>>(url: ApiUrlBuilder<A>): ApiHookMethods<R, P, A, S> {
   return {
-    url,
-    delete<NA = A>(url?: IApiResourceUrlBuilder<NA>) {
-      return addDeleteCall<T, CombineArg<A, NA>, S>(this, url as IApiResourceUrlBuilder<CombineArg<A, NA>>);
+    get<N extends string, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addGetCall<N, R, RM, P, PM, A, S>(name, 'get', url, this, merge);
     },
-    patch<NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) {
-      return addPostCall<'patch', NB, T, CombineArg<A, NA>, S>('patch', this, url);
+    head<N extends string, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addGetCall<N, R, RM, P, PM, A, S>(name, 'head', url, this, merge);
     },
-    post<NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) {
-      return addPostCall<'post', NB, T, CombineArg<A, NA>, S>('post', this, url);
+    options<N extends string, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addGetCall<N, R, RM, P, PM, A, S>(name, 'options', url, this, merge);
     },
-    put<NB, NA = A>(url?: IApiResourceUrlBuilder<CombineArg<A, NA>>) {
-      return addPostCall<'put', NB, T, CombineArg<A, NA>, S>('put', this, url);
+    delete<N extends string, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addGetCall<N, R, RM, P, PM, A, S>(name, 'delete', url, this, merge);
+    },
+    patch<N extends string, BM, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addPostCall<N, BM, R, RM, P, PM, A, S>(name, 'patch', url, this, merge);
+    },
+    post<N extends string, BM, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addPostCall<N, BM, R, RM, P, PM, A, S>(name, 'post', url, this, merge);
+    },
+    put<N extends string, BM, RM, PM extends ApiParams>(name: N, merge: ApiMerge<R, RM>) {
+      return addPostCall<N, BM, R, RM, P, PM, A, S>(name, 'put', url, this, merge);
     }
   };
 }
 
-// Hook modifiers
-function addDeleteCall<T, A, S extends ApiResourceGetState<T>>(wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourceDeleteState<T>> {
-  const deleteUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
-
-  // new hook
-  function useApiResource(arg: A): S & IApiResourceDeleteState<T> {
-    // Memo
-    const url = useMemo(() => deleteUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
+// Hook modifier
+function addGetCall<N extends string, R, RM, P extends ApiParams, PM extends ApiParams, A, S extends ApiGetState<R, P>>(name: N, method: keyof typeof API_GET_HOOKS, builder: ApiUrlBuilder<A>, wrapped: ApiHook<R, P, A, S>, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStateGetMethod<N, RM, PM>> {
+  // Hook
+  function useApiResource(args: A, params?: P): S & ApiStateGetMethod<N, RM, PM> {
+    // Url
+    const sargs = useDeepMemo(args);
+    const url = useMemo(() => builder(sargs), [sargs]);
 
     // Api
-    const all = wrapped(arg);
-    const { send } = useApi.delete<T>(url);
+    const { send } = API_GET_HOOKS[method]<RM, PM>(url, undefined, { load: false });
+    const all = wrapped(args, params);
 
     // Result
     const { update } = all;
 
-    return {
-      ...all,
-      remove: useCallback(() => {
-        return send().then((res) => {
-          if (res.data) update(res.data);
+    return Object.assign(all, {
+      [name]: useCallback((params?: PM) => {
+        return send(params).then((res) => {
+          update(old => merge(old, res.data));
           return res;
         });
-      }, [send, update])
-    };
+      }, [send, update]),
+    } as ApiStateGetMethod<N, RM, PM>);
   }
 
-  return Object.assign(useApiResource, hookMethods<T, A, S & IApiResourceDeleteState<T>>(wrapped.url));
+  return Object.assign(useApiResource, hookMethods<R, P, A, S & ApiStateGetMethod<N, RM, PM>>(builder));
 }
 
-function addPostCall<M extends IApiPostMethod, B, T, A, S extends ApiResourceGetState<T>>(method: M, wrapped: IApiResourceHook<T, A, S>, url?: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, S & IApiResourcePostState<M, B, T>> {
-  const postUrl: ((arg: A) => string) = url ? (typeof url === 'string' ? () => url : url) : wrapped.url;
-
-  // new hook
-  function useApiResource(arg: A): S & IApiResourcePostState<M, B, T> {
-    // Memo
-    const url = useMemo(() => postUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
+function addPostCall<N extends string, BM, R, RM, P extends ApiParams, PM extends ApiParams, A, S extends ApiGetState<R, P>>(name: N, method: keyof typeof API_POST_HOOKS, builder: ApiUrlBuilder<A>, wrapped: ApiHook<R, P, A, S>, merge: ApiMerge<R, RM>): ApiHook<R, P, A, S & ApiStatePostMethod<N, BM, RM, PM>> {
+  // Hook
+  function useApiResource(args: A, params?: P): S & ApiStatePostMethod<N, BM, RM, PM> {
+    // Url
+    const sargs = useDeepMemo(args);
+    const url = useMemo(() => builder(sargs), [sargs]);
 
     // Api
-    const all = wrapped(arg);
-    const { send } = useApi[method]<B, T>(url);
+    const { send } = API_POST_HOOKS[method]<BM, RM, PM>(url);
+    const all = wrapped(args, params);
 
     // Result
     const { update } = all;
 
-    return {
-      ...all,
-      [method]: useCallback((data: B) => {
-        return send(data).then((res) => {
-          if (res.data) update(res.data);
+    return Object.assign(all, {
+      [name]: useCallback((body: BM, params?: PM) => {
+        return send(body, params).then((res) => {
+          update(old => merge(old, res.data));
           return res;
         });
-      }, [send, update])
-    } as S & IApiResourcePostState<M, B, T>;
+      }, [send, update]),
+    } as ApiStatePostMethod<N, BM, RM, PM>);
   }
 
-  return Object.assign(useApiResource, hookMethods<T, A, S & IApiResourcePostState<M, B, T>>(wrapped.url));
+  return Object.assign(useApiResource, hookMethods<R, P, A, S & ApiStatePostMethod<N, BM, RM, PM>>(builder));
 }
 
 // Hook builder
-export function apiResource<T, A = void>(url: IApiResourceUrlBuilder<A>): IApiResourceHook<T, A, ApiResourceGetState<T>> {
-  const getUrl: (arg: A) => string = typeof url === 'string' ? () => url : url;
+export function apiResource<R, P extends ApiParams, A = void>(url: string | ApiUrlBuilder<A>): ApiHook<R, P, A, ApiGetState<R, P>> {
+  const builder = typeof url === 'string' ? () => url : url;
 
-  // hook
-  function useApiResource(arg: A): ApiResourceGetState<T> {
-    // Memo
-    const url = useMemo(() => getUrl(arg), [useDeepMemo(arg)]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Hook
+  function useApiResource(args: A, params?: P): ApiGetState<R, P> {
+    // Url
+    const sargs = useDeepMemo(args);
+    const url = useMemo(() => builder(sargs), [sargs]);
 
     // Api
-    return useApi.get<T>(url);
+    return useApiGet<R, P>(url, params);
   }
 
-  return Object.assign(useApiResource, hookMethods<T, A, ApiResourceGetState<T>>(getUrl));
+  return Object.assign(useApiResource, hookMethods<R, P, A, ApiGetState<R, P>>(builder));
 }

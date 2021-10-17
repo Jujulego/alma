@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useCallback, useDebugValue } from 'react';
 
 import { ApiParams } from '../types';
-import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetRequest';
+import { ApiGetRequestConfig, ApiGetState, useGetRequest } from './useGetRequest';
 
 /**
  * Send a head request with axios, returns the current status of the request.
@@ -12,7 +12,7 @@ import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetReques
  * @param params: query parameters
  * @param config: axios configuration
  */
-export function useApiHead<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, P, E> {
+export function useApiHead<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetState<R, P, E> {
   useDebugValue(url);
   const { load, disableSwr, ...rconfig } = config;
 
