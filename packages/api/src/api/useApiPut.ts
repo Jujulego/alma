@@ -1,26 +1,41 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios from 'axios';
-import { useCallback, useDebugValue } from 'react';
+import { useCallback } from 'react';
 
-import { ApiParams } from '../types';
-import { ApiPostRequestConfig, ApiPostReturn, usePostRequest } from './usePostRequest';
+import { useApiRequest } from './useApiRequest';
+import { ApiPromise } from '../api-promise';
+import { ApiHeaders, ApiResponse } from '../types';
 
+// Types
+export interface ApiPutRequestState<B, D> {
+  /**
+   * Indicates if the request is running.
+   */
+  loading: boolean;
+
+  /**
+   * Callback that sends a get request and resolves to the response.
+   */
+  send: (body: B, url?: string, headers?: ApiHeaders) => ApiPromise<ApiResponse<D>>;
+}
+
+// Hook
 /**
  * Send a put request with axios, returns the current status of the request.
  *
- * @param url: URL of the request
- * @param params: query parameters
- * @param config: axios configuration
+ * @param defaultUrl: Default URL of the request (could be overridden by send call)
+ * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
  */
-export function useApiPut<B, R = unknown, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config?: ApiPostRequestConfig): ApiPostReturn<B, P, R, E> {
-  useDebugValue(url);
+export function useApiPut<B, D>(defaultUrl: string, defaultHeaders: ApiHeaders = {}): ApiPutRequestState<B, D> {
+  // Stabilise objects
+  const sDefaultHeaders = useDeepMemo(defaultHeaders);
 
-  // Callbacks
-  const generator = useCallback(
-    (body: B, signal: AbortSignal, _params?: P) =>
-      axios.put<R>(url, body, { ...config, params: { ...params, ..._params }, signal }),
-    [url, useDeepMemo(params), useDeepMemo(config)] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+  // Api call
+  const { loading, send } = useApiRequest<'put', B, D>();
 
-  return usePostRequest<B, R, P, E>(generator);
+  return {
+    loading,
+    send: useCallback((body, url = defaultUrl, headers= sDefaultHeaders) => {
+      return send({ method: 'put', url: url, headers, body });
+    }, [send, defaultUrl, sDefaultHeaders])
+  };
 }
