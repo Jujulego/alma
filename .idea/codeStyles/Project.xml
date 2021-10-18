@@ -11,6 +11,8 @@
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="SPACES_WITHIN_OBJECT_LITERAL_BRACES" value="true" />
       <option name="SPACES_WITHIN_IMPORTS" value="true" />
+      <option name="BLACKLIST_IMPORTS" value="rxjs/Rx,node_modules/**,**/node_modules/**,**/dist/**,@angular/material,@angular/material/typings/**" />
+      <option name="USE_PATH_MAPPING" value="DIFFERENT_PATHS" />
     </TypeScriptCodeStyleSettings>
     <codeStyleSettings language="JavaScript">
       <indentOptions>

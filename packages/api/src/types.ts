@@ -1,31 +1,50 @@
-// Utility types
-export type Updator<R = unknown> = (data: R) => R;
-export type CombineArg<A1, A2> = A1 extends void ? A2 : (A2 extends void ? A1 : A1 & A2)
-
+// Types
+export type ApiMethod = 'get' | 'head' | 'options' | 'delete' | 'post' | 'patch' | 'put';
 export type ApiParams = Record<string, unknown>;
+export type ApiHeaders = Record<string, string>;
 
-export interface ApiState {
-  loading: boolean;
+// - request
+interface ApiMethodBody<B> {
+  get: { body?: B },
+  head: { body?: B },
+  options: { body?: B },
+  delete: { body?: B },
+  post: { body: B },
+  patch: { body: B },
+  put: { body: B },
 }
 
-export interface ApiResult<R, E = unknown> {
+export type ApiRequest<M extends ApiMethod, B = unknown> = ApiMethodBody<B>[M] & {
   /**
-   * Status of the last response
+   * Request method
+   */
+  method: M;
+
+  /**
+   * Request url
+   */
+  url: string;
+
+  /**
+   * Request headers
+   */
+  headers: ApiHeaders;
+}
+
+// - response
+export interface ApiResponse<D = unknown> {
+  /**
+   * Response status
    */
   status: number;
 
   /**
-   * Result of the request if it was successful
+   * Response headers
    */
-  data?: R;
+  headers: ApiHeaders;
 
   /**
-   * Result of the request if it was errored
+   * Response body
    */
-  error?: E;
-}
-
-// Utils
-export function normalizeUpdator<R = unknown>(update: R | Updator<R>): Updator<R> {
-  return typeof update === 'function' ? (update as Updator<R>) : () => update;
+  data: D;
 }

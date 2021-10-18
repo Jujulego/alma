@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from 'react';
 
 import { SwrCacheContext, SwrCacheState } from './SwrCacheContext';
-import { normalizeUpdator, Updator } from '../types';
+import { normalizeUpdator, Updator } from '../utils';
 
 // Component
 export const SwrCache: FC = ({ children }) => {

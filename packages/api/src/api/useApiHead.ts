@@ -1,26 +1,41 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import axios from 'axios';
-import { useCallback, useDebugValue } from 'react';
+import { useCallback } from 'react';
 
-import { ApiParams } from '../types';
-import { ApiGetRequestConfig, ApiGetReturn, useGetRequest } from './useGetRequest';
+import { ApiPromise } from '../api-promise';
+import { ApiHeaders, ApiResponse } from '../types';
+import { useApiRequest } from './useApiRequest';
 
+// Types
+export interface ApiHeadRequestState<D> {
+  /**
+   * Indicates if the request is running.
+   */
+  loading: boolean;
+
+  /**
+   * Callback that sends a head request and resolves to the response.
+   */
+  send: (url?: string, headers?: ApiHeaders) => ApiPromise<ApiResponse<D>>;
+}
+
+// Hook
 /**
  * Send a head request with axios, returns the current status of the request.
- * 
- * @param url: URL of the request
- * @param params: query parameters
- * @param config: axios configuration
+ *
+ * @param defaultUrl: Default URL of the request (could be overridden by send call)
+ * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
  */
-export function useApiHead<R, P extends ApiParams = ApiParams, E = unknown>(url: string, params?: P, config: ApiGetRequestConfig = {}): ApiGetReturn<R, E> {
-  useDebugValue(url);
-  const { load, disableSwr, ...rconfig } = config;
+export function useApiHead<D>(defaultUrl: string, defaultHeaders: ApiHeaders = {}): ApiHeadRequestState<D> {
+  // Stabilise objects
+  const sDefaultHeaders = useDeepMemo(defaultHeaders);
 
-  // Callbacks
-  const generator = useCallback(
-    (signal: AbortSignal) => axios.head<R>(url, { ...rconfig, params, signal }),
-    [url, useDeepMemo(params), useDeepMemo(rconfig)] // eslint-disable-line react-hooks/exhaustive-deps
-  );
+  // Api call
+  const { loading, send } = useApiRequest<'head', unknown, D>();
 
-  return useGetRequest<R, E>(generator, `api-head:${url}`, { load, disableSwr });
+  return {
+    loading,
+    send: useCallback((url = defaultUrl, headers= sDefaultHeaders) => {
+      return send({ method: 'head', url: url, headers });
+    }, [send, defaultUrl, sDefaultHeaders])
+  };
 }
