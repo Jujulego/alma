@@ -1640,7 +1640,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/alma-api@^1.1.7, @jujulego/alma-api@workspace:packages/api":
+"@jujulego/alma-api@npm:^1.1.6":
+  version: 1.1.7
+  resolution: "@jujulego/alma-api@npm:1.1.7"
+  dependencies:
+    "@jujulego/alma-utils": ^1.0.6
+  peerDependencies:
+    axios: ^0.23.0
+    react: ^17.0.0
+    react-dom: ^17.0.0
+  checksum: d81bb763ed53ffa3cb17c67f466608d8fe4e235db1cdda34439f7187591613577ab4f6dfad036a01ed0fa222f9726d40d1d1def77d10efb24d004aa73a83f36b
+  languageName: node
+  linkType: hard
+
+"@jujulego/alma-api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
@@ -1663,7 +1676,7 @@ __metadata:
     axios: 0.23.0
     del: 6.0.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.1.0
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.4
@@ -1674,7 +1687,7 @@ __metadata:
     jest: 27.2.5
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.0.5
     typescript: 4.4.4
   peerDependencies:
     axios: ^0.23.0
@@ -1694,7 +1707,7 @@ __metadata:
     "@babel/preset-react": 7.14.5
     "@babel/preset-typescript": 7.15.0
     "@babel/runtime": 7.15.4
-    "@jujulego/alma-api": ^1.1.7
+    "@jujulego/alma-api": ^1.1.6
     "@jujulego/alma-utils": ^1.0.6
     "@testing-library/jest-dom": 5.14.1
     "@testing-library/react": 12.1.2
@@ -1708,7 +1721,7 @@ __metadata:
     axios: 0.23.0
     del: 6.0.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.1.0
     eslint-plugin-react: 7.26.0
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.4
@@ -1722,7 +1735,7 @@ __metadata:
     jest: 27.2.5
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.0.5
     typescript: 4.4.4
   peerDependencies:
     axios: ^0.23.0
@@ -1754,7 +1767,7 @@ __metadata:
     del: 6.0.0
     dequal: ^2.0.2
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.1.0
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.4
@@ -1765,7 +1778,7 @@ __metadata:
     jest: 27.2.5
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.0.5
     typescript: 4.4.4
   peerDependencies:
     react: ^17.0.0
@@ -2436,7 +2449,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.0.0
     "@typescript-eslint/parser": 5.0.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.1.0
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 4.12.4
@@ -4116,9 +4129,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:25.2.1":
-  version: 25.2.1
-  resolution: "eslint-plugin-jest@npm:25.2.1"
+"eslint-plugin-jest@npm:25.1.0":
+  version: 25.1.0
+  resolution: "eslint-plugin-jest@npm:25.1.0"
   dependencies:
     "@typescript-eslint/experimental-utils": ^5.0.0
   peerDependencies:
@@ -4127,7 +4140,7 @@ __metadata:
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 8ac8d1e2e138dd1371f7ebeba01559609049eb92b8561f15952217bd9a478a8f7aaa1e58ef3386962ae06096bc2ab56173a389ea8d2dfbc47a59afd23bdd09c6
+  checksum: dd91eab9ec29de4ae0e519cc7c16524f185c21b30f0940c8545943a47605dd4540402626a855e2d2497f11180be0fc0c9f7f7398396b5cb2a35fab5a725bf3f4
   languageName: node
   linkType: hard
 
@@ -6742,13 +6755,6 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"lodash.memoize@npm:4.x":
-  version: 4.1.2
-  resolution: "lodash.memoize@npm:4.1.2"
-  checksum: 9ff3942feeccffa4f1fafa88d32f0d24fdc62fd15ded5a74a5f950ff5f0c6f61916157246744c620173dddf38d37095a92327d5fd3861e2063e736a5c207d089
-  languageName: node
-  linkType: hard
-
 "lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
@@ -6763,7 +6769,7 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.17.15, lodash@npm:^4.7.0":
+"lodash@npm:4.x, lodash@npm:^4.17.15, lodash@npm:^4.7.0":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -9176,15 +9182,15 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:27.0.7":
-  version: 27.0.7
-  resolution: "ts-jest@npm:27.0.7"
+"ts-jest@npm:27.0.5":
+  version: 27.0.5
+  resolution: "ts-jest@npm:27.0.5"
   dependencies:
     bs-logger: 0.x
     fast-json-stable-stringify: 2.x
     jest-util: ^27.0.0
     json5: 2.x
-    lodash.memoize: 4.x
+    lodash: 4.x
     make-error: 1.x
     semver: 7.x
     yargs-parser: 20.x
@@ -9203,7 +9209,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 3711361cb5ae54aac547b00f8ad118ec88333c391af4bff0420497e9faa296eace4e8272c627ecbf4be675af9f68c437e4c2ccc5693c6d744796ec7da6dda131
+  checksum: fd53cdb6f913cbe802799d2b491f70f33c52c840c4b8483cecf600ff360efbd00c8d7ed9eb0dd677219f330ee38928b7b9890e9853e9f4d3574b9d8e1dcf4a30
   languageName: node
   linkType: hard
 
