@@ -20,10 +20,22 @@ export type ApiStateQueryMethod<N extends string, DM, AM> = {
   [key in N]: (args: AM) => ApiPromise<ApiResponse<DM>>
 }
 
+export interface ApiMutableHookState<B, D> {
+  loading: boolean;
+  send: (body: B, url?: string) => ApiPromise<ApiResponse<D>>;
+}
+
+export type ApiMutableHook<B, D> = (url: string) => ApiMutableHookState<B, D>
+
+export type ApiStateMutateMethod<N extends string, BM, DM, AM> = {
+  [key in N]: (body: BM, args: AM) => ApiPromise<ApiResponse<DM>>
+}
+
 export type ApiHook<D, A, S extends ApiAutoLoadState<D>> = ((args: A) => S) & ApiHookMethods<D, A, S>;
 
 export interface ApiHookMethods<D, A, S extends ApiAutoLoadState<D>> {
   query<N extends string, DM = D, AM = void>(name: N, hook: ApiQueryableHook<DM>, url: null | string | ApiUrlBuilder<AM>, merge: ApiMerge<D, DM>): ApiHook<D, A, S & ApiStateQueryMethod<N, DM, AM>>;
+  mutate<N extends string, BM, DM = D, AM = void>(name: N, hook: ApiMutableHook<BM, DM>, url: null | string | ApiUrlBuilder<AM>, merge: ApiMerge<D, DM>): ApiHook<D, A, S & ApiStateMutateMethod<N, BM, DM, AM>>;
 }
 
 // Utils
@@ -31,7 +43,10 @@ function hookMethods<D, A, S extends ApiAutoLoadState<D>>(url: ApiUrlBuilder<A>)
   return {
     query<N extends string, DM, AM>(name: N, hook: ApiQueryableHook<DM>, builder: null | string | ApiUrlBuilder<AM>, merge: ApiMerge<D, DM>) {
       return addQueryCall<N, D, DM, A, AM, S>(url, this, name, hook, builder, merge);
-    }
+    },
+    mutate<N extends string, BM, DM, AM>(name: N, hook: ApiMutableHook<BM, DM>, builder: null | string | ApiUrlBuilder<AM>, merge: ApiMerge<D, DM>) {
+      return addMutationCall<N, BM, D, DM, A, AM, S>(url, this, name, hook, builder, merge);
+    },
   };
 }
 
@@ -63,6 +78,35 @@ function addQueryCall<N extends string, D, DM, A, AM, S extends ApiAutoLoadState
   }
 
   return Object.assign(useApiResource, hookMethods<D, A, S & ApiStateQueryMethod<N, DM, AM>>(defaultBuilder));
+}
+
+function addMutationCall<N extends string, BM, D, DM, A, AM, S extends ApiAutoLoadState<D>>(defaultBuilder: ApiUrlBuilder<A>, wrapped: ApiHook<D, A, S>, name: N, hook: ApiMutableHook<BM, DM>, builder: null | string | ApiUrlBuilder<AM>, merge: ApiMerge<D, DM>): ApiHook<D, A, S & ApiStateMutateMethod<N, BM, DM, AM>> {
+  // Hook
+  function useApiResource(args: A): S & ApiStateMutateMethod<N, BM, DM, AM> {
+    // Url
+    const sargs = useDeepMemo(args);
+    const defaultUrl = useMemo(() => defaultBuilder(sargs), [sargs]);
+
+    // Api
+    const { send } = hook(defaultUrl);
+    const all = wrapped(args);
+
+    // Result
+    const { update } = all;
+
+    return Object.assign(all, {
+      [name]: useCallback((body: BM, args: AM) => {
+        const url = typeof builder === 'function' ? builder(args) : builder || undefined;
+
+        return send(body, url).then((res) => {
+          update((old) => merge(old, res.data));
+          return res;
+        });
+      }, [send, update]),
+    } as ApiStateMutateMethod<N, BM, DM, AM>);
+  }
+
+  return Object.assign(useApiResource, hookMethods<D, A, S & ApiStateMutateMethod<N, BM, DM, AM>>(defaultBuilder));
 }
 
 // Hook builder

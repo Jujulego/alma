@@ -4,18 +4,22 @@ import {
   apiResource, ApiPromise, ApiResponse, makeApiPromise,
   useApiAutoLoad as _useApiAutoLoad,
   useApiDelete as _useApiDelete,
-  useApiGet as _useApiGet
+  useApiGet as _useApiGet,
+  useApiPut as _useApiPut
 } from '../src';
 
 // Mocks
 jest.mock('../src/api/useApiAutoLoad');
 const useApiAutoLoad = _useApiAutoLoad as jest.MockedFunction<typeof _useApiAutoLoad>;
 
+jest.mock('../src/api/useApiDelete');
+const useApiDelete = _useApiDelete as jest.MockedFunction<typeof _useApiDelete>;
+
 jest.mock('../src/api/useApiGet');
 const useApiGet = _useApiGet as jest.MockedFunction<typeof _useApiGet>;
 
-jest.mock('../src/api/useApiDelete');
-const useApiDelete = _useApiDelete as jest.MockedFunction<typeof _useApiDelete>;
+jest.mock('../src/api/useApiPut');
+const useApiPut = _useApiPut as jest.MockedFunction<typeof _useApiPut>;
 
 // Setup
 beforeEach(() => {
@@ -187,5 +191,124 @@ describe('apiResource.query', () => {
     });
 
     expect(spySend).toHaveBeenCalledWith('/api/test/1/delete');
+  });
+});
+
+describe('apiResource.mutate', () => {
+  // Tests
+  it('should call useApiPut with same url', async () => {
+    // Mocks
+    let respond: (data: string) => void = () => undefined;
+    const spySend = jest.fn<ApiPromise<ApiResponse<string>>, [number, string]>()
+      .mockReturnValue(makeApiPromise(new Promise((resolve) => {
+        respond = (data) => resolve({
+          status: 200,
+          headers: {},
+          data,
+        });
+      }), jest.fn()));
+
+    const spyMerge = jest.fn();
+    const spyUpdate = jest.fn();
+
+    useApiAutoLoad.mockReturnValue({
+      loading: false,
+      data: 'test',
+      reload: jest.fn(),
+      update: spyUpdate
+    });
+
+    useApiPut.mockReturnValue({ loading: false, send: spySend });
+
+    // Render
+    const useApiTest = apiResource<string>(useApiGet, '/api/test')
+      .mutate('put', useApiPut, null, spyMerge);
+
+    const { result } = renderHook(() => useApiTest());
+
+    // Check
+    expect(result.current).toEqual(expect.objectContaining({
+      put: expect.any(Function),
+    }));
+
+    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test');
+    expect(useApiPut).toHaveBeenCalledWith('/api/test');
+
+    // Call send
+    let prom: ApiPromise<ApiResponse<string>>;
+    act(() => {
+      prom = result.current.put(1);
+    });
+
+    expect(spySend).toHaveBeenCalledWith(1, undefined);
+
+    // After receive
+    await act(async () => {
+      respond('updated');
+
+      await expect(prom).resolves.toEqual({
+        status: 200,
+        headers: {},
+        data: 'updated'
+      });
+    });
+
+    expect(spyUpdate).toHaveBeenCalledWith(expect.any(Function));
+
+    // Check updator
+    const updator = spyUpdate.mock.calls[0][0];
+
+    expect(updator('test')).toBeUndefined();
+    expect(spyMerge).toHaveBeenCalledWith('test', 'updated');
+  });
+
+  it('should call useApiPut with new url', async () => {
+    // Mocks
+    const spySend = jest.fn<ApiPromise<ApiResponse<string>>, [number, string]>()
+      .mockReturnValue(makeApiPromise(new Promise(() => undefined), jest.fn()));
+
+    useApiPut.mockReturnValue({ loading: false, send: spySend });
+
+    // Render
+    const useApiTest = apiResource<string>(useApiGet, '/api/test')
+      .mutate('put', useApiPut, '/api/test/put', jest.fn());
+
+    const { result } = renderHook(() => useApiTest());
+
+    // Check
+    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test');
+    expect(useApiPut).toHaveBeenCalledWith('/api/test');
+
+    // Call send
+    act(() => {
+      result.current.put(1);
+    });
+
+    expect(spySend).toHaveBeenCalledWith(1, '/api/test/put');
+  });
+
+  it('should call useApiPut with built url', async () => {
+    // Mocks
+    const spySend = jest.fn<ApiPromise<ApiResponse<string>>, [number, string]>()
+      .mockReturnValue(makeApiPromise(new Promise(() => undefined), jest.fn()));
+
+    useApiPut.mockReturnValue({ loading: false, send: spySend });
+
+    // Render
+    const useApiTest = apiResource<string>(useApiGet, '/api/test')
+      .mutate('put', useApiPut, (id: number) => `/api/test/${id}/put`, jest.fn());
+
+    const { result } = renderHook(() => useApiTest());
+
+    // Check
+    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test');
+    expect(useApiPut).toHaveBeenCalledWith('/api/test');
+
+    // Call send
+    act(() => {
+      result.current.put(2, 1);
+    });
+
+    expect(spySend).toHaveBeenCalledWith(2, '/api/test/1/put');
   });
 });
