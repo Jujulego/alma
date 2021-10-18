@@ -55,7 +55,7 @@ function addQueryCall<N extends string, D, DM, A, AM, S extends ApiAutoLoadState
         const url = typeof builder === 'function' ? builder(args) : builder || undefined;
 
         return send(url).then((res) => {
-          update(old => merge(old, res.data));
+          update((old) => merge(old, res.data));
           return res;
         });
       }, [send, update]),
