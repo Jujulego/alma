@@ -26,7 +26,7 @@
     "react-dom": "^17.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-api": "^1.1.7",
+    "@jujulego/alma-api": "^2.0.0",
     "@jujulego/alma-utils": "^1.0.6",
     "graphql-ws": "^5.5.0"
   },
