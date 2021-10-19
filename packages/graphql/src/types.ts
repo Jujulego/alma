@@ -1,8 +1,9 @@
-import { DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLError } from 'graphql';
 
 // Types
 export type GqlVariables = Record<string, unknown>;
 export type GqlDocument<D = unknown, V extends GqlVariables = GqlVariables> = (string | DocumentNode) & { _d?: D, _v?: V };
+export type GqlCancel = () => void;
 
 export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> {
   _d?: D,
@@ -11,29 +12,17 @@ export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> 
   variables?: V;
 }
 
-export interface GqlLocation {
-  column: number;
-  line: number;
-}
-
-export interface GqlError {
-  message: string;
-  locations: GqlLocation[];
-  path?: string[];
-  extensions?: unknown;
-}
-
 export interface GqlResponse<D> {
   data: D;
-  errors?: GqlError[];
+  errors?: ReadonlyArray<GraphQLError>;
 }
 
 export interface GqlErrorResponse {
-  errors: GqlError[];
+  data?: undefined;
+  errors: ReadonlyArray<GraphQLError>;
 }
 
-export interface GqlState<D> {
-  loading: boolean;
-  data?: D | undefined;
-  error?: GqlErrorResponse;
+export interface GqlSink<D> {
+  onData: (data: GqlResponse<D>) => void;
+  onError: (error: unknown) => void;
 }

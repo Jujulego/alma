@@ -1,15 +1,15 @@
 import { createClient, Client } from 'graphql-ws';
 import { FC, useEffect, useState } from 'react';
 
-import { GqlSubscriptionContext } from './GqlSubscriptionContext';
+import { GqlWsContext } from './GqlWsContext';
 
 // Types
-export interface GqlSubscriptionClientProps {
+export interface GqlWsClientProps {
   endpoint: string;
 }
 
 // Component
-export const GqlSubscriptionClient: FC<GqlSubscriptionClientProps> = (props) => {
+export const GqlWsClient: FC<GqlWsClientProps> = (props) => {
   const { endpoint, children } = props;
 
   // State
@@ -25,8 +25,8 @@ export const GqlSubscriptionClient: FC<GqlSubscriptionClientProps> = (props) => 
 
   // Render
   return (
-    <GqlSubscriptionContext.Provider value={{ client }}>
+    <GqlWsContext.Provider value={{ client }}>
       { children }
-    </GqlSubscriptionContext.Provider>
+    </GqlWsContext.Provider>
   );
 };

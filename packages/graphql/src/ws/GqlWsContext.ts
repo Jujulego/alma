@@ -2,9 +2,9 @@ import { Client } from 'graphql-ws';
 import { createContext } from 'react';
 
 // Types
-export interface GqlSubscriptionState {
+export interface GqlWsClientState {
   client?: Client;
 }
 
 // Context
-export const GqlSubscriptionContext = createContext<GqlSubscriptionState>({});
+export const GqlWsContext = createContext<GqlWsClientState>({});
