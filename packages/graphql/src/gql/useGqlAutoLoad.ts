@@ -1,19 +1,12 @@
-import { ApiPromise, normalizeUpdator, Updator, useSwrCache } from '@jujulego/alma-api';
+import { normalizeUpdator, Updator, useSwrCache } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { GraphQLError } from 'graphql';
 import { useCallback, useDebugValue, useEffect, useMemo, useState } from 'react';
 
-import { GqlVariables, GqlResponse, GqlDocument, GqlRequest } from '../types';
+import { GqlVariables, GqlResponse, GqlDocument, GqlRequest, GqlQueryHook } from '../types';
 import { buildRequest } from '../utils';
 
 // Types
-export interface GqlLoadableHookState<D, V extends GqlVariables> {
-  loading: boolean;
-  send: (vars: V) => ApiPromise<GqlResponse<D>>;
-}
-
-export type GqlLoadableHook<D, V extends GqlVariables> = (url: string, req: GqlRequest<D, V>) => GqlLoadableHookState<D, V>;
-
 export interface GqlAutoLoadConfig {
   /**
    * Load request on mount
@@ -58,7 +51,7 @@ export interface GqlAutoLoadState<D> {
 }
 
 // Hook
-export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V> | GqlRequest<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
+export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlQueryHook<D, V>, url: string, doc: GqlDocument<D, V> | GqlRequest<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
   const { load = true, disableSwr = false } = config;
 
   // State
