@@ -1,0 +1,84 @@
+import { ApiPromise, Updator, useSwrCache } from '@jujulego/alma-api';
+import { useCallback, useDebugValue, useEffect, useState } from 'react';
+
+import { GqlVariables, GqlResponse, GqlDocument } from '../types';
+
+// Types
+export interface GqlLoadableHookState<D, V extends GqlVariables> {
+  loading: boolean;
+  send: (vars: V) => ApiPromise<GqlResponse<D>>;
+}
+
+export type GqlLoadableHook<D, V extends GqlVariables> = (url: string, doc: GqlDocument<D, V>) => GqlLoadableHookState<D, V>;
+
+export interface GqlAutoLoadConfig {
+  /**
+   * Load request on mount
+   *
+   * @default true
+   */
+  load?: boolean;
+
+  /**
+   * Disable use of Swr cache
+   *
+   * @default false
+   */
+  disableSwr?: boolean;
+}
+
+export interface GqlAutoLoadState<D> {
+  /**
+   * Indicates if the request is running.
+   */
+  loading: boolean;
+
+  /**
+   * Result of the request
+   */
+  data?: GqlResponse<D>;
+
+  /**
+   * Forces request reload
+   */
+  reload: () => void;
+
+  /**
+   * Update cached data
+   */
+  update: (data?: GqlResponse<D> | Updator<GqlResponse<D> | undefined>) => void;
+}
+
+// Hook
+export function useApiAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
+  const { load = true/*, disableSwr = false*/ } = config;
+
+  // Cache
+  const { data, setData } = useSwrCache<GqlResponse<D> | undefined>(`gql:${url}`, undefined, true);
+  useDebugValue(data);
+
+  // State
+  const [reload, setReload] = useState(load ? 1 : 0);
+
+  // Api call
+  const { loading, send } = hook(url, doc);
+
+  // Effects
+  useEffect(() => {
+    if (reload === 0) return;
+
+    const prom = send(vars)
+      .then((res) => {
+        setData(res);
+      });
+
+    return () => prom.cancel();
+  }, [reload, send, vars, setData]);
+
+  return {
+    loading,
+    data,
+    reload: useCallback(() => setReload((old) => old + 1), []),
+    update: setData
+  };
+}
