@@ -1,5 +1,6 @@
-import { ApiPromise, Updator, useSwrCache } from '@jujulego/alma-api';
+import { ApiPromise, normalizeUpdator, Updator, useSwrCache } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
+import { GraphQLError } from 'graphql';
 import { useCallback, useDebugValue, useEffect, useMemo, useState } from 'react';
 
 import { GqlVariables, GqlResponse, GqlDocument, GqlRequest } from '../types';
@@ -38,7 +39,12 @@ export interface GqlAutoLoadState<D> {
   /**
    * Result of the request
    */
-  data?: GqlResponse<D>;
+  data?: D;
+
+  /**
+   * Errors of the request
+   */
+  errors?: ReadonlyArray<GraphQLError>;
 
   /**
    * Forces request reload
@@ -48,7 +54,7 @@ export interface GqlAutoLoadState<D> {
   /**
    * Update cached data
    */
-  update: (data?: GqlResponse<D> | Updator<GqlResponse<D> | undefined>) => void;
+  update: (data?: D | Updator<D | undefined>) => void;
 }
 
 // Hook
@@ -86,8 +92,10 @@ export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<
 
   return {
     loading,
-    data,
+    ...data,
     reload: useCallback(() => setReload((old) => old + 1), []),
-    update: setData
+    update: useCallback((data) => {
+      setData((old) => ({ ...old, data: normalizeUpdator(data)(old?.data) }));
+    }, [setData]),
   };
 }
