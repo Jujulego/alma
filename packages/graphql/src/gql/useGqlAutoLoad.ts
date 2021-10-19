@@ -52,7 +52,7 @@ export interface GqlAutoLoadState<D> {
 }
 
 // Hook
-export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
+export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V> | GqlRequest<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
   const { load = true, disableSwr = false } = config;
 
   // State

@@ -1,9 +1,10 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 
-import { GqlCancel, GqlDocument, GqlRequest, GqlSink, GqlVariables } from '../types';
+import { GqlCancel, GqlDocument, GqlRequest, GqlResponse, GqlSink, GqlVariables } from '../types';
 import { buildRequest } from '../utils';
 import { GqlWsContext } from '../ws';
+import { ApiPromise, makeApiPromise } from '../../../api';
 
 // Types
 export interface GqlWsState<D, V extends GqlVariables> {
@@ -11,6 +12,13 @@ export interface GqlWsState<D, V extends GqlVariables> {
    * Indicates if the request is running.
    */
   loading: boolean;
+
+  /**
+   * Send the given graphql request
+   *
+   * @param vars to send with the document
+   */
+  send: (vars: V) => ApiPromise<GqlResponse<D>>;
 
   /**
    * Send the given graphql subscription
@@ -35,12 +43,46 @@ export function useGqlWs<D, V extends GqlVariables = GqlVariables>(url: string, 
   // Return
   return {
     loading,
-    subscribe: useCallback((vars, sink) => {
+    send: useCallback((vars) => {
+      // Assert ws client is present
       if (!client) {
-        console.warn('websocket client not found, subscription will not be send');
+        console.warn('websocket client not found, request will not be send.');
+        return makeApiPromise(new Promise(() => undefined), () => undefined);
+      }
+
+      // Send request
+      setLoading(true);
+      let cancel: GqlCancel = () => undefined;
+
+      return makeApiPromise(
+        new Promise((resolve, reject) => {
+          cancel = client.subscribe<D>({ ...req, variables: vars }, {
+            next(value) {
+              resolve({
+                data: value.data as D,
+                errors: value.errors,
+              });
+            },
+            complete() {
+              setLoading(false);
+            },
+            error(error) {
+              reject(error);
+              setLoading(false);
+            }
+          });
+        }),
+        () => cancel()
+      );
+    }, [client, req]),
+    subscribe: useCallback((vars, sink) => {
+      // Assert ws client is present
+      if (!client) {
+        console.warn('websocket client not found, subscription will not be send.');
         return () => undefined;
       }
 
+      // Send subscription
       setLoading(true);
 
       return client.subscribe<D>({ ...req, variables: vars }, {
