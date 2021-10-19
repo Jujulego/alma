@@ -1,7 +1,7 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 
-import { GqlCancel, GqlDocument, GqlSink, GqlVariables } from '../types';
+import { GqlCancel, GqlDocument, GqlRequest, GqlSink, GqlVariables } from '../types';
 import { buildRequest } from '../utils';
 import { GqlWsContext } from '../ws';
 
@@ -21,7 +21,7 @@ export interface GqlWsState<D, V extends GqlVariables> {
 }
 
 // Hook
-export function useGqlWs<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V>): GqlWsState<D, V> {
+export function useGqlWs<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V> | GqlRequest<D, V>): GqlWsState<D, V> {
   // Build request
   const sdoc = useDeepMemo(doc);
   const req = useMemo(() => buildRequest(sdoc), [sdoc]);

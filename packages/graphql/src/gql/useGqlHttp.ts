@@ -21,7 +21,7 @@ export interface GqlHttpState<D, V extends GqlVariables> {
 }
 
 // Hook
-export function useGqlHttp<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V>): GqlHttpState<D, V> {
+export function useGqlHttp<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V> | GqlRequest<D, V>): GqlHttpState<D, V> {
   // Build request
   const sdoc = useDeepMemo(doc);
   const req = useMemo(() => buildRequest(sdoc), [sdoc]);

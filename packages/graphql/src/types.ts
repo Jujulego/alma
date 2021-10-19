@@ -13,13 +13,8 @@ export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> 
 }
 
 export interface GqlResponse<D> {
-  data: D;
+  data?: D;
   errors?: ReadonlyArray<GraphQLError>;
-}
-
-export interface GqlErrorResponse {
-  data?: undefined;
-  errors: ReadonlyArray<GraphQLError>;
 }
 
 export interface GqlSink<D> {

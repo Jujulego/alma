@@ -1,7 +1,9 @@
 import { ApiPromise, Updator, useSwrCache } from '@jujulego/alma-api';
-import { useCallback, useDebugValue, useEffect, useState } from 'react';
+import { useDeepMemo } from '@jujulego/alma-utils';
+import { useCallback, useDebugValue, useEffect, useMemo, useState } from 'react';
 
-import { GqlVariables, GqlResponse, GqlDocument } from '../types';
+import { GqlVariables, GqlResponse, GqlDocument, GqlRequest } from '../types';
+import { buildRequest } from '../utils';
 
 // Types
 export interface GqlLoadableHookState<D, V extends GqlVariables> {
@@ -9,7 +11,7 @@ export interface GqlLoadableHookState<D, V extends GqlVariables> {
   send: (vars: V) => ApiPromise<GqlResponse<D>>;
 }
 
-export type GqlLoadableHook<D, V extends GqlVariables> = (url: string, doc: GqlDocument<D, V>) => GqlLoadableHookState<D, V>;
+export type GqlLoadableHook<D, V extends GqlVariables> = (url: string, req: GqlRequest<D, V>) => GqlLoadableHookState<D, V>;
 
 export interface GqlAutoLoadConfig {
   /**
@@ -50,20 +52,27 @@ export interface GqlAutoLoadState<D> {
 }
 
 // Hook
-export function useApiAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
-  const { load = true/*, disableSwr = false*/ } = config;
-
-  // Cache
-  const { data, setData } = useSwrCache<GqlResponse<D> | undefined>(`gql:${url}`, undefined, true);
-  useDebugValue(data);
+export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlLoadableHook<D, V>, url: string, doc: GqlDocument<D, V>, vars: V, config: GqlAutoLoadConfig = {}): GqlAutoLoadState<D> {
+  const { load = true, disableSwr = false } = config;
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
 
-  // Api call
-  const { loading, send } = hook(url, doc);
+  // Build request
+  const sdoc = useDeepMemo(doc);
+  const req = useMemo(() => buildRequest(sdoc), [sdoc]);
 
-  // Effects
+  useEffect(() => {
+    if (!req.operationName) console.warn('Gql request has no operation name, so it won\'t be cached');
+  }, [req]);
+
+  // Cache
+  const { data, setData } = useSwrCache<GqlResponse<D> | undefined>(`gql:${req.operationName}`, undefined, req.operationName ? disableSwr : true);
+  useDebugValue(data);
+
+  // Send request
+  const { loading, send } = hook(url, req);
+
   useEffect(() => {
     if (reload === 0) return;
 
