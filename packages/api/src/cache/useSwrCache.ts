@@ -1,8 +1,8 @@
+import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 
 import { SwrCacheContext } from './SwrCacheContext';
 import { Updator } from '../utils';
-import { useDeepMemo } from '../../../utils';
 
 // Types
 export interface SwrCacheResult<R> {
