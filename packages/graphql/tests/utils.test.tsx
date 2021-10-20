@@ -44,6 +44,21 @@ describe('buildRequest', () => {
     });
   });
 
+  it('should return request without parsing', async () => {
+    const req = {
+      query: `
+          query {
+              test {
+                  isSuccessful
+              }
+          }
+      `
+  };
+
+    // Checks
+    expect(buildRequest(req)).toBe(req);
+  });
+
   it('should return request without operationName (none set)', async () => {
     const doc = gql`
         query {
