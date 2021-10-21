@@ -1,7 +1,7 @@
 import { createClient, Client } from 'graphql-ws';
 import { FC, useEffect, useState } from 'react';
 
-import { GqlWsContext } from './GqlWsContext';
+import { GqlWsClientContext } from './GqlWsClientContext';
 
 // Types
 export interface GqlWsClientProps {
@@ -25,8 +25,8 @@ export const GqlWsClient: FC<GqlWsClientProps> = (props) => {
 
   // Render
   return (
-    <GqlWsContext.Provider value={{ client }}>
+    <GqlWsClientContext.Provider value={{ client }}>
       { children }
-    </GqlWsContext.Provider>
+    </GqlWsClientContext.Provider>
   );
 };

@@ -3,7 +3,7 @@ import { useCallback, useContext, useMemo, useState } from 'react';
 
 import { GqlCancel, GqlDocument, GqlRequest, GqlResponse, GqlSink, GqlVariables } from '../types';
 import { buildRequest } from '../utils';
-import { GqlWsContext } from '../ws';
+import { GqlWsClientContext } from '../ws';
 import { ApiPromise, makeApiPromise } from '../../../api';
 
 // Types
@@ -38,7 +38,7 @@ export function useGqlWs<D, V extends GqlVariables = GqlVariables>(url: string, 
   const [loading, setLoading] = useState(false);
 
   // Context
-  const { client } = useContext(GqlWsContext);
+  const { client } = useContext(GqlWsClientContext);
 
   // Return
   return {

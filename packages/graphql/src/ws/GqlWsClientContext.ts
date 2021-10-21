@@ -7,4 +7,4 @@ export interface GqlWsClientState {
 }
 
 // Context
-export const GqlWsContext = createContext<GqlWsClientState>({});
+export const GqlWsClientContext = createContext<GqlWsClientState>({});

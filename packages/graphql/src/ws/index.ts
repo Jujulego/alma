@@ -1,2 +1,2 @@
 export * from './GqlWsClient';
-export * from './GqlWsContext';
+export * from './GqlWsClientContext';
