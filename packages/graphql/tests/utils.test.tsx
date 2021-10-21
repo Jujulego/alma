@@ -8,7 +8,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 
-// Tests
+// Tests suites
 describe('buildRequest', () => {
   // Tests
   it('should return request with both query and operationName', async () => {
