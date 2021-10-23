@@ -35,7 +35,7 @@ beforeEach(() => {
     loading: false,
     data: 'test',
     reload: jest.fn(),
-    update: jest.fn()
+    setData: jest.fn()
   });
 });
 
@@ -52,7 +52,7 @@ describe('apiResource', () => {
       loading: false,
       data: 'test',
       reload: expect.any(Function),
-      update: expect.any(Function),
+      setData: expect.any(Function),
     });
 
     expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test');
@@ -68,7 +68,7 @@ describe('apiResource', () => {
       loading: false,
       data: 'test',
       reload: expect.any(Function),
-      update: expect.any(Function),
+      setData: expect.any(Function),
     });
 
     expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test/1');
@@ -96,7 +96,7 @@ describe('apiResource.query', () => {
       loading: false,
       data: 'test',
       reload: jest.fn(),
-      update: spyUpdate
+      setData: spyUpdate
     });
 
     useApiDelete.mockReturnValue({ loading: false, send: spySend });
@@ -215,7 +215,7 @@ describe('apiResource.mutate', () => {
       loading: false,
       data: 'test',
       reload: jest.fn(),
-      update: spyUpdate
+      setData: spyUpdate
     });
 
     useApiPut.mockReturnValue({ loading: false, send: spySend });

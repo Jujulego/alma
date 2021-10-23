@@ -63,17 +63,17 @@ function addQueryCall<N extends string, D, DM, A, AM, S extends ApiAutoLoadState
     const all = wrapped(args);
 
     // Result
-    const { update } = all;
+    const { setData } = all;
 
     return Object.assign(all, {
       [name]: useCallback((args: AM) => {
         const url = typeof builder === 'function' ? builder(args) : builder || undefined;
 
         return send(url).then((res) => {
-          update((old) => merge(old, res.data));
+          setData((old) => merge(old, res.data));
           return res;
         });
-      }, [send, update]),
+      }, [send, setData]),
     } as ApiStateQueryMethod<N, DM, AM>);
   }
 
@@ -92,17 +92,17 @@ function addMutationCall<N extends string, BM, D, DM, A, AM, S extends ApiAutoLo
     const all = wrapped(args);
 
     // Result
-    const { update } = all;
+    const { setData } = all;
 
     return Object.assign(all, {
       [name]: useCallback((body: BM, args: AM) => {
         const url = typeof builder === 'function' ? builder(args) : builder || undefined;
 
         return send(body, url).then((res) => {
-          update((old) => merge(old, res.data));
+          setData((old) => merge(old, res.data));
           return res;
         });
-      }, [send, update]),
+      }, [send, setData]),
     } as ApiStateMutateMethod<N, BM, DM, AM>);
   }
 

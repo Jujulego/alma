@@ -64,7 +64,7 @@ describe('useApiAutoLoad', () => {
     expect(result.current).toEqual({
       loading: true,
       reload: expect.any(Function),
-      update: expect.any(Function),
+      setData: expect.any(Function),
     });
 
     expect(spySend).toHaveBeenCalledTimes(1);
