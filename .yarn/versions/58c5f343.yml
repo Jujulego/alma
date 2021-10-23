@@ -1,2 +1,2 @@
 releases:
-  "@jujulego/alma-api": patch
+  "@jujulego/alma-api": minor
