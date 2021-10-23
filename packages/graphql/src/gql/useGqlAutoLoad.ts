@@ -45,9 +45,9 @@ export interface GqlAutoLoadState<D> {
   reload: () => void;
 
   /**
-   * Update cached data
+   * Update stored data
    */
-  update: (data?: D | Updator<D | undefined>) => void;
+  setData: (data?: D | Updator<D | undefined>) => void;
 }
 
 // Hook
@@ -62,7 +62,7 @@ export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlQueryHook<D, 
   const req = useMemo(() => buildRequest(sdoc), [sdoc]);
 
   useEffect(() => {
-    if (!req.operationName) console.warn('Gql request has no operation name, so it won\'t be cached');
+    if (!req.operationName) console.warn('Graphql request has no operation name, it won\'t be cached');
   }, [req]);
 
   // Cache
@@ -87,7 +87,7 @@ export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlQueryHook<D, 
     loading,
     ...data,
     reload: useCallback(() => setReload((old) => old + 1), []),
-    update: useCallback((data) => {
+    setData: useCallback((data) => {
       setData((old) => ({ ...old, data: normalizeUpdator(data)(old?.data) }));
     }, [setData]),
   };
