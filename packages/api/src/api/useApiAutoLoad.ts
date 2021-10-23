@@ -51,9 +51,9 @@ export interface ApiAutoLoadState<D> {
   reload: () => void;
 
   /**
-   * Update cached data
+   * Update stored data
    */
-  update: (data?: D | Updator<D | undefined>) => void;
+  setData: (data?: D | Updator<D | undefined>) => void;
 }
 
 // Hook
@@ -86,6 +86,6 @@ export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config:
     loading,
     data,
     reload: useCallback(() => setReload((old) => old + 1), []),
-    update: setData
+    setData
   };
 }
