@@ -46,7 +46,7 @@ export function useGqlWs<D, V extends GqlVariables = GqlVariables>(url: string, 
     send: useCallback((vars) => {
       // Assert ws client is present
       if (!client) {
-        console.warn('websocket client not found, request will not be send.');
+        console.warn('websocket client not found, request will not be send. Use <GqlWsClient> as a parent to fix this.');
         return makeApiPromise(new Promise(() => undefined), () => undefined);
       }
 

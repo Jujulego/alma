@@ -42,6 +42,7 @@ describe('useGqlHttp', () => {
     });
 
     expect(useApiRequest).toHaveBeenCalled();
+    expect(buildRequest).toHaveBeenCalledWith('document !');
 
     // Call send
     await act(async () => {
