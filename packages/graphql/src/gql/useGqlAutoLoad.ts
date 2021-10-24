@@ -70,18 +70,19 @@ export function useGqlAutoLoad<D, V extends GqlVariables>(hook: GqlQueryHook<D, 
   useDebugValue(data);
 
   // Send request
+  const svars = useDeepMemo(vars);
   const { loading, send } = hook(url, req);
 
   useEffect(() => {
     if (reload === 0) return;
 
-    const prom = send(vars)
+    const prom = send(svars)
       .then((res) => {
         setData(res);
       });
 
     return () => prom.cancel();
-  }, [reload, send, vars, setData]);
+  }, [reload, send, svars, setData]);
 
   return {
     loading,

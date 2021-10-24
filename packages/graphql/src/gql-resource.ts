@@ -39,15 +39,15 @@ function addQueryCall<N extends string, D, DM, V extends GqlVariables, VM extend
     const all = wrapped(vars);
 
     // Result
-    const { update } = all;
+    const { setData } = all;
 
     return Object.assign(all, {
       [name]: useCallback((vars: VM) => {
         return send(vars).then((res) => {
-          update((old) => merge(old, res.data));
+          setData((old) => merge(old, res.data));
           return res;
         });
-      }, [send, update]),
+      }, [send, setData]),
     } as GqlStateQueryMethod<N, DM, VM>);
   }
 
