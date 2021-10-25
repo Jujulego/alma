@@ -1,6 +1,7 @@
 const del = require('del');
 const gulp = require('gulp');
 const babel = require('gulp-babel');
+const rename = require('gulp-rename');
 const ts = require('gulp-typescript');
 
 // Config
@@ -19,17 +20,18 @@ gulp.task('clean', () => del('dist'));
 
 gulp.task('build:cjs', () => gulp.src(paths.src)
   .pipe(babel({ envName: 'cjs' }))
-  .pipe(gulp.dest('dist/cjs'))
+  .pipe(gulp.dest('dist'))
 );
 
 gulp.task('build:esm', () => gulp.src(paths.src)
   .pipe(babel({ envName: 'esm' }))
-  .pipe(gulp.dest('dist/esm'))
+  .pipe(rename({ extname: '.mjs' }))
+  .pipe(gulp.dest('dist'))
 );
 
 gulp.task('build:types', () => gulp.src(paths.src)
   .pipe(tsProject()).dts
-  .pipe(gulp.dest('dist/types'))
+  .pipe(gulp.dest('dist'))
 );
 
 gulp.task('build', gulp.series(

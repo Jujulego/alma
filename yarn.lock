@@ -1661,6 +1661,7 @@ __metadata:
     gulp: 4.0.2
     gulp-babel: 8.0.0
     gulp-cli: 2.3.0
+    gulp-rename: 2.0.0
     gulp-typescript: 6.0.0-alpha.1
     jest: 27.3.1
     react: 17.0.2
@@ -1709,6 +1710,7 @@ __metadata:
     gulp: 4.0.2
     gulp-babel: 8.0.0
     gulp-cli: 2.3.0
+    gulp-rename: 2.0.0
     gulp-typescript: 6.0.0-alpha.1
     jest: 27.3.1
     react: 17.0.2
@@ -1752,6 +1754,7 @@ __metadata:
     gulp: 4.0.2
     gulp-babel: 8.0.0
     gulp-cli: 2.3.0
+    gulp-rename: ^2.0.0
     gulp-typescript: 6.0.0-alpha.1
     jest: 27.3.1
     react: 17.0.2
@@ -5086,6 +5089,13 @@ fsevents@^2.3.2:
   bin:
     gulp: bin/gulp.js
   checksum: 42e3ca1374a82dea7f2aab775a5db2a67718d42e858438c497336a4db35def7b8c14933d7be3ec99178b78e5c49665058fde1fd0de067a8f8dd8caafcee4faa2
+  languageName: node
+  linkType: hard
+
+"gulp-rename@npm:2.0.0, gulp-rename@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "gulp-rename@npm:2.0.0"
+  checksum: b9add0d130487dee6067206eebfc3867e4e254117edef154e8c270e3111b112335439ac1cac1519d6a32541343e04bd299484253a333b4e34c7d430039953e99
   languageName: node
   linkType: hard
 
