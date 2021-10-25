@@ -1,105 +1,107 @@
-import { ApiGetRequestConfig, ApiPromise } from '@jujulego/alma-api';
-import { useCallback, useEffect } from 'react';
+import { ApiPromise } from '@jujulego/alma-api';
+import { useCallback } from 'react';
 
-import { useQueryRequest, useMutationRequest, useSubscriptionRequest, GqlQueryState } from './gql';
-import { GqlDocument, GqlVariables } from './types';
+import { GqlAutoLoadState, useGqlAutoLoad } from './gql';
+import { GqlCancel, GqlDocument, GqlQueryHook, GqlResponse, GqlSink, GqlSubscribeHook, GqlVariables } from './types';
 import { buildRequest } from './utils';
 
 // Types
-export type GqlMerge<S, R> = (state: S | undefined, res: R | undefined) => S | undefined;
+export type GqlMerge<D, DM> = (state: D | undefined, res: DM | undefined) => D | undefined;
 
-export type GqlStateMutateMethods<N extends string, DM, VM extends GqlVariables> = {
-  [key in N]: (vars: VM) => ApiPromise<DM>;
+export type GqlStateQueryMethod<N extends string, DM, VM extends GqlVariables> = {
+  [key in N]: (vars: VM) => ApiPromise<GqlResponse<DM>>;
 }
 
-export type GqlStateSubscribeMethods<N extends string, VS extends GqlVariables> = {
-  [key in N]: (vars: VS) => (() => void);
+export type GqlStateSubscribeMethod<N extends string, DM, VM extends GqlVariables> = {
+  [key in N]: (vars: VM, sink: GqlSink<DM>) => GqlCancel;
 }
 
-export type GqlHook<D, V extends GqlVariables, S extends GqlQueryState<D>> = ((vars: V, config?: ApiGetRequestConfig) => S) & GqlHookMethods<D, V, S>;
+export type GqlHook<D, V extends GqlVariables, S extends GqlAutoLoadState<D>> = ((vars: V) => S) & GqlHookMethods<D, V, S>;
 
-export interface GqlHookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>> {
-  mutation<N extends string, DM = D, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMutateMethods<N, DM, VM>>
-  subscription<N extends string, DS = D, VS extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DS, VS>, merge: GqlMerge<D, DS>): GqlHook<D, V, S & GqlStateSubscribeMethods<N, VS>>
+export interface GqlHookMethods<D, V extends GqlVariables, S extends GqlAutoLoadState<D>> {
+  query<N extends string, DM = D, VM extends GqlVariables = V>(name: N, hook: GqlQueryHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateQueryMethod<N, DM, VM>>;
+  subscribe<N extends string, DM = D, VM extends GqlVariables = V>(name: N, hook: GqlSubscribeHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateSubscribeMethod<N, DM, VM>>;
 }
 
 // Utils
-function hookMethods<D, V extends GqlVariables, S extends GqlQueryState<D>>(url: string): GqlHookMethods<D, V, S> {
+function hookMethods<D, V extends GqlVariables, S extends GqlAutoLoadState<D>>(url: string): GqlHookMethods<D, V, S> {
   return {
-    mutation<N extends string, DM, VM extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>) {
-      return addMutateCall<N, D, DM, V, VM, S>(url, name, doc, this, merge);
+    query<N extends string, DM, VM extends GqlVariables>(name: N, hook: GqlQueryHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateQueryMethod<N, DM, VM>> {
+      return addQueryCall<N, D, DM, V, VM, S>(url, this, name, hook, doc, merge);
     },
-    subscription<N extends string, DS, VS extends GqlVariables = GqlVariables>(name: N, doc: GqlDocument<DS, VS>, merge: GqlMerge<D, DS>) {
-      return addSubscribeCall<N, D, DS, V, VS, S>(url, name, doc, this, merge);
-    }
+    subscribe<N extends string, DM, VM extends GqlVariables>(name: N, hook: GqlSubscribeHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateSubscribeMethod<N, DM, VM>> {
+      return addSubscribeCall<N, D, DM, V, VM, S>(url, this, name, hook, doc, merge);
+    },
   };
 }
 
-// Hook modifiers
-function addMutateCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlQueryState<D>>(url: string, name: N, doc: GqlDocument<DM, VM>, wrapped: GqlHook<D, V, S>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateMutateMethods<N, DM, VM>> {
+// Hook modifier
+function addQueryCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlAutoLoadState<D>>(url: string, wrapped: GqlHook<D, V, S>, name: N, hook: GqlQueryHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateQueryMethod<N, DM, VM>> {
+  // Build request
   const req = buildRequest(doc);
 
-  // Modified hook
-  function useGqlResource(vars: V, config?: ApiGetRequestConfig): S & GqlStateMutateMethods<N, DM, VM> {
-    // Api
-    const { send } = useMutationRequest<DM, VM>(url, req, config);
-    const all = wrapped(vars, config);
+  // Hook
+  function useGqlResource(vars: V): S & GqlStateQueryMethod<N, DM, VM> {
+    // Gql
+    const { send } = hook(url, req);
+    const all = wrapped(vars);
 
     // Result
-    const { update } = all;
+    const { setData } = all;
 
     return Object.assign(all, {
       [name]: useCallback((vars: VM) => {
         return send(vars).then((res) => {
-          update((state) => merge(state, res) as D);
+          setData((old) => merge(old, res.data));
           return res;
         });
-      }, [update, send])
-    } as GqlStateMutateMethods<N, DM, VM>);
+      }, [send, setData]),
+    } as GqlStateQueryMethod<N, DM, VM>);
   }
 
-  return Object.assign(useGqlResource, hookMethods<D, V, S & GqlStateMutateMethods<N, DM, VM>>(url));
+  return Object.assign(useGqlResource, hookMethods<D, V, S & GqlStateQueryMethod<N, DM, VM>>(url));
 }
 
-function addSubscribeCall<N extends string, D, DS, V extends GqlVariables, VS extends GqlVariables, S extends GqlQueryState<D>>(url: string, name: N, doc: GqlDocument<DS, VS>, wrapped: GqlHook<D, V, S>, merge: GqlMerge<D, DS>): GqlHook<D, V, S & GqlStateSubscribeMethods<N, VS>> {
-  const req = buildRequest(doc);
-
-  // Modified hook
-  function useGqlResource(vars: V, config?: ApiGetRequestConfig): S & GqlStateSubscribeMethods<N, VS> {
-    // Api
-    const { subscribe, data } = useSubscriptionRequest<DS, VS>(req);
-    const all = wrapped(vars, config);
-    const { update } = all;
-
-    // Effects
-    useEffect(() => {
-      if (data) {
-        update((state) => merge(state, data) as D);
-      }
-    }, [update, data]);
-
-    // Result
-    return Object.assign(all, {
-      [name]: subscribe,
-    } as GqlStateSubscribeMethods<N, VS>);
-  }
-
-  return Object.assign(useGqlResource, hookMethods<D, V, S & GqlStateSubscribeMethods<N, VS>>(url));
-}
-
-// Hook builder
-export function gqlResource<D, V extends GqlVariables = GqlVariables>(url: string, doc: GqlDocument<D, V>): GqlHook<D, V, GqlQueryState<D>> {
+function addSubscribeCall<N extends string, D, DM, V extends GqlVariables, VM extends GqlVariables, S extends GqlAutoLoadState<D>>(url: string, wrapped: GqlHook<D, V, S>, name: N, hook: GqlSubscribeHook<DM, VM>, doc: GqlDocument<DM, VM>, merge: GqlMerge<D, DM>): GqlHook<D, V, S & GqlStateSubscribeMethod<N, DM, VM>> {
   // Build request
   const req = buildRequest(doc);
 
-  if (!req.operationName) {
-    console.warn('No operation name found in document, result will not be cached');
+  // Hook
+  function useGqlResource(vars: V): S & GqlStateSubscribeMethod<N, DM, VM> {
+    // Gql
+    const { subscribe } = hook(url, req);
+    const all = wrapped(vars);
+
+    // Result
+    const { setData } = all;
+
+    return Object.assign(all, {
+      [name]: useCallback((vars: VM, sink: GqlSink<DM>) => {
+        return subscribe(vars, {
+          onData(res) {
+            sink.onData(res);
+            setData((old) => merge(old, res.data));
+          },
+          onError(error) {
+            sink.onError(error);
+          }
+        });
+      }, [subscribe, setData]),
+    } as GqlStateSubscribeMethod<N, DM, VM>);
   }
+
+  return Object.assign(useGqlResource, hookMethods<D, V, S & GqlStateSubscribeMethod<N, DM, VM>>(url));
+}
+
+// Hook builder
+export function gqlResource<D, V extends GqlVariables = GqlVariables>(hook: GqlQueryHook<D, V>, url: string, doc: GqlDocument<D, V>): GqlHook<D, V, GqlAutoLoadState<D>> {
+  // Build request
+  const req = buildRequest(doc);
 
   // Hook
-  function useGqlResource(vars: V, config?: ApiGetRequestConfig): GqlQueryState<D> {
-    return useQueryRequest<D, V>(url, req, vars, config);
+  function useGqlResource(vars: V): GqlAutoLoadState<D> {
+    return useGqlAutoLoad<D, V>(hook, url, req, vars);
   }
 
-  return Object.assign(useGqlResource, hookMethods<D, V, GqlQueryState<D>>(url));
+  return Object.assign(useGqlResource, hookMethods<D, V, GqlAutoLoadState<D>>(url));
 }

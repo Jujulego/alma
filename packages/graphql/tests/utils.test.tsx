@@ -8,7 +8,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 
-// Tests
+// Tests suites
 describe('buildRequest', () => {
   // Tests
   it('should return request with both query and operationName', async () => {
@@ -42,6 +42,21 @@ describe('buildRequest', () => {
     {
       query: doc,
     });
+  });
+
+  it('should return request without parsing', async () => {
+    const req = {
+      query: `
+          query {
+              test {
+                  isSuccessful
+              }
+          }
+      `
+  };
+
+    // Checks
+    expect(buildRequest(req)).toBe(req);
   });
 
   it('should return request without operationName (none set)', async () => {

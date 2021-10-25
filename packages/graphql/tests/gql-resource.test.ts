@@ -1,51 +1,54 @@
-import { ApiPromise, Updator } from '@jujulego/alma-api';
+import { ApiPromise, makeApiPromise } from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
-import gql from 'graphql-tag';
 
 import {
-  buildRequest as _buildRequest,
-  gqlDoc as _gqlDoc, gqlResource,
-  useMutationRequest as _useMutationRequest,
-  useQueryRequest as _useQueryRequest
+  buildRequest as _buildRequest, GqlCancel, gqlDoc as _gqlDoc,
+  gqlResource, GqlResponse, GqlSink, GqlVariables,
+  useGqlAutoLoad as _useGqlAutoLoad,
+  useGqlHttp as _useGqlHttp,
+  useGqlWs as _useGqlWs
 } from '../src';
-import { TestData } from './types';
 
 // Mocks
-jest.mock('../src/gql/useQueryRequest');
-const useQueryRequest = _useQueryRequest as jest.MockedFunction<typeof _useQueryRequest>;
+jest.mock('../src/gql/useGqlAutoLoad');
+const useGqlAutoLoad = _useGqlAutoLoad as jest.MockedFunction<typeof _useGqlAutoLoad>;
 
-jest.mock('../src/gql/useMutationRequest');
-const useMutationRequest = _useMutationRequest as jest.MockedFunction<typeof _useMutationRequest>;
+jest.mock('../src/gql/useGqlHttp');
+const useGqlHttp = _useGqlHttp as jest.MockedFunction<typeof _useGqlHttp>;
+
+jest.mock('../src/gql/useGqlWs');
+const useGqlWs = _useGqlWs as jest.MockedFunction<typeof _useGqlWs>;
 
 jest.mock('../src/utils');
 const buildRequest = _buildRequest as jest.MockedFunction<typeof _buildRequest>;
 const gqlDoc = _gqlDoc as jest.MockedFunction<typeof _gqlDoc>;
 
 // Setup
-const query = gql`
-    query Test {
-        test {
-            isSuccessful
-        }
-    }
-`;
-
-const mutation = gql`
-    mutation Success($test: String!) {
-        success(name: $test) {
-            isSuccessful
-        }
-    }
-`;
-
 beforeEach(() => {
   jest.resetAllMocks();
 
   // Mocks
-  useQueryRequest.mockReturnValue({
-    loading: true,
-    update: jest.fn(),
+  useGqlHttp.mockReturnValue({
+    loading: false,
+    send: jest.fn()
+  });
+
+  useGqlWs.mockReturnValue({
+    loading: false,
+    send: jest.fn(),
+    subscribe: jest.fn()
+  });
+
+  useGqlAutoLoad.mockReturnValue({
+    loading: false,
+    data: 'test',
     reload: jest.fn(),
+    setData: jest.fn()
+  });
+
+  buildRequest.mockReturnValue({
+    operationName: 'operationName',
+    query: 'query',
   });
 
   gqlDoc.mockImplementation((doc) => doc);
@@ -54,140 +57,160 @@ beforeEach(() => {
 // Test suites
 describe('gqlResource', () => {
   // Tests
-  it('should send request using useQueryRequest and buildRequest', () => {
-    // Mocks
-    buildRequest.mockReturnValue({
-      operationName: 'Test',
-      query: 'query Test { ... }'
-    });
-
-    // Build query
-    const useGqlTest = gqlResource<TestData, { name: string }>('/graphql', query);
-
-    // Check buildRequest
-    expect(buildRequest).toHaveBeenCalledTimes(1);
-    expect(buildRequest).toHaveBeenCalledWith(query);
-
+  it('should call useGqlAutoLoad with given url, document and hook and return result', () => {
     // Render
-    const { result } = renderHook(() => useGqlTest({ name: 'name' }));
-
-    // Check result
-    expect(result.current).toEqual({
-      loading: true,
-      update: expect.any(Function),
-      reload: expect.any(Function),
-    });
-
-    // Check useQueryRequest
-    expect(useQueryRequest).toHaveBeenCalledWith(
-      '/graphql',
-      { operationName: 'Test', query: 'query Test { ... }' },
-      { name: 'name' },
-      undefined
-    );
-  });
-
-  it('should warn on request without operationName', () => {
-    // Mocks
-    buildRequest.mockReturnValue({
-      query: 'query { ... }'
-    });
-
-    jest.spyOn(console, 'warn')
-      .mockImplementation();
-
-    // Build query
-    gqlResource<TestData, { name: string }>('/graphql', query);
+    const useGqlTest = gqlResource(useGqlHttp, '/api/graphql', gqlDoc<string>('document'));
+    const { result } = renderHook(() => useGqlTest({ test: 5 }));
 
     // Check
-    expect(console.warn).toHaveBeenCalledTimes(1);
-    expect(console.warn).toHaveBeenCalledWith('No operation name found in document, result will not be cached');
+    expect(result.current).toEqual({
+      loading: false,
+      data: 'test',
+      reload: expect.any(Function),
+      setData: expect.any(Function),
+    });
+
+    expect(buildRequest).toHaveBeenCalledWith('document');
+    expect(useGqlAutoLoad).toHaveBeenCalledWith(useGqlHttp, '/api/graphql', { operationName: 'operationName', query: 'query' }, { test: 5 });
   });
 });
 
-describe('useGqlMutation', () => {
+describe('gqlResource.query', () => {
   // Tests
-  it('should send request using useMutationRequest and buildRequest', async () => {
+  it('should call useGqlHttp with same url, given document and return result', async () => {
     // Mocks
-    const spyUpdate = jest.fn<void, [Updator<{ test: TestData }>]>();
+    let respond: (data: string) => void = () => undefined;
+    const spySend = jest.fn<ApiPromise<GqlResponse<string>>, [GqlVariables]>()
+      .mockReturnValue(makeApiPromise(new Promise((resolve) => {
+        respond = (data) => resolve({ data });
+      }), jest.fn()));
 
-    useQueryRequest.mockReturnValue({
-      loading: true,
-      update: spyUpdate,
+    const spyMerge = jest.fn();
+    const spyUpdate = jest.fn();
+
+    useGqlAutoLoad.mockReturnValue({
+      loading: false,
+      data: 'test',
       reload: jest.fn(),
+      setData: spyUpdate
     });
 
-    const spySend = jest.fn<ApiPromise<{ success: TestData }>, [{ name: string }]>()
-      .mockResolvedValue({
-        success: { isSuccessful: true }
-      });
-
-    useMutationRequest.mockReturnValue({
-      loading: true,
-      send: spySend,
-    });
-
-    buildRequest.mockReturnValue({
-      operationName: 'Test',
-      query: 'query Test { ... }'
-    });
-
-    const useGqlQTest = gqlResource<{ test: TestData }, { name: string }>('/graphql', query);
-
-    buildRequest.mockReturnValue({
-      operationName: 'Success',
-      query: 'mutation Success { ... }'
-    });
-
-    // Build query
-    const spyMerge = jest.fn<{ test: TestData }, [{ test: TestData } | undefined, { success: TestData }]>()
-      .mockImplementation((old, res) => ({ test: res.success }));
-
-    const useGqlMTest = useGqlQTest.mutation('success', gqlDoc<{ success: TestData }, { name: string }>(mutation), spyMerge);
-
-    // Check buildRequest
-    expect(buildRequest).toHaveBeenCalledTimes(2);
-    expect(buildRequest).toHaveBeenCalledWith(query);
-    expect(buildRequest).toHaveBeenCalledWith(mutation);
+    useGqlHttp.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const { result } = renderHook(() => useGqlMTest({ name: 'name' }));
+    const useGqlTest = gqlResource(useGqlHttp, '/api/graphql', gqlDoc<string>('document'))
+      .query('getMore', useGqlHttp, gqlDoc<string>('getMore document'), spyMerge);
 
-    // Check result
-    expect(result.current).toEqual({
-      loading: true,
-      update: expect.any(Function),
-      reload: expect.any(Function),
-      success: expect.any(Function),
+    const { result } = renderHook(() => useGqlTest({ test: 5 }));
+
+    // Checks
+    expect(result.current).toEqual(expect.objectContaining({
+      getMore: expect.any(Function),
+    }));
+
+    expect(buildRequest).toHaveBeenCalledWith('document');
+    expect(useGqlAutoLoad).toHaveBeenCalledWith(useGqlHttp, '/api/graphql', { operationName: 'operationName', query: 'query' }, { test: 5 });
+
+    expect(buildRequest).toHaveBeenCalledWith('getMore document');
+    expect(useGqlHttp).toHaveBeenCalledWith('/api/graphql', { operationName: 'operationName', query: 'query' });
+
+    // Call send
+    let prom: ApiPromise<GqlResponse<string>>;
+    act(() => {
+      prom = result.current.getMore({ more: 'a lot' });
     });
 
-    // Check useMutationRequest
-    expect(useMutationRequest).toHaveBeenCalledWith(
-      '/graphql',
-      { operationName: 'Success', query: 'mutation Success { ... }' },
-      undefined
-    );
+    expect(spySend).toHaveBeenCalledWith({ more: 'a lot' });
 
-    // Send request
+    // After receive
     await act(async () => {
-      await expect(result.current.success({ name: 'name' }))
-        .resolves.toEqual({
-          success: { isSuccessful: true }
-        });
+      respond('more');
+
+      await expect(prom).resolves.toEqual({
+        data: 'more'
+      });
     });
 
-    expect(spySend).toHaveBeenCalledWith({ name: 'name' });
     expect(spyUpdate).toHaveBeenCalledWith(expect.any(Function));
 
-    // Check given updator
+    // Check updator
     const updator = spyUpdate.mock.calls[0][0];
 
-    expect(updator({ test: { isSuccessful: false }}))
-      .toEqual({ test: { isSuccessful: true }});
+    expect(updator('test')).toBeUndefined();
+    expect(spyMerge).toHaveBeenCalledWith('test', 'more');
+  });
+});
 
-    expect(spyMerge).toHaveBeenCalledWith(
-      { test: { isSuccessful: false }},
-      { success: { isSuccessful: true } }
-    );
+describe('gqlResource.subscribe', () => {
+  // Tests
+  it('should call useGqlWs with same url, given document and return result', () => {
+    // Mocks
+    const spySubscribe = jest.fn<GqlCancel, [GqlVariables, GqlSink<string>]>()
+      .mockReturnValue(() => undefined);
+
+    const spyMerge = jest.fn();
+    const spyUpdate = jest.fn();
+
+    useGqlAutoLoad.mockReturnValue({
+      loading: false,
+      data: 'test',
+      reload: jest.fn(),
+      setData: spyUpdate
+    });
+
+    useGqlWs.mockReturnValue({ loading: false, send: jest.fn(), subscribe: spySubscribe });
+
+    // Render
+    const useGqlTest = gqlResource(useGqlHttp, '/api/graphql', gqlDoc<string>('document'))
+      .subscribe('events', useGqlWs, gqlDoc<string>('events document'), spyMerge);
+
+    const { result } = renderHook(() => useGqlTest({ test: 5 }));
+
+    // Checks
+    expect(result.current).toEqual(expect.objectContaining({
+      events: expect.any(Function),
+    }));
+
+    expect(buildRequest).toHaveBeenCalledWith('document');
+    expect(useGqlAutoLoad).toHaveBeenCalledWith(useGqlHttp, '/api/graphql', { operationName: 'operationName', query: 'query' }, { test: 5 });
+
+    expect(buildRequest).toHaveBeenCalledWith('events document');
+    expect(useGqlWs).toHaveBeenCalledWith('/api/graphql', { operationName: 'operationName', query: 'query' });
+
+    // Call send
+    const spyOnData = jest.fn();
+    const spyOnError = jest.fn();
+
+    act(() => {
+      result.current.events({ event: 'update' }, { onData: spyOnData, onError: spyOnError });
+    });
+
+    expect(spySubscribe).toHaveBeenCalledWith({ event: 'update' }, {
+      onData: expect.any(Function),
+      onError: expect.any(Function)
+    });
+
+    // After receive
+    const { onData, onError } = spySubscribe.mock.calls[0][1];
+
+    act(() => {
+      onData({ data: 'more' });
+    });
+
+    expect(spyOnData).toHaveBeenCalledWith({ data: 'more' });
+    expect(spyUpdate).toHaveBeenCalledWith(expect.any(Function));
+
+    // Check updator
+    const updator = spyUpdate.mock.calls[0][0];
+
+    expect(updator('test')).toBeUndefined();
+    expect(spyMerge).toHaveBeenCalledWith('test', 'more');
+
+    // On error
+    act(() => {
+      onError(new Error('failed !'));
+    });
+
+    expect(spyOnError).toHaveBeenCalledWith(new Error('failed !'));
   });
 });

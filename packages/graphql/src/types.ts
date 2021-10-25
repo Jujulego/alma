@@ -1,8 +1,10 @@
-import { DocumentNode } from 'graphql';
+import { DocumentNode, GraphQLError } from 'graphql';
+import { ApiPromise } from '../../api';
 
 // Types
 export type GqlVariables = Record<string, unknown>;
 export type GqlDocument<D = unknown, V extends GqlVariables = GqlVariables> = (string | DocumentNode) & { _d?: D, _v?: V };
+export type GqlCancel = () => void;
 
 export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> {
   _d?: D,
@@ -11,29 +13,27 @@ export interface GqlRequest<D = unknown, V extends GqlVariables = GqlVariables> 
   variables?: V;
 }
 
-export interface GqlLocation {
-  column: number;
-  line: number;
-}
-
-export interface GqlError {
-  message: string;
-  locations: GqlLocation[];
-  path?: string[];
-  extensions?: unknown;
-}
-
 export interface GqlResponse<D> {
-  data: D;
-  errors?: GqlError[];
+  data?: D;
+  errors?: ReadonlyArray<GraphQLError>;
 }
 
-export interface GqlErrorResponse {
-  errors: GqlError[];
+export interface GqlSink<D> {
+  onData: (data: GqlResponse<D>) => void;
+  onError: (error: unknown) => void;
 }
 
-export interface GqlState<D> {
+// Hooks
+export interface GqlQueryHookState<D, V extends GqlVariables> {
   loading: boolean;
-  data?: D | undefined;
-  error?: GqlErrorResponse;
+  send: (vars: V) => ApiPromise<GqlResponse<D>>;
 }
+
+export type GqlQueryHook<D, V extends GqlVariables> = (url: string, req: GqlRequest<D, V>) => GqlQueryHookState<D, V>;
+
+export interface GqlSubscribeHookState<D, V extends GqlVariables> {
+  loading: boolean;
+  subscribe: (vars: V, sink: GqlSink<D>) => GqlCancel;
+}
+
+export type GqlSubscribeHook<D, V extends GqlVariables> = (url: string, req: GqlRequest<D, V>) => GqlSubscribeHookState<D, V>;
