@@ -8,7 +8,8 @@
     "@typescript-eslint",
     "jest",
     "react",
-    "testing-library"
+    "testing-library",
+    "workspaces"
   ],
   "extends": [
     "eslint:recommended",
@@ -17,7 +18,8 @@
     "plugin:jest/style",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:testing-library/react"
+    "plugin:testing-library/react",
+    "plugin:workspaces/recommended"
   ],
   "env": {
     "node": true,

@@ -1,5 +1,5 @@
+import { ApiPromise } from '@jujulego/alma-api';
 import { DocumentNode, GraphQLError } from 'graphql';
-import { ApiPromise } from '../../api';
 
 // Types
 export type GqlVariables = Record<string, unknown>;
