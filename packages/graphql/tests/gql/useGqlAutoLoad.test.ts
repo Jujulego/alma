@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { buildRequest as _buildRequest, GqlResponse, useGqlAutoLoad, useGqlHttp as _useGqlHttp } from '../../src';
 
 // Mocks
-jest.mock('@jujulego/alma-api/dist/cjs/cache');
+jest.mock('@jujulego/alma-api/dist/cache');
 const useSwrCache = _useSwrCache as jest.MockedFunction<typeof _useSwrCache>;
 
 jest.mock('../../src/gql/useGqlHttp');
