@@ -13,7 +13,7 @@ export type GqlStateQueryMethod<N extends string, DM, VM extends GqlVariables> =
 }
 
 export type GqlStateSubscribeMethod<N extends string, DM, VM extends GqlVariables> = {
-  [key in N]: (vars: VM, sink: GqlSink<DM>) => GqlCancel;
+  [key in N]: (vars: VM, sink?: GqlSink<DM>) => GqlCancel;
 }
 
 export type GqlHook<D, V extends GqlVariables, S extends GqlAutoLoadState<D>> = ((vars: V) => S) & GqlHookMethods<D, V, S>;
@@ -76,14 +76,14 @@ function addSubscribeCall<N extends string, D, DM, V extends GqlVariables, VM ex
     const { setData } = all;
 
     return Object.assign(all, {
-      [name]: useCallback((vars: VM, sink: GqlSink<DM>) => {
+      [name]: useCallback((vars: VM, sink?: GqlSink<DM>) => {
         return subscribe(vars, {
           onData(res) {
-            sink.onData(res);
+            sink?.onData(res);
             setData((old) => merge(old, res.data));
           },
           onError(error) {
-            sink.onError(error);
+            sink?.onError(error);
           }
         });
       }, [subscribe, setData]),
