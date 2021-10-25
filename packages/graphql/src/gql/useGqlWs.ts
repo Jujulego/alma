@@ -1,10 +1,10 @@
+import { ApiPromise, makeApiPromise } from '@jujulego/alma-api';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 
 import { GqlCancel, GqlDocument, GqlRequest, GqlResponse, GqlSink, GqlVariables } from '../types';
 import { buildRequest } from '../utils';
 import { GqlWsClientContext } from '../ws';
-import { ApiPromise, makeApiPromise } from '../../../api';
 
 // Types
 export interface GqlWsState<D, V extends GqlVariables> {
