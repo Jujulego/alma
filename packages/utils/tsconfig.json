@@ -2,10 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "incremental": true,
-    "module": "esnext",
-    "jsx": "react-jsx",
     "rootDir": ".",
-    "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "noEmit": true
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   }
 }
