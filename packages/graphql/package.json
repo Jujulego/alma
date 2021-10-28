@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "axios": "^0.23.0 || ^0.24.0",
-    "graphql": "^15.6.0",
+    "graphql": "^15.6.0 || ^16.0.0",
     "react": "^17.0.0",
     "react-dom": "^17.0.0"
   },
@@ -59,7 +59,7 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "eslint-plugin-testing-library": "5.0.0",
     "eslint-plugin-workspaces": "0.7.0",
-    "graphql": "15.7.0",
+    "graphql": "16.0.0",
     "graphql-tag": "2.12.5",
     "gulp": "4.0.2",
     "gulp-babel": "8.0.0",

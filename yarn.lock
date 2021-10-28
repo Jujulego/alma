@@ -1724,7 +1724,7 @@ __metadata:
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 5.0.0
     eslint-plugin-workspaces: 0.7.0
-    graphql: 15.7.0
+    graphql: 16.0.0
     graphql-tag: 2.12.5
     graphql-ws: ^5.5.0
     gulp: 4.0.2
@@ -1738,7 +1738,7 @@ __metadata:
     typescript: 4.4.4
   peerDependencies:
     axios: ^0.23.0 || ^0.24.0
-    graphql: ^15.6.0
+    graphql: ^15.6.0 || ^16.0.0
     react: ^17.0.0
     react-dom: ^17.0.0
   languageName: unknown
@@ -5122,10 +5122,10 @@ fsevents@^2.3.2:
   languageName: node
   linkType: hard
 
-"graphql@npm:15.7.0":
-  version: 15.7.0
-  resolution: "graphql@npm:15.7.0"
-  checksum: e95027a63fc68444aa6079793c5f6902e9691dc0fff87ce7d5bf57a104cb100bc5763739e0d25ea08fbe5dedbb009479ebf11de1ebd3c8a0737605129bdaa2c2
+"graphql@npm:16.0.0":
+  version: 16.0.0
+  resolution: "graphql@npm:16.0.0"
+  checksum: 6b7c09cbafdcafde7bf69e84fb35abc5641bd923cd3b4894f12bbb6ee412478a959906937a63c8ad7cf37b3e5b980c26001f89be90ac9bcf4cefade3a4efd21f
   languageName: node
   linkType: hard
 
