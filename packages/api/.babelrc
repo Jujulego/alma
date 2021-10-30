@@ -2,6 +2,10 @@
   "env": {
     "esm": {
       "presets": [
+        ["@babel/preset-env", {
+          "bugfixes": true,
+          "modules": false
+        }],
         ["@babel/preset-react", {
           "runtime": "automatic"
         }],
@@ -15,6 +19,7 @@
     "cjs": {
       "presets": [
         ["@babel/preset-env", {
+          "bugfixes": true,
           "modules": "cjs"
         }],
         ["@babel/preset-react", {
