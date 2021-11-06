@@ -1985,7 +1985,7 @@ __metadata:
     axios: 0.24.0
     del: 6.0.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.2.3
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 5.0.0
@@ -2031,7 +2031,7 @@ __metadata:
     axios: 0.24.0
     del: 6.0.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.2.3
     eslint-plugin-react: 7.26.0
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 5.0.0
@@ -2078,7 +2078,7 @@ __metadata:
     del: 6.0.0
     dequal: ^2.0.2
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.2.3
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 5.0.0
@@ -2762,7 +2762,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.3.0
     "@typescript-eslint/parser": 5.3.0
     eslint: 7.32.0
-    eslint-plugin-jest: 25.2.1
+    eslint-plugin-jest: 25.2.3
     eslint-plugin-react: 7.26.1
     eslint-plugin-react-hooks: 4.2.0
     eslint-plugin-testing-library: 5.0.0
@@ -4497,9 +4497,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:25.2.1":
-  version: 25.2.1
-  resolution: "eslint-plugin-jest@npm:25.2.1"
+"eslint-plugin-jest@npm:25.2.3":
+  version: 25.2.3
+  resolution: "eslint-plugin-jest@npm:25.2.3"
   dependencies:
     "@typescript-eslint/experimental-utils": ^5.0.0
   peerDependencies:
@@ -4508,7 +4508,9 @@ __metadata:
   peerDependenciesMeta:
     "@typescript-eslint/eslint-plugin":
       optional: true
-  checksum: 8ac8d1e2e138dd1371f7ebeba01559609049eb92b8561f15952217bd9a478a8f7aaa1e58ef3386962ae06096bc2ab56173a389ea8d2dfbc47a59afd23bdd09c6
+    jest:
+      optional: true
+  checksum: eb6ed233348c735bfb3933947d75f982a0884825b2269518048a236bee49a913b67b7788986b8d4679687658cc4f7cd3d2ef32b128cb3d65b422ddec92c770ab
   languageName: node
   linkType: hard
 
