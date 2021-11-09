@@ -15,7 +15,7 @@
     "not ie 11"
   ],
   "devDependencies": {
-    "@jujulego/jill": "1.1.8",
+    "@jujulego/jill": "1.1.11",
     "@typescript-eslint/eslint-plugin": "5.3.0",
     "@typescript-eslint/parser": "5.3.0",
     "eslint": "7.32.0",
