@@ -6,6 +6,11 @@ const ts = require('gulp-typescript');
 // Config
 const paths = {
   src: 'src/**/*.{ts,tsx}',
+  deps: [
+    '../../.pnp.*',
+    '../core/dist/**',
+    '../myr/dist/**',
+  ]
 };
 
 const tsProject = ts.createProject('tsconfig.json', {
@@ -31,7 +36,8 @@ gulp.task('build:types', () => gulp.src(paths.src)
   .pipe(gulp.dest('dist/types'))
 );
 
-gulp.task('build', gulp.series(
-  'clean',
-  gulp.parallel('build:cjs', 'build:esm', 'build:types'),
+gulp.task('build', gulp.parallel('build:cjs', 'build:esm', 'build:types'));
+
+gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
+  gulp.parallel('build:cjs', 'build:types')
 ));

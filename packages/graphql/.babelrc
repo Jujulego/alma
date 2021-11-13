@@ -10,6 +10,9 @@
           "runtime": "automatic"
         }],
         "@babel/preset-typescript"
+      ],
+      "plugins": [
+        "@babel/proposal-class-properties"
       ]
     },
     "cjs": {
@@ -22,6 +25,9 @@
           "runtime": "automatic"
         }],
         "@babel/preset-typescript"
+      ],
+      "plugins": [
+        "@babel/proposal-class-properties"
       ]
     }
   }

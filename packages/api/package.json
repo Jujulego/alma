@@ -20,7 +20,9 @@
   },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
+    "clean": "gulp clean",
     "build": "gulp build",
+    "watch": "gulp watch",
     "test": "jest"
   },
   "peerDependencies": {
@@ -34,7 +36,6 @@
   "devDependencies": {
     "@babel/core": "7.16.0",
     "@babel/plugin-proposal-class-properties": "7.16.0",
-    "@babel/plugin-proposal-object-rest-spread": "7.16.0",
     "@babel/preset-env": "7.16.0",
     "@babel/preset-react": "7.16.0",
     "@babel/preset-typescript": "7.16.0",
