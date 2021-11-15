@@ -690,7 +690,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-object-rest-spread@npm:7.16.0, @babel/plugin-proposal-object-rest-spread@npm:^7.16.0":
+"@babel/plugin-proposal-object-rest-spread@npm:^7.16.0":
   version: 7.16.0
   resolution: "@babel/plugin-proposal-object-rest-spread@npm:7.16.0"
   dependencies:
@@ -2005,7 +2005,6 @@ __metadata:
   dependencies:
     "@babel/core": 7.16.0
     "@babel/plugin-proposal-class-properties": 7.16.0
-    "@babel/plugin-proposal-object-rest-spread": 7.16.0
     "@babel/preset-env": 7.16.0
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
@@ -2015,7 +2014,7 @@ __metadata:
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.2
-    "@types/react": 17.0.34
+    "@types/react": 17.0.35
     "@types/testing-library__jest-dom": 5.14.1
     "@typescript-eslint/eslint-plugin": 5.3.1
     "@typescript-eslint/parser": 5.3.1
@@ -2049,7 +2048,6 @@ __metadata:
   dependencies:
     "@babel/core": 7.16.0
     "@babel/plugin-proposal-class-properties": 7.16.0
-    "@babel/plugin-proposal-object-rest-spread": 7.16.0
     "@babel/preset-env": 7.16.0
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
@@ -2060,7 +2058,7 @@ __metadata:
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.2
-    "@types/react": 17.0.34
+    "@types/react": 17.0.35
     "@types/testing-library__jest-dom": 5.14.1
     "@types/uuid": 8.3.1
     "@typescript-eslint/eslint-plugin": 5.3.1
@@ -2099,7 +2097,6 @@ __metadata:
   dependencies:
     "@babel/core": 7.16.0
     "@babel/plugin-proposal-class-properties": 7.16.0
-    "@babel/plugin-proposal-object-rest-spread": 7.16.0
     "@babel/preset-env": 7.16.0
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
@@ -2108,7 +2105,7 @@ __metadata:
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/jest": 27.0.2
-    "@types/react": 17.0.34
+    "@types/react": 17.0.35
     "@types/testing-library__jest-dom": 5.14.1
     "@typescript-eslint/eslint-plugin": 5.3.1
     "@typescript-eslint/parser": 5.3.1
@@ -2485,14 +2482,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.34":
-  version: 17.0.34
-  resolution: "@types/react@npm:17.0.34"
+"@types/react@npm:17.0.35":
+  version: 17.0.35
+  resolution: "@types/react@npm:17.0.35"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 16729ad7d50922ccbf8eb93874d7781dc2f1c64edc78134b5edc7154839d41e9fe320eb1c11ad2d1c9bf28b99cb1febda344509c1fda025955a5c2b43c688c8f
+  checksum: 33e2bf8068ccc5330f089f5d4bee54649c2d5b512edee4a9e44c113271a69ea8c71ddbd3103b205eb971fd4c358e9f69d707df08bec90b3c33492db374614eb7
   languageName: node
   linkType: hard
 
