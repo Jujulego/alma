@@ -2080,7 +2080,7 @@ __metadata:
     eslint-plugin-jest: 25.3.0
     eslint-plugin-react: 7.27.1
     eslint-plugin-react-hooks: 4.3.0
-    eslint-plugin-testing-library: 5.0.0
+    eslint-plugin-testing-library: 5.0.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-babel: 8.0.0
@@ -2125,7 +2125,7 @@ __metadata:
     eslint-plugin-jest: 25.3.0
     eslint-plugin-react: 7.27.1
     eslint-plugin-react-hooks: 4.3.0
-    eslint-plugin-testing-library: 5.0.0
+    eslint-plugin-testing-library: 5.0.1
     eslint-plugin-workspaces: 0.7.0
     graphql: 16.0.1
     graphql-tag: 2.12.6
@@ -2171,7 +2171,7 @@ __metadata:
     eslint-plugin-jest: 25.3.0
     eslint-plugin-react: 7.27.1
     eslint-plugin-react-hooks: 4.3.0
-    eslint-plugin-testing-library: 5.0.0
+    eslint-plugin-testing-library: 5.0.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-babel: 8.0.0
@@ -2639,7 +2639,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/experimental-utils@npm:5.5.0":
+"@typescript-eslint/experimental-utils@npm:5.5.0, @typescript-eslint/experimental-utils@npm:^5.5.0":
   version: 5.5.0
   resolution: "@typescript-eslint/experimental-utils@npm:5.5.0"
   dependencies:
@@ -2911,7 +2911,7 @@ __metadata:
     eslint-plugin-jest: 25.3.0
     eslint-plugin-react: 7.27.1
     eslint-plugin-react-hooks: 4.3.0
-    eslint-plugin-testing-library: 5.0.0
+    eslint-plugin-testing-library: 5.0.1
     eslint-plugin-workspaces: 0.7.0
     jest: 27.4.3
     typescript: 4.5.2
@@ -4802,14 +4802,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:5.0.0":
-  version: 5.0.0
-  resolution: "eslint-plugin-testing-library@npm:5.0.0"
+"eslint-plugin-testing-library@npm:5.0.1":
+  version: 5.0.1
+  resolution: "eslint-plugin-testing-library@npm:5.0.1"
   dependencies:
-    "@typescript-eslint/experimental-utils": ^5.0.0
+    "@typescript-eslint/experimental-utils": ^5.5.0
   peerDependencies:
     eslint: ^7.5.0 || ^8.0.0
-  checksum: 41af8fc9f80632a1442f1848d4d60f2224d7a1f8f4f9df047749aee50e91bcdc1b0bcd54fe0fa65d642df912723deed3fee96c49d0694c3f56b71ae3f597b7ae
+  checksum: a609f65d4ef4d2c68904e6a52ed22a9dd6ed4de3157937c16a56de1021c6270dc8041785a2f0603d619575c4a957e93476c29e28a756cf6973526a8aeafc9e13
   languageName: node
   linkType: hard
 
