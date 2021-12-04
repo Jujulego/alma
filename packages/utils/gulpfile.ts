@@ -69,5 +69,5 @@ gulp.task('build', gulp.series(
 ));
 
 gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
-  gulp.parallel('build:cjs', 'build:types')
+  gulp.parallel('build:cjs', 'build:esm', 'build:types')
 ));
