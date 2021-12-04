@@ -3,6 +3,7 @@ import del from 'del';
 import gulp from 'gulp';
 import babel from 'gulp-babel';
 import rename from 'gulp-rename';
+import sourcemaps from 'gulp-sourcemaps';
 import terser from 'gulp-terser';
 import typescript from 'gulp-typescript';
 import buffer from 'vinyl-buffer';
@@ -26,17 +27,23 @@ const dts = typescript.createProject('tsconfig.json', {
 gulp.task('clean', () => del(['dist']));
 
 gulp.task('build:cjs', () => gulp.src(paths.src, { since: gulp.lastRun('build:cjs') })
+  .pipe(sourcemaps.init())
   .pipe(babel({ envName: 'cjs' } as any))
+  .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('dist/cjs'))
 );
 
 gulp.task('build:esm', () => gulp.src(paths.src, { since: gulp.lastRun('build:esm') })
+  .pipe(sourcemaps.write('.'))
   .pipe(babel({ envName: 'esm' } as any))
+  .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('dist/esm'))
 );
 
 gulp.task('build:types', () => gulp.src(paths.src, { since: gulp.lastRun('build:types') })
+  .pipe(sourcemaps.init())
   .pipe(dts()).dts
+  .pipe(sourcemaps.write('.'))
   .pipe(gulp.dest('dist/types'))
 );
 
@@ -47,6 +54,7 @@ gulp.task('bundle:umd', () =>
     output: {
       file: 'alma-utils.js',
       format: 'umd',
+      sourcemap: true,
       name: '@jujulego/alma-utils',
       globals: {
         'react': 'react',

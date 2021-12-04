@@ -12,7 +12,6 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/utils/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/api/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/graphql/coverage" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/utils/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
