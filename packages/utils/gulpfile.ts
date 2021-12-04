@@ -1,15 +1,16 @@
+import rollup from '@rollup/stream';
 import del from 'del';
 import gulp from 'gulp';
 import babel from 'gulp-babel';
+import rename from 'gulp-rename';
+import terser from 'gulp-terser';
 import typescript from 'gulp-typescript';
-import webpack from 'webpack-stream';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { WebpackPnpExternals } = require('webpack-pnp-externals');
+import buffer from 'vinyl-buffer';
+import source from 'vinyl-source-stream';
 
 // Config
 const paths = {
-  entry: 'dist/cjs/index.js',
+  entry: 'dist/esm/index.js',
   src: 'src/**/*.{ts,tsx}',
   deps: [
     '../../.pnp.*'
@@ -39,21 +40,26 @@ gulp.task('build:types', () => gulp.src(paths.src, { since: gulp.lastRun('build:
   .pipe(gulp.dest('dist/types'))
 );
 
-gulp.task('bundle:umd', () => gulp.src(paths.entry, { since: gulp.lastRun('bundle:umd') })
-  .pipe(webpack({
-    mode: 'production',
+gulp.task('bundle:umd', () =>
+  rollup({
+    input: paths.entry,
+    external: ['react', 'dequal/lite'],
     output: {
-      filename: 'alma-utils.js',
-      library: {
-        name: '@jujulego/alma-utils',
-        type: 'umd'
-      }
-    },
-    externals: [
-      WebpackPnpExternals(),
-    ]
-  }))
-  .pipe(gulp.dest('dist/umd'))
+      file: 'alma-utils.js',
+      format: 'umd',
+      name: '@jujulego/alma-utils',
+      globals: {
+        'react': 'react',
+        'dequal/lite': 'dequal',
+      },
+    }
+  })
+    .pipe(source('alma-utils.js'))
+    .pipe(gulp.dest('dist/umd'))
+    .pipe(buffer())
+    .pipe(terser({ keep_fnames: true, mangle: false }))
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest('dist/umd'))
 );
 
 gulp.task('build', gulp.series(
