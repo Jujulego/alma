@@ -2,15 +2,15 @@
   "name": "@jujulego/alma-utils",
   "version": "1.0.9",
   "license": "MIT",
-  "main": "lib/index.js",
-  "module": "lib/index.mjs",
-  "browser": "umd/alma-utils.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/indexcjs/.js",
+  "module": "dist/esm/index.js",
+  "browser": "dist/umd/alma-utils.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
-    "require": "./lib/index.js",
-    "import": "./lib/index.mjs",
-    "browser": "./umd/alma-utils.js",
-    "types": "./lib/index.d.ts"
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/esm/index.js",
+    "browser": "./dist/umd/alma-utils.js",
+    "types": "./dist/types/index.d.ts"
   },
   "sideEffects": false,
   "repository": {
@@ -68,7 +68,6 @@
     "gulp-babel": "8.0.0",
     "gulp-cli": "2.3.0",
     "gulp-rename": "2.0.0",
-    "gulp-terser": "2.1.0",
     "gulp-typescript": "6.0.0-alpha.1",
     "jest": "27.4.3",
     "react": "17.0.2",

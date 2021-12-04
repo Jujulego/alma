@@ -2173,6 +2173,7 @@ __metadata:
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
+    "@rollup/stream": ^2.0.0
     "@testing-library/jest-dom": 5.15.1
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
@@ -2205,6 +2206,7 @@ __metadata:
     jest: 27.4.3
     react: 17.0.2
     react-dom: 17.0.2
+    rollup: ^2.60.2
     ts-jest: 27.0.7
     ts-node: 10.4.0
     typescript: 4.5.2
@@ -2325,6 +2327,15 @@ __metadata:
   version: 3.0.4
   resolution: "@repeaterjs/repeater@npm:3.0.4"
   checksum: cca0db3e802bc26fcce0b4a574074d9956da53bf43094de03c0e4732d05e13441279a92f0b96e2a7a39da50933684947a138c1213406eaafe39cfd4683d6c0df
+  languageName: node
+  linkType: hard
+
+"@rollup/stream@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@rollup/stream@npm:2.0.0"
+  peerDependencies:
+    rollup: ^2.35.1
+  checksum: 841b3187e324368e3f2d9c0f21af7ed5b8dafa8572addc8d2fb38d973f23c70099006aaf1e8f318221f72ce6566a3ac10cd21d9dd4d5714d0fc15c79d72510c4
   languageName: node
   linkType: hard
 
@@ -9974,6 +9985,20 @@ resolve@^2.0.0-next.3:
   bin:
     rimraf: bin.js
   checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^2.60.2":
+  version: 2.60.2
+  resolution: "rollup@npm:2.60.2"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: bcd41dfe8afb7e0d97ce2237752165bdda689bcce6321d96821d565de3e0c865a49b544923f315985be2bfde086f72b54aae4ae7c87f798b3cb9558a5bec4e65
   languageName: node
   linkType: hard
 
