@@ -1,32 +1,34 @@
-import del from 'del';
-import gulp from 'gulp';
-
 import babel from 'alma-tools/babel';
 import dts from 'alma-tools/dts';
 import rollup from 'alma-tools/rollup';
+import del from 'del';
+import gulp from 'gulp';
+import path from 'path';
 
 // Config
 const paths = {
   src: 'src/**/*.{ts,tsx}',
-  tsconfig: 'tsconfig.json',
-
-  entry: 'dist/esm/index.js',
+  output: 'dist',
   deps: [
     '../../.pnp.*'
   ]
 };
 
 // Tasks
-gulp.task('clean', () => del(['dist']));
+gulp.task('clean', () => del(paths.output));
 
-babel.task('build:cjs', { ...paths, env: 'cjs', output: 'dist/cjs' });
-babel.task('build:esm', { ...paths, env: 'esm', output: 'dist/esm' });
+babel.task('build:cjs', { src: paths.src, env: 'cjs', output: path.join(paths.output, 'cjs') });
+babel.task('build:esm', { src: paths.src, env: 'esm', output: path.join(paths.output, 'esm') });
 
-dts.task('build:types', { ...paths, output: 'dist/types' });
+dts.task('build:types', {
+  src: paths.src,
+  tsconfig: 'tsconfig.json',
+  output: path.join(paths.output, 'types')
+});
 
 rollup.task('bundle:umd', {
   config: {
-    input: paths.entry,
+    input: path.join(paths.output, 'esm/index.js'),
     external: ['react', 'dequal/lite'],
     output: {
       file: 'alma-utils.js',
@@ -38,7 +40,7 @@ rollup.task('bundle:umd', {
       },
     }
   },
-  output: 'dist/umd'
+  output: path.join(paths.output, 'umd')
 });
 
 gulp.task('build', gulp.series(
