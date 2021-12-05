@@ -4,5 +4,10 @@
     "incremental": true,
     "rootDir": ".",
     "tsBuildInfoFile": "./dist/.tsbuildinfo"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
   }
 }

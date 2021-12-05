@@ -31,10 +31,10 @@ setup-tests.ts
 .vscode/*
 
 # Configs
-.babelrc
+.babelrc*
 .eslintrc.json
 .gitignore
-gulpfile.js
+gulpfile.*
 jest.config.js
 nest-cli.json
 sonar-project.properties

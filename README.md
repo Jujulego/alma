@@ -9,4 +9,4 @@ React utils
 ## Packages
 - [@jujulego/alma-api](https://github.com/Jujulego/alma/tree/master/packages/api)
 - [@jujulego/alma-graphql](https://github.com/Jujulego/alma/tree/master/packages/graphql)
-- [@jujulego/alma-utils](https://github.com/Jujulego/jill/tree/master/packages/utils)
+- [@jujulego/alma-utils](https://github.com/Jujulego/alma/tree/master/packages/utils)
