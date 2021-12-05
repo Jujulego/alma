@@ -2105,7 +2105,7 @@ __metadata:
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
     "@jujulego/alma-utils": ^1.0.9
-    "@testing-library/jest-dom": 5.15.1
+    "@testing-library/jest-dom": 5.16.0
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
@@ -2129,7 +2129,7 @@ __metadata:
     jest: 27.4.3
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.1.0
     ts-node: 10.4.0
     typescript: 4.5.2
   peerDependencies:
@@ -2151,7 +2151,7 @@ __metadata:
     "@babel/runtime": 7.16.3
     "@jujulego/alma-api": ^2.1.3
     "@jujulego/alma-utils": ^1.0.9
-    "@testing-library/jest-dom": 5.15.1
+    "@testing-library/jest-dom": 5.16.0
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
@@ -2179,7 +2179,7 @@ __metadata:
     jest: 27.4.3
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.1.0
     ts-node: 10.4.0
     typescript: 4.5.2
   peerDependencies:
@@ -2200,7 +2200,7 @@ __metadata:
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
-    "@testing-library/jest-dom": 5.15.1
+    "@testing-library/jest-dom": 5.16.0
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
@@ -2224,7 +2224,7 @@ __metadata:
     jest: 27.4.3
     react: 17.0.2
     react-dom: 17.0.2
-    ts-jest: 27.0.7
+    ts-jest: 27.1.0
     ts-node: 10.4.0
     typescript: 4.5.2
   peerDependencies:
@@ -2387,20 +2387,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:5.15.1":
-  version: 5.15.1
-  resolution: "@testing-library/jest-dom@npm:5.15.1"
+"@testing-library/jest-dom@npm:5.16.0":
+  version: 5.16.0
+  resolution: "@testing-library/jest-dom@npm:5.16.0"
   dependencies:
     "@babel/runtime": ^7.9.2
     "@types/testing-library__jest-dom": ^5.9.1
-    aria-query: ^4.2.2
+    aria-query: ^5.0.0
     chalk: ^3.0.0
     css: ^3.0.0
     css.escape: ^1.5.1
     dom-accessibility-api: ^0.5.6
     lodash: ^4.17.15
     redent: ^3.0.0
-  checksum: c9fba26f9a31c17143933537e16b55fdabbf065710f96f4c4be42de682651208d89361ac55bc68247610d9973ee37736f2a9911b50431d230f480b86379c2350
+  checksum: 34ccca14f6b2ea0748556548481bc4f1a979c0a918e1c14c4b9e67a1ac8c2a0c52dca8da91d56c218c779ae0e9387b041d74f585da39f757c19a472b033e2b5e
   languageName: node
   linkType: hard
 
@@ -3376,6 +3376,13 @@ __metadata:
     "@babel/runtime": ^7.10.2
     "@babel/runtime-corejs3": ^7.10.2
   checksum: 38401a9a400f26f3dcc24b84997461a16b32869a9893d323602bed8da40a8bcc0243b8d2880e942249a1496cea7a7de769e93d21c0baa439f01e1ee936fed665
+  languageName: node
+  linkType: hard
+
+"aria-query@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "aria-query@npm:5.0.0"
+  checksum: c41f98866c5a304561ee8cae55856711cddad6f3f85d8cb43cc5f79667078d9b8979ce32d244c1ff364e6463a4d0b6865804a33ccc717fed701b281cf7dc6296
   languageName: node
   linkType: hard
 
@@ -5095,6 +5102,187 @@ __metadata:
     es6-iterator: ^2.0.3
     es6-symbol: ^3.1.1
   checksum: 19ca15f46d50948ce78c2da5f21fb5b1ef45addd4fe17b5df952ff1f2a3d6ce4781249bc73b90995257264be2a98b2ec749bb2aba0c14b5776a1154178f9c927
+  languageName: node
+  linkType: hard
+
+"esbuild-android-arm64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-android-arm64@npm:0.14.2"
+  conditions: os=android & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-darwin-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-darwin-64@npm:0.14.2"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-darwin-arm64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-darwin-arm64@npm:0.14.2"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-freebsd-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-freebsd-64@npm:0.14.2"
+  conditions: os=freebsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-freebsd-arm64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-freebsd-arm64@npm:0.14.2"
+  conditions: os=freebsd & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-32@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-32@npm:0.14.2"
+  conditions: os=linux & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-64@npm:0.14.2"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-arm64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-arm64@npm:0.14.2"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-arm@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-arm@npm:0.14.2"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-mips64le@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-mips64le@npm:0.14.2"
+  conditions: os=linux & cpu=mips64el
+  languageName: node
+  linkType: hard
+
+"esbuild-linux-ppc64le@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-linux-ppc64le@npm:0.14.2"
+  conditions: os=linux & cpu=ppc64
+  languageName: node
+  linkType: hard
+
+"esbuild-netbsd-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-netbsd-64@npm:0.14.2"
+  conditions: os=netbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-openbsd-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-openbsd-64@npm:0.14.2"
+  conditions: os=openbsd & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-sunos-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-sunos-64@npm:0.14.2"
+  conditions: os=sunos & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-32@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-windows-32@npm:0.14.2"
+  conditions: os=win32 & cpu=ia32
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-windows-64@npm:0.14.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"esbuild-windows-arm64@npm:0.14.2":
+  version: 0.14.2
+  resolution: "esbuild-windows-arm64@npm:0.14.2"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:~0.14.0":
+  version: 0.14.2
+  resolution: "esbuild@npm:0.14.2"
+  dependencies:
+    esbuild-android-arm64: 0.14.2
+    esbuild-darwin-64: 0.14.2
+    esbuild-darwin-arm64: 0.14.2
+    esbuild-freebsd-64: 0.14.2
+    esbuild-freebsd-arm64: 0.14.2
+    esbuild-linux-32: 0.14.2
+    esbuild-linux-64: 0.14.2
+    esbuild-linux-arm: 0.14.2
+    esbuild-linux-arm64: 0.14.2
+    esbuild-linux-mips64le: 0.14.2
+    esbuild-linux-ppc64le: 0.14.2
+    esbuild-netbsd-64: 0.14.2
+    esbuild-openbsd-64: 0.14.2
+    esbuild-sunos-64: 0.14.2
+    esbuild-windows-32: 0.14.2
+    esbuild-windows-64: 0.14.2
+    esbuild-windows-arm64: 0.14.2
+  dependenciesMeta:
+    esbuild-android-arm64:
+      optional: true
+    esbuild-darwin-64:
+      optional: true
+    esbuild-darwin-arm64:
+      optional: true
+    esbuild-freebsd-64:
+      optional: true
+    esbuild-freebsd-arm64:
+      optional: true
+    esbuild-linux-32:
+      optional: true
+    esbuild-linux-64:
+      optional: true
+    esbuild-linux-arm:
+      optional: true
+    esbuild-linux-arm64:
+      optional: true
+    esbuild-linux-mips64le:
+      optional: true
+    esbuild-linux-ppc64le:
+      optional: true
+    esbuild-netbsd-64:
+      optional: true
+    esbuild-openbsd-64:
+      optional: true
+    esbuild-sunos-64:
+      optional: true
+    esbuild-windows-32:
+      optional: true
+    esbuild-windows-64:
+      optional: true
+    esbuild-windows-arm64:
+      optional: true
+  bin:
+    esbuild: bin/esbuild
+  checksum: d786e6330b541d9d79ed81e82c1c35944c007cb38bf30bb021e68cf6bb25023316a45c68a4e94fa8397f4b79c69bb7a3b221afd9fac7725a4a2ca4ad8b55dff8
   languageName: node
   linkType: hard
 
@@ -10809,11 +10997,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:27.0.7":
-  version: 27.0.7
-  resolution: "ts-jest@npm:27.0.7"
+"ts-jest@npm:27.1.0":
+  version: 27.1.0
+  resolution: "ts-jest@npm:27.1.0"
   dependencies:
     bs-logger: 0.x
+    esbuild: ~0.14.0
     fast-json-stable-stringify: 2.x
     jest-util: ^27.0.0
     json5: 2.x
@@ -10836,7 +11025,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 3711361cb5ae54aac547b00f8ad118ec88333c391af4bff0420497e9faa296eace4e8272c627ecbf4be675af9f68c437e4c2ccc5693c6d744796ec7da6dda131
+  checksum: ff59267dc93dde03b0cabc0c0ca44e1322ac1abc8401187dc687c2b539c6cd2f95400418855a9f4154bff7043caa6e84765f5bb02624f4b40df6bba9e8af555f
   languageName: node
   linkType: hard
 
