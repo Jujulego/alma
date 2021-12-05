@@ -2196,24 +2196,17 @@ __metadata:
     "@babel/preset-react": 7.16.0
     "@babel/preset-typescript": 7.16.0
     "@babel/runtime": 7.16.3
-    "@rollup/stream": 2.0.0
     "@testing-library/jest-dom": 5.15.1
     "@testing-library/react": 12.1.2
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
-    "@types/gulp-babel": 6.1.30
-    "@types/gulp-filter": 3.0.34
-    "@types/gulp-rename": 2.0.1
-    "@types/gulp-sourcemaps": 0.0.35
-    "@types/gulp-terser": 1.2.1
     "@types/jest": 27.0.3
     "@types/node": 14.18.0
     "@types/react": 17.0.37
     "@types/testing-library__jest-dom": 5.14.2
-    "@types/vinyl-buffer": 1.0.0
-    "@types/vinyl-source-stream": 0.0.30
     "@typescript-eslint/eslint-plugin": 5.5.0
     "@typescript-eslint/parser": 5.5.0
+    alma-tools: "workspace:*"
     del: 6.0.0
     dequal: ^2.0.2
     eslint: 7.32.0
@@ -2223,22 +2216,13 @@ __metadata:
     eslint-plugin-testing-library: 5.0.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
-    gulp-babel: 8.0.0
     gulp-cli: 2.3.0
-    gulp-filter: 7.0.0
-    gulp-rename: 2.0.0
-    gulp-sourcemaps: 3.0.0
-    gulp-terser: 2.1.0
-    gulp-typescript: 6.0.0-alpha.1
     jest: 27.4.3
     react: 17.0.2
     react-dom: 17.0.2
-    rollup: 2.60.2
     ts-jest: 27.0.7
     ts-node: 10.4.0
     typescript: 4.5.2
-    vinyl-buffer: 1.0.1
-    vinyl-source-stream: 2.0.0
   peerDependencies:
     react: ^17.0.0
     react-dom: ^17.0.0
@@ -3177,6 +3161,35 @@ __metadata:
   checksum: 690ffb9408415fdab43686b3f92037ba0c8362f5d0709a123ba3fb546e6ad81414455f80a2b5cc432ce924afe9864671198f022bc331a19c072d4ede152ec3ca
   languageName: node
   linkType: hard
+
+"alma-tools@workspace:*, alma-tools@workspace:tools":
+  version: 0.0.0-use.local
+  resolution: "alma-tools@workspace:tools"
+  dependencies:
+    "@rollup/stream": 2.0.0
+    "@types/gulp": 4.0.9
+    "@types/gulp-babel": 6.1.30
+    "@types/gulp-filter": 3.0.34
+    "@types/gulp-rename": 2.0.1
+    "@types/gulp-sourcemaps": 0.0.35
+    "@types/gulp-terser": 1.2.1
+    "@types/vinyl-buffer": 1.0.0
+    "@types/vinyl-source-stream": 0.0.30
+    gulp-babel: 8.0.0
+    gulp-filter: 7.0.0
+    gulp-rename: 2.0.0
+    gulp-sourcemaps: 3.0.0
+    gulp-terser: 2.1.0
+    gulp-typescript: 6.0.0-alpha.1
+    rollup: 2.60.2
+    typescript: 4.5.2
+    vinyl-buffer: 1.0.1
+    vinyl-source-stream: 2.0.0
+  peerDependencies:
+    "@babel/core": 7.16.0
+    gulp: 4.0.2
+  languageName: unknown
+  linkType: soft
 
 "alma@workspace:.":
   version: 0.0.0-use.local
