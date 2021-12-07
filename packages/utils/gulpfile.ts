@@ -1,5 +1,4 @@
-import { babel, dts, flow, src } from 'alma-tools';
-import rollup from 'alma-tools/rollup';
+import { babel, dest, dts, flow, rollup, src, terser } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
 import path from 'path';
@@ -19,13 +18,13 @@ gulp.task('clean', () => del(paths.output));
 gulp.task('build:cjs', () => flow(
   ...src(paths.src, { since: gulp.lastRun('build:cjs') }),
   ...babel({ envName: 'cjs' }),
-  gulp.dest(path.join(paths.output, 'cjs'))
+  ...dest(path.join(paths.output, 'cjs'))
 ));
 
 gulp.task('build:esm', () => flow(
   ...src(paths.src, { since: gulp.lastRun('build:esm') }),
   ...babel({ envName: 'esm' }),
-  gulp.dest(path.join(paths.output, 'esm'))
+  ...dest(path.join(paths.output, 'esm'))
 ));
 
 gulp.task('build:types', () => flow(
@@ -34,8 +33,8 @@ gulp.task('build:types', () => flow(
   gulp.dest(path.join(paths.output, 'types')),
 ));
 
-rollup.task('bundle:umd', {
-  config: {
+gulp.task('bundle:umd', () => flow(
+  ...rollup({
     input: path.join(paths.output, 'esm/index.js'),
     external: ['react', 'dequal/lite'],
     output: {
@@ -47,9 +46,11 @@ rollup.task('bundle:umd', {
         'dequal/lite': 'dequal',
       },
     }
-  },
-  output: path.join(paths.output, 'umd')
-});
+  }),
+  ...dest(path.join(paths.output, 'umd')),
+  ...terser({ keep_fnames: true, mangle: false }),
+  ...dest(path.join(paths.output, 'umd')),
+));
 
 gulp.task('build', gulp.series(
   'clean',

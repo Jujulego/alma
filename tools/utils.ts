@@ -21,13 +21,22 @@ export function flow<F extends Flow>(...streams: F): FlowResult<F> {
   return res as FlowResult<F>;
 }
 
-export function step<S extends RWStream[]>(...step: S): S {
+export function steps<S extends [RStream, ...RWStream[]]>(...step: S): S
+export function steps<S extends [...RWStream[], WStream]>(...step: S): S
+export function steps<S extends RWStream[]>(...step: S): S {
   return step;
 }
 
 export function src(...params: Parameters<typeof gulp.src>) {
-  return step(
+  return steps(
     gulp.src(...params),
     sourcemaps.init()
+  );
+}
+
+export function dest(path: string) {
+  return steps(
+    sourcemaps.write('.'),
+    gulp.dest(path),
   );
 }
