@@ -1,5 +1,4 @@
-import { dts, flow, src } from 'alma-tools';
-import babel from 'alma-tools/babel';
+import { babel, dts, flow, src } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
 import path from 'path';
@@ -17,8 +16,17 @@ const paths = {
 // Tasks
 gulp.task('clean', () => del(paths.output));
 
-babel.task('build:cjs', { src: paths.src, env: 'cjs', output: path.join(paths.output, 'cjs') });
-babel.task('build:esm', { src: paths.src, env: 'esm', output: path.join(paths.output, 'esm') });
+gulp.task('build:cjs', () => flow(
+  ...src(paths.src, { since: gulp.lastRun('build:cjs') }),
+  ...babel({ envName: 'cjs' }),
+  gulp.dest(path.join(paths.output, 'cjs'))
+));
+
+gulp.task('build:esm', () => flow(
+  ...src(paths.src, { since: gulp.lastRun('build:esm') }),
+  ...babel({ envName: 'esm' }),
+  gulp.dest(path.join(paths.output, 'esm'))
+));
 
 gulp.task('build:types', () => flow(
   ...src(paths.src, { since: gulp.lastRun('build:types') }),

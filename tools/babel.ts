@@ -1,8 +1,10 @@
 import gulp from 'gulp';
-import babel from 'gulp-babel';
+import _babel from 'gulp-babel';
 import sourcemaps from 'gulp-sourcemaps';
+import { step } from './utils';
 
 // Interface
+export type BabelOptions = Parameters<typeof _babel>[0] & { envName: string };
 export interface ToolsBabelPaths {
   /**
    * Glob to source files
@@ -25,10 +27,15 @@ export function task(name: string, paths: ToolsBabelPaths) {
   // Gulp task
   gulp.task(name, () => gulp.src(paths.src, { since: gulp.lastRun(name) })
     .pipe(sourcemaps.init())
-    .pipe(babel({ envName: paths.env } as any))
+    .pipe(_babel({ envName: paths.env } as any))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(paths.output))
   );
 }
 
-export default { task };
+export function babel(options: BabelOptions) {
+  return step(
+    _babel(options),
+    sourcemaps.write('.')
+  );
+}

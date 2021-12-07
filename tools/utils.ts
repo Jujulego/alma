@@ -2,28 +2,26 @@ import gulp from 'gulp';
 import sourcemaps from 'gulp-sourcemaps';
 
 // Types
-export type Awaitable<T> = T | Promise<T>;
-
 export type RStream = NodeJS.ReadableStream;
 export type WStream = NodeJS.WritableStream;
 export type RWStream = NodeJS.ReadWriteStream;
 
-export type Flow = [Awaitable<RStream>, ...Awaitable<RWStream>[], Awaitable<WStream>];
+export type Flow = [RStream, ...RWStream[], WStream];
 export type FlowResult<F extends Flow> = F extends [...unknown[], infer T] ? Awaited<T> : never;
 
 // Utils
-export async function flow<F extends Flow>(...streams: F): Promise<FlowResult<F>> {
+export function flow<F extends Flow>(...streams: F): FlowResult<F> {
   const [first, ...next] = streams;
-  let res = await first;
+  let res = first;
 
-  for (const stream of next as Awaitable<RWStream>[]) {
-    res = res.pipe(await stream);
+  for (const stream of next as RWStream[]) {
+    res = res.pipe(stream);
   }
 
   return res as FlowResult<F>;
 }
 
-export function step<S extends Awaitable<RWStream>[]>(...step: S): S {
+export function step<S extends RWStream[]>(...step: S): S {
   return step;
 }
 
