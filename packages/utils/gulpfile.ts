@@ -1,5 +1,5 @@
+import { dts, flow, src } from 'alma-tools';
 import babel from 'alma-tools/babel';
-import dts from 'alma-tools/dts';
 import rollup from 'alma-tools/rollup';
 import del from 'del';
 import gulp from 'gulp';
@@ -20,11 +20,11 @@ gulp.task('clean', () => del(paths.output));
 babel.task('build:cjs', { src: paths.src, env: 'cjs', output: path.join(paths.output, 'cjs') });
 babel.task('build:esm', { src: paths.src, env: 'esm', output: path.join(paths.output, 'esm') });
 
-dts.task('build:types', {
-  src: paths.src,
-  tsconfig: 'tsconfig.json',
-  output: path.join(paths.output, 'types')
-});
+gulp.task('build:types', () => flow(
+  ...src(paths.src, { since: gulp.lastRun('build:types') }),
+  ...dts('tsconfig.json'),
+  gulp.dest(path.join(paths.output, 'types')),
+));
 
 rollup.task('bundle:umd', {
   config: {
