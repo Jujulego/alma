@@ -17,21 +17,21 @@ const paths = {
 gulp.task('clean', () => del(paths.output));
 
 gulp.task('build:cjs', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:cjs') }),
-  ...babel({ envName: 'cjs' }),
-  ...dest(path.join(paths.output, 'cjs'))
+  src(paths.src, { since: gulp.lastRun('build:cjs') }),
+  babel({ envName: 'cjs' }),
+  dest(path.join(paths.output, 'cjs'))
 ));
 
 gulp.task('build:esm', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:esm') }),
-  ...babel({ envName: 'esm' }),
-  ...dest(path.join(paths.output, 'esm'))
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  babel({ envName: 'esm' }),
+  dest(path.join(paths.output, 'esm'))
 ));
 
 gulp.task('build:types', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:types') }),
-  ...dts('tsconfig.json'),
-  ...dest(path.join(paths.output, 'types')),
+  src(paths.src, { since: gulp.lastRun('build:types') }),
+  dts('tsconfig.json'),
+  dest(path.join(paths.output, 'types')),
 ));
 
 gulp.task('build', gulp.series(

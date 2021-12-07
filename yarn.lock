@@ -2671,6 +2671,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.flatten@npm:4.4.6":
+  version: 4.4.6
+  resolution: "@types/lodash.flatten@npm:4.4.6"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: f37c2afb328717f8cc4d3523d0c894c2241c8f56edb0a141b0a0034ba2612eb3b5359e8604e2072ea8858f8080a0e9bdb1e4528e66ca90118f287bbc29448c50
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.14.177
+  resolution: "@types/lodash@npm:4.14.177"
+  checksum: 00f9eb300ed5219cfbabb3448d4a71744895edad60dcfda9f028c0808a50eb6ad1ca9f673b56a85f85668a4ea54b9870643625468a747039c435643e52253a75
+  languageName: node
+  linkType: hard
+
 "@types/minimatch@npm:*, @types/minimatch@npm:^3.0.3":
   version: 3.0.5
   resolution: "@types/minimatch@npm:3.0.5"
@@ -3177,6 +3193,7 @@ __metadata:
     "@types/gulp-rename": 2.0.1
     "@types/gulp-sourcemaps": 0.0.35
     "@types/gulp-terser": 1.2.1
+    "@types/lodash.flatten": 4.4.6
     "@types/node": 14.18.0
     "@types/vinyl-buffer": 1.0.0
     "@types/vinyl-source-stream": 0.0.30
@@ -3186,6 +3203,7 @@ __metadata:
     gulp-sourcemaps: 3.0.0
     gulp-terser: 2.1.0
     gulp-typescript: 6.0.0-alpha.1
+    lodash.flatten: 4.4.0
     rollup: 2.60.2
     typescript: 4.5.2
     vinyl-buffer: 1.0.1
@@ -8223,6 +8241,13 @@ fsevents@^1.2.7:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
+  languageName: node
+  linkType: hard
+
+"lodash.flatten@npm:4.4.0":
+  version: 4.4.0
+  resolution: "lodash.flatten@npm:4.4.0"
+  checksum: 0ac34a393d4b795d4b7421153d27c13ae67e08786c9cbb60ff5b732210d46f833598eee3fb3844bb10070e8488efe390ea53bb567377e0cb47e9e630bf0811cb
   languageName: node
   linkType: hard
 

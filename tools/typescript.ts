@@ -1,7 +1,5 @@
 import typescript from 'gulp-typescript';
 
-import { steps } from './utils';
-
 // Step
 export function dts(tsconfig: string) {
   const prj = typescript.createProject(tsconfig, {
@@ -9,7 +7,5 @@ export function dts(tsconfig: string) {
     emitDeclarationOnly: true
   });
 
-  return steps(
-    prj(),
-  );
+  return prj();
 }

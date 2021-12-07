@@ -16,25 +16,25 @@ const paths = {
 gulp.task('clean', () => del(paths.output));
 
 gulp.task('build:cjs', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:cjs') }),
-  ...babel({ envName: 'cjs' }),
-  ...dest(path.join(paths.output, 'cjs'))
+  src(paths.src, { since: gulp.lastRun('build:cjs') }),
+  babel({ envName: 'cjs' }),
+  dest(path.join(paths.output, 'cjs'))
 ));
 
 gulp.task('build:esm', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:esm') }),
-  ...babel({ envName: 'esm' }),
-  ...dest(path.join(paths.output, 'esm'))
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  babel({ envName: 'esm' }),
+  dest(path.join(paths.output, 'esm'))
 ));
 
 gulp.task('build:types', () => flow(
-  ...src(paths.src, { since: gulp.lastRun('build:types') }),
-  ...dts('tsconfig.json'),
-  gulp.dest(path.join(paths.output, 'types')),
+  src(paths.src, { since: gulp.lastRun('build:types') }),
+  dts('tsconfig.json'),
+  dest(path.join(paths.output, 'types')),
 ));
 
 gulp.task('bundle:umd', () => flow(
-  ...rollup({
+  rollup({
     input: path.join(paths.output, 'esm/index.js'),
     external: ['react', 'dequal/lite'],
     output: {
@@ -47,9 +47,9 @@ gulp.task('bundle:umd', () => flow(
       },
     }
   }),
-  ...dest(path.join(paths.output, 'umd')),
-  ...terser({ keep_fnames: true, mangle: false }),
-  ...dest(path.join(paths.output, 'umd')),
+  dest(path.join(paths.output, 'umd')),
+  terser({ keep_fnames: true, mangle: false }),
+  dest(path.join(paths.output, 'umd')),
 ));
 
 gulp.task('build', gulp.series(
