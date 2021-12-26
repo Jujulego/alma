@@ -2182,7 +2182,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
     "@types/node": 14.18.3
-    "@types/react": 17.0.37
+    "@types/react": 17.0.38
     "@types/testing-library__jest-dom": 5.14.2
     "@typescript-eslint/eslint-plugin": 5.8.0
     "@typescript-eslint/parser": 5.8.0
@@ -2228,7 +2228,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
     "@types/node": 14.18.3
-    "@types/react": 17.0.37
+    "@types/react": 17.0.38
     "@types/testing-library__jest-dom": 5.14.2
     "@types/uuid": 8.3.3
     "@typescript-eslint/eslint-plugin": 5.8.0
@@ -2277,7 +2277,7 @@ __metadata:
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
     "@types/node": 14.18.3
-    "@types/react": 17.0.37
+    "@types/react": 17.0.38
     "@types/testing-library__jest-dom": 5.14.2
     "@typescript-eslint/eslint-plugin": 5.8.0
     "@typescript-eslint/parser": 5.8.0
@@ -2806,14 +2806,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.37":
-  version: 17.0.37
-  resolution: "@types/react@npm:17.0.37"
+"@types/react@npm:17.0.38":
+  version: 17.0.38
+  resolution: "@types/react@npm:17.0.38"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: e68b0d59aa69577fc6a6d654b25d5d8408625498f4c483f160b557fac21e840f6e8807cbde93e9f039949b6d624a019b1990d18499c1d65aecf3605c25e30242
+  checksum: 4079f4f959cd4a4bfaeda8b89fe8a1b1f8bdc9d87acfdc5f74a0b39cec9ec6a470724357c62778c0f063180b360c250e920c5a142f1dbcda67d9cc25a6d43a85
   languageName: node
   linkType: hard
 
