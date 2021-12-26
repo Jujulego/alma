@@ -2110,7 +2110,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.3
     "@types/react": 17.0.37
     "@types/testing-library__jest-dom": 5.14.2
     "@typescript-eslint/eslint-plugin": 5.6.0
@@ -2156,7 +2156,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.3
     "@types/react": 17.0.37
     "@types/testing-library__jest-dom": 5.14.2
     "@types/uuid": 8.3.3
@@ -2205,7 +2205,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/jest": 27.0.3
-    "@types/node": 14.18.0
+    "@types/node": 14.18.3
     "@types/react": 17.0.37
     "@types/testing-library__jest-dom": 5.14.2
     "@typescript-eslint/eslint-plugin": 5.6.0
@@ -2685,10 +2685,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.18.0":
-  version: 14.18.0
-  resolution: "@types/node@npm:14.18.0"
-  checksum: b120c26fe5f30bc358e861db8d7e401e419d14bd9dd25c022f3c2ea8b0b429d4c9efd77ad5d6d2a8bde61702a6786fb74d409f1b2cbb61c79133e2a65aab4fb1
+"@types/node@npm:14.18.3":
+  version: 14.18.3
+  resolution: "@types/node@npm:14.18.3"
+  checksum: 72275674a25b0e9d4fe213449d874fd3e8280a84d911a359d298d68b84550b6a3210d484dc2662b8eb6e0b1829f4dac5e60cb7c01ce78878b316305c798d1cbb
   languageName: node
   linkType: hard
 
