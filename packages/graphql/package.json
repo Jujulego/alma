@@ -38,12 +38,12 @@
     "graphql-ws": "^5.5.0"
   },
   "devDependencies": {
-    "@babel/core": "7.16.5",
-    "@babel/plugin-proposal-class-properties": "7.16.5",
-    "@babel/preset-env": "7.16.5",
-    "@babel/preset-react": "7.16.5",
-    "@babel/preset-typescript": "7.16.5",
-    "@babel/runtime": "7.16.5",
+    "@babel/core": "7.16.7",
+    "@babel/plugin-proposal-class-properties": "7.16.7",
+    "@babel/preset-env": "7.16.8",
+    "@babel/preset-react": "7.16.7",
+    "@babel/preset-typescript": "7.16.7",
+    "@babel/runtime": "7.16.7",
     "@testing-library/jest-dom": "5.16.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/react-hooks": "7.0.2",
