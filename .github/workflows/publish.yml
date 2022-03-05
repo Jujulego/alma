@@ -62,7 +62,7 @@ jobs:
       - name: Build
         run: yarn jill each build
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
           path: packages/*/dist/*
@@ -120,7 +120,7 @@ jobs:
       - name: Test
         run: yarn workspace ${{ matrix.name }} test
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.slug }}-coverage
           path: ${{ matrix.root }}/coverage
