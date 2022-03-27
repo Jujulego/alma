@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@jujulego/alma-api": "^2.1.4",
-    "@jujulego/alma-utils": "^1.0.11",
+    "@jujulego/alma-utils": "^1.1.0",
     "graphql-ws": "^5.5.0"
   },
   "devDependencies": {
