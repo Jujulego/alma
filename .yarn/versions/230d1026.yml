@@ -1,0 +1,6 @@
+releases:
+  "@jujulego/alma-utils": minor
+
+declined:
+  - "@jujulego/alma-api"
+  - "@jujulego/alma-graphql"
