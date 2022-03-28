@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import { ApiPromise, makeApiPromise } from '../api-promise';
+import { ApiConfigContext } from '../config/ApiConfigContext';
 import { ApiMethod, ApiRequest, ApiResponse } from '../types';
 
 // Types
@@ -22,6 +22,9 @@ export interface ApiRequestState<M extends ApiMethod, B, D> {
  * Send http request with axios. Handle loading state and request cancellation.
  */
 export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B, D> {
+  // Context
+  const { fetcher } = useContext(ApiConfigContext);
+
   // State
   const [loading, setLoading] = useState(false);
 
@@ -31,13 +34,7 @@ export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B
 
     // Make request
     const abort = new AbortController();
-    return makeApiPromise(axios.request<D>({
-      method: req.method,
-      url: req.url,
-      headers: req.headers,
-      data: req.body,
-      signal: abort.signal
-    })
+    return makeApiPromise(fetcher<M, B, D>(req, abort.signal)
       .then((res) => {
         setLoading(false);
         return res;
@@ -46,7 +43,7 @@ export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B
         setLoading(false);
         throw error;
       }), () => abort.abort());
-  }, []);
+  }, [fetcher]);
 
   return { loading, send };
 }

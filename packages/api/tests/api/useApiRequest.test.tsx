@@ -1,9 +1,6 @@
-import axios from 'axios';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiRequest } from '../../src/api';
-import { ApiPromise } from '../../src/api-promise';
-import { ApiResponse } from '../../src/types';
+import { ApiConfigContext, ApiPromise, ApiResponse, useApiRequest } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -15,9 +12,8 @@ describe('useApiRequest', () => {
   // Tests
   it('should call request generator on send call', async () => {
     // Mocks
-    let response: (data: string) => void = () => undefined;
-
-    jest.spyOn(axios, 'request').mockReturnValue(new Promise((resolve) => {
+    let response: (error: unknown) => void = () => undefined;
+    const fetcher = jest.fn().mockReturnValue(new Promise((resolve) => {
       response = (data) => resolve({
         status: 200,
         headers: {
@@ -28,7 +24,13 @@ describe('useApiRequest', () => {
     }));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>());
+    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+      wrapper: ({ children }) => (
+        <ApiConfigContext.Provider value={{ fetcher }}>
+          { children }
+        </ApiConfigContext.Provider>
+      )
+    });
 
     expect(result.current).toEqual({
       loading: false,
@@ -52,14 +54,13 @@ describe('useApiRequest', () => {
       send: expect.any(Function)
     });
 
-    expect(axios.request).toHaveBeenCalledWith({
+    expect(fetcher).toHaveBeenCalledWith({
       method: 'get',
       url: '/api/test',
       headers: {
         TEST: 'test',
-      },
-      signal: expect.any(AbortSignal)
-    });
+      }
+    }, expect.any(AbortSignal));
 
     // After receive
     await act(async () => {
@@ -83,12 +84,18 @@ describe('useApiRequest', () => {
   it('should reset loading if request failed', async () => {
     // Mocks
     let response: (error: unknown) => void = () => undefined;
-    jest.spyOn(axios, 'request').mockReturnValue(new Promise((resolve, reject) => {
+    const fetcher = jest.fn().mockReturnValue(new Promise((resolve, reject) => {
       response = (error) => reject(error);
     }));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>());
+    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+      wrapper: ({ children }) => (
+        <ApiConfigContext.Provider value={{ fetcher }}>
+          { children }
+        </ApiConfigContext.Provider>
+      )
+    });
 
     expect(result.current).toEqual({
       loading: false,
@@ -112,7 +119,7 @@ describe('useApiRequest', () => {
       send: expect.any(Function)
     });
 
-    expect(axios.request).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(1);
 
     // After receive
     await act(async () => {
@@ -129,10 +136,19 @@ describe('useApiRequest', () => {
 
   it('should abort request on request cancel', async () => {
     // Mocks
-    jest.spyOn(axios, 'request').mockReturnValue(new Promise(() => undefined));
+    let response: (error: unknown) => void = () => undefined;
+    const fetcher = jest.fn().mockReturnValue(new Promise((resolve, reject) => {
+      response = (error) => reject(error);
+    }));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>());
+    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+      wrapper: ({ children }) => (
+        <ApiConfigContext.Provider value={{ fetcher }}>
+          { children }
+        </ApiConfigContext.Provider>
+      )
+    });
 
     expect(result.current).toEqual({
       loading: false,
@@ -151,14 +167,13 @@ describe('useApiRequest', () => {
       });
     });
 
-    expect(axios.request).toHaveBeenCalledTimes(1);
+    expect(fetcher).toHaveBeenCalledTimes(1);
 
     // Abort !
     act(() => {
       prom.cancel();
     });
 
-    const { signal } = (axios.request as jest.MockedFunction<typeof axios.request>).mock.calls[0][0];
-    expect(signal?.aborted).toBe(true);
+    expect(fetcher.mock.calls[0][1].aborted).toBe(true);
   });
 });
