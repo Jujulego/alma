@@ -1,44 +1,24 @@
-import rollup from '@rollup/stream';
-import gulp from 'gulp';
-import filter from 'gulp-filter';
-import rename from 'gulp-rename';
+import { steps } from '@jujulego/flow';
+import _rollup from '@rollup/stream';
 import sourcemaps from 'gulp-sourcemaps';
-import terser from 'gulp-terser';
-import { RollupCache, InputOptions, OutputOptions } from 'rollup';
+import { InputOptions, OutputOptions, RollupCache } from 'rollup';
 import buffer from 'vinyl-buffer';
 import source from 'vinyl-source-stream';
 
-// Interface
-export interface ToolsRollupPaths {
-  /**
-   * Rollup config
-   */
-  config: Omit<InputOptions, 'cache'> & { output: OutputOptions & { file: string } };
-
-  /**
-   * Output directory
-   */
-  output: string;
+// Types
+export interface RollupConfig extends Omit<InputOptions, 'cache'> {
+  output: OutputOptions & { file: string };
 }
 
-// Task
-export function task(name: string, paths: ToolsRollupPaths) {
-  let cache: RollupCache;
+// Step
+export function rollup(config: RollupConfig) {
+  let cache: RollupCache | undefined = undefined;
 
-  // Gulp task
-  gulp.task(name, () => rollup({ ...paths.config, cache })
-    .on('bundle', (bundle) => { cache = bundle; })
-    .pipe(source(paths.config.output.file))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.output))
-    .pipe(filter(paths.config.output.file))
-    .pipe(terser({ keep_fnames: true, mangle: false }))
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.output))
+  return steps(
+    _rollup({ ...config, cache })
+      .on('bundle', (bundle) => { cache = bundle; }),
+    source(config.output.file),
+    buffer(),
+    sourcemaps.init({ loadMaps: true })
   );
 }
-
-export default { task };

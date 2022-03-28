@@ -1,34 +1,9 @@
-import gulp from 'gulp';
-import babel from 'gulp-babel';
-import sourcemaps from 'gulp-sourcemaps';
+import _babel from 'gulp-babel';
 
-// Interface
-export interface ToolsBabelPaths {
-  /**
-   * Glob to source files
-   */
-  src: string;
+// Types
+export type BabelOptions = Parameters<typeof _babel>[0] & { envName?: string };
 
-  /**
-   * Babel env to use
-   */
-  env: string;
-
-  /**
-   * Output directory
-   */
-  output: string;
+// Step
+export function babel(options: BabelOptions = {}) {
+  return _babel(options);
 }
-
-// Task
-export function task(name: string, paths: ToolsBabelPaths) {
-  // Gulp task
-  gulp.task(name, () => gulp.src(paths.src, { since: gulp.lastRun(name) })
-    .pipe(sourcemaps.init())
-    .pipe(babel({ envName: paths.env } as any))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(paths.output))
-  );
-}
-
-export default { task };

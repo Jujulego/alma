@@ -3,9 +3,11 @@
   "private": true,
   "peerDependencies": {
     "@babel/core": "7.17.5",
-    "gulp": "4.0.2"
+    "gulp": "4.0.2",
+    "typescript": "4.5.5"
   },
   "dependencies": {
+    "@jujulego/flow": "1.1.0",
     "@rollup/stream": "2.0.0",
     "@types/gulp": "4.0.9",
     "@types/gulp-babel": "6.1.30",
@@ -22,7 +24,6 @@
     "gulp-terser": "2.1.0",
     "gulp-typescript": "6.0.0-alpha.1",
     "rollup": "2.70.1",
-    "typescript": "4.5.5",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.0"
   }

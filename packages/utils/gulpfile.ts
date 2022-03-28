@@ -1,34 +1,43 @@
-import babel from 'alma-tools/babel';
-import dts from 'alma-tools/dts';
-import rollup from 'alma-tools/rollup';
+import { babel, dest, dts, flow, rollup, src, terser, ts } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
-import path from 'path';
+import filter from 'gulp-filter';
 
 // Config
 const paths = {
-  src: 'src/**/*.{ts,tsx}',
-  output: 'dist',
+  src: ['src/**/*.ts', 'src/**/*.tsx'],
+  tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*'
   ]
 };
 
 // Tasks
-gulp.task('clean', () => del(paths.output));
+gulp.task('clean', () => del('dist'));
 
-babel.task('build:cjs', { src: paths.src, env: 'cjs', output: path.join(paths.output, 'cjs') });
-babel.task('build:esm', { src: paths.src, env: 'esm', output: path.join(paths.output, 'esm') });
+gulp.task('build:cjs', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:cjs') }),
+  ts(paths.tsconfig),
+  babel({ envName: 'cjs' }),
+  dest('dist/cjs')
+));
 
-dts.task('build:types', {
-  src: paths.src,
-  tsconfig: 'tsconfig.json',
-  output: path.join(paths.output, 'types')
-});
+gulp.task('build:esm', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  ts(paths.tsconfig),
+  babel({ envName: 'esm' }),
+  dest('dist/esm')
+));
 
-rollup.task('bundle:umd', {
-  config: {
-    input: path.join(paths.output, 'esm/index.js'),
+gulp.task('build:types', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  dts(paths.tsconfig),
+  dest('dist/types')
+));
+
+gulp.task('bundle:umd', () => flow(
+  rollup({
+    input: 'dist/esm/index.js',
     external: ['react', 'dequal/lite'],
     output: {
       file: 'alma-utils.js',
@@ -39,9 +48,12 @@ rollup.task('bundle:umd', {
         'dequal/lite': 'dequal',
       },
     }
-  },
-  output: path.join(paths.output, 'umd')
-});
+  }),
+  dest('dist/umd'),
+  filter('alma-utils.js'),
+  terser('.min', { keep_fnames: true, mangle: false }),
+  dest('dist/umd'),
+));
 
 gulp.task('build', gulp.series(
   'clean',
@@ -49,7 +61,7 @@ gulp.task('build', gulp.series(
   'bundle:umd',
 ));
 
-gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.series(
     gulp.parallel('build:cjs', 'build:esm', 'build:types'),
     'bundle:umd',
