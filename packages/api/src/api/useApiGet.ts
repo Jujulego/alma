@@ -20,7 +20,7 @@ export interface ApiGetRequestState<D> {
 
 // Hook
 /**
- * Send a get request with axios, returns the current status of the request.
+ * Send a get request, returns the current status of the request.
  *
  * @param defaultUrl: Default URL of the request (could be overridden by send call)
  * @param defaultHeaders: Default Headers of the request (could be overridden by send call)

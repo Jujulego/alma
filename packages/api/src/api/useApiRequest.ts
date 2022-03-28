@@ -19,7 +19,7 @@ export interface ApiRequestState<M extends ApiMethod, B, D> {
 
 // Hook
 /**
- * Send http request with axios. Handle loading state and request cancellation.
+ * Send http request. Handle loading state and request cancellation.
  */
 export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B, D> {
   // Context

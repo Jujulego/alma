@@ -20,7 +20,7 @@ export interface ApiPutRequestState<B, D> {
 
 // Hook
 /**
- * Send a put request with axios, returns the current status of the request.
+ * Send a put request, returns the current status of the request.
  *
  * @param defaultUrl: Default URL of the request (could be overridden by send call)
  * @param defaultHeaders: Default Headers of the request (could be overridden by send call)

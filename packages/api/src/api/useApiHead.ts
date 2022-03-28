@@ -20,7 +20,7 @@ export interface ApiHeadRequestState<D> {
 
 // Hook
 /**
- * Send a head request with axios, returns the current status of the request.
+ * Send a head request, returns the current status of the request.
  *
  * @param defaultUrl: Default URL of the request (could be overridden by send call)
  * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
