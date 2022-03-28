@@ -6,8 +6,7 @@ module.exports = (api) => ({
     }],
     ['@babel/preset-react', {
       runtime: 'automatic'
-    }],
-    '@babel/preset-typescript'
+    }]
   ],
   plugins: [
     '@babel/proposal-class-properties'

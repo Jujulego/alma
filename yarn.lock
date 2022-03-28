@@ -2245,7 +2245,6 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
-    "@babel/preset-typescript": 7.16.7
     "@babel/runtime": 7.17.2
     "@jujulego/alma-utils": ^1.1.0
     "@testing-library/jest-dom": 5.16.2
@@ -2341,7 +2340,6 @@ __metadata:
     "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
-    "@babel/preset-typescript": 7.16.7
     "@babel/runtime": 7.17.2
     "@testing-library/jest-dom": 5.16.2
     "@testing-library/react": 12.1.4
