@@ -2347,6 +2347,7 @@ __metadata:
     "@testing-library/react": 12.1.4
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
+    "@types/gulp-filter": 3.0.34
     "@types/jest": 27.4.1
     "@types/node": 14.18.12
     "@types/react": 17.0.39
@@ -2364,6 +2365,7 @@ __metadata:
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
+    gulp-filter: 7.0.0
     jest: 27.5.1
     react: 17.0.2
     react-dom: 17.0.2
@@ -2375,6 +2377,15 @@ __metadata:
     react-dom: ^17.0.0
   languageName: unknown
   linkType: soft
+
+"@jujulego/flow@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@jujulego/flow@npm:1.1.0"
+  dependencies:
+    lodash.flatten: ^4.4.0
+  checksum: ac28945513977a635cccbefd7c2db0091099cbbe1e52c8541f7752088c4344a81135c0526d66ac5cd329ed302bff6e98b152767330b2af8279a2ad75231aac20
+  languageName: node
+  linkType: hard
 
 "@jujulego/jill-common@npm:^1.2.0":
   version: 1.2.0
@@ -3395,6 +3406,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "alma-tools@workspace:tools"
   dependencies:
+    "@jujulego/flow": 1.1.0
     "@rollup/stream": 2.0.0
     "@types/gulp": 4.0.9
     "@types/gulp-babel": 6.1.30
@@ -3411,12 +3423,12 @@ __metadata:
     gulp-terser: 2.1.0
     gulp-typescript: 6.0.0-alpha.1
     rollup: 2.70.1
-    typescript: 4.5.5
     vinyl-buffer: 1.0.1
     vinyl-source-stream: 2.0.0
   peerDependencies:
     "@babel/core": 7.17.5
     gulp: 4.0.2
+    typescript: 4.5.5
   languageName: unknown
   linkType: soft
 
@@ -8175,6 +8187,13 @@ fsevents@^1.2.7:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: a3f527d22c548f43ae31c861ada88b2637eb48ac6aa3eb56e82d44917971b8aa96fbb37aa60efea674dc4ee8c42074f90f7b1f772e9db375435f6c83a19b3bc6
+  languageName: node
+  linkType: hard
+
+"lodash.flatten@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "lodash.flatten@npm:4.4.0"
+  checksum: 0ac34a393d4b795d4b7421153d27c13ae67e08786c9cbb60ff5b732210d46f833598eee3fb3844bb10070e8488efe390ea53bb567377e0cb47e9e630bf0811cb
   languageName: node
   linkType: hard
 
