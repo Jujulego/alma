@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "5.16.0",
     "@typescript-eslint/parser": "5.16.0",
     "alma-tools": "workspace:*",
-    "axios": "0.26.0",
+    "axios": "0.26.1",
     "del": "6.0.0",
     "eslint": "8.10.0",
     "eslint-plugin-jest": "26.1.1",
