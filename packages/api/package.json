@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-api",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -32,7 +32,7 @@
     "react-dom": "^17.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-utils": "^1.1.0"
+    "@jujulego/alma-utils": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.17.5",
