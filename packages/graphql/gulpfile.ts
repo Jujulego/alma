@@ -1,13 +1,11 @@
-import babel from 'alma-tools/babel';
-import dts from 'alma-tools/dts';
+import { babel, dest, dts, flow, src, ts } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
-import path from 'path';
 
 // Config
 const paths = {
   src: 'src/**/*.{ts,tsx}',
-  output: 'dist',
+  tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*',
     '../api/dist/types/**',
@@ -16,22 +14,33 @@ const paths = {
 };
 
 // Tasks
-gulp.task('clean', () => del(paths.output));
+gulp.task('clean', () => del('dist'));
 
-babel.task('build:cjs', { src: paths.src, env: 'cjs', output: path.join(paths.output, 'cjs') });
-babel.task('build:esm', { src: paths.src, env: 'esm', output: path.join(paths.output, 'esm') });
+gulp.task('build:cjs', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:cjs') }),
+  ts(paths.tsconfig),
+  babel({ envName: 'cjs' }),
+  dest('dist/cjs')
+));
 
-dts.task('build:types', {
-  src: paths.src,
-  tsconfig: 'tsconfig.json',
-  output: path.join(paths.output, 'types')
-});
+gulp.task('build:esm', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  ts(paths.tsconfig),
+  babel({ envName: 'esm' }),
+  dest('dist/esm')
+));
+
+gulp.task('build:types', () => flow(
+  src(paths.src, { since: gulp.lastRun('build:esm') }),
+  dts(paths.tsconfig),
+  dest('dist/types')
+));
 
 gulp.task('build', gulp.series(
   'clean',
   gulp.parallel('build:cjs', 'build:esm', 'build:types'),
 ));
 
-gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.parallel('build:cjs', 'build:esm', 'build:types'),
 ));
