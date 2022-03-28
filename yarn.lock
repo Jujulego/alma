@@ -2266,7 +2266,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jujulego/alma-api@^2.1.5, @jujulego/alma-api@workspace:packages/api":
+"@jujulego/alma-api@^2.1.6, @jujulego/alma-api@workspace:packages/api":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
@@ -2319,7 +2319,7 @@ __metadata:
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.8
-    "@jujulego/alma-api": ^2.1.5
+    "@jujulego/alma-api": ^2.1.6
     "@jujulego/alma-utils": ^1.1.1
     "@testing-library/jest-dom": 5.16.3
     "@testing-library/react": 12.1.4
