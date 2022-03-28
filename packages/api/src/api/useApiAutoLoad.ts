@@ -46,6 +46,11 @@ export interface ApiAutoLoadState<D> {
   data?: D;
 
   /**
+   * Error
+   */
+  error?: unknown;
+
+  /**
    * Forces request reload
    */
   reload: () => void;
@@ -66,6 +71,7 @@ export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config:
 
   // State
   const [reload, setReload] = useState(load ? 1 : 0);
+  const [error, setError] = useState<unknown>();
 
   // Api call
   const { loading, send } = hook(url, headers);
@@ -77,6 +83,9 @@ export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config:
     const prom = send()
       .then((res) => {
         setData(res.data);
+      })
+      .catch((err) => {
+        setError(err);
       });
 
     return () => prom.cancel();
@@ -84,7 +93,7 @@ export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config:
 
   return {
     loading,
-    data,
+    data, error,
     reload: useCallback(() => setReload((old) => old + 1), []),
     setData
   };
