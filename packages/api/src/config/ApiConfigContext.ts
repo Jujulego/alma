@@ -15,7 +15,6 @@ function encodeBody(body?: unknown): BodyInit | undefined {
     || body instanceof ArrayBuffer
     || body instanceof Blob
     || body instanceof FormData
-    || body instanceof ReadableStream
     || body instanceof URLSearchParams
   ) {
     return body;
