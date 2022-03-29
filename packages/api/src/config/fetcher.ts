@@ -41,7 +41,7 @@ function decodeHeaders(headers: Headers): ApiHeaders {
  * Those body types will be passed directly to fetch.
  *
  * @param req: request to send
- * @param signal: AbortSignal
+ * @param signal: AbortSignal used to interrupt the call
  */
 export async function fetcher<M extends ApiMethod, B, D>(req: ApiRequest<M, B>, signal: AbortSignal): Promise<ApiResponse<D>> {
   const headers = new Headers(req.headers);
