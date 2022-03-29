@@ -13,7 +13,7 @@ describe('AlmaApiSetup', () => {
   it('should only setup config with default fetcher', () => {
     // Check config
     const { result: configResult } = renderHook(() => useContext(ApiConfigContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup>{ children }</AlmaApiSetup>,
     });
 
     expect(configResult.current).toEqual({
@@ -22,7 +22,7 @@ describe('AlmaApiSetup', () => {
 
     // Check cache
     const { result: cacheResult } = renderHook(() => useContext(SwrCacheContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup>{ children }</AlmaApiSetup>,
     });
 
     expect(cacheResult.current).toEqual({});
@@ -33,7 +33,7 @@ describe('AlmaApiSetup', () => {
 
     // Check config
     const { result: configResult } = renderHook(() => useContext(ApiConfigContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup fetcher={fetcher}>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup fetcher={fetcher}>{ children }</AlmaApiSetup>,
     });
 
     expect(configResult.current).toEqual({
@@ -42,7 +42,7 @@ describe('AlmaApiSetup', () => {
 
     // Check cache
     const { result: cacheResult } = renderHook(() => useContext(SwrCacheContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup fetcher={fetcher}>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup fetcher={fetcher}>{ children }</AlmaApiSetup>,
     });
 
     expect(cacheResult.current).toEqual({});
@@ -51,7 +51,7 @@ describe('AlmaApiSetup', () => {
   it('should setup config and cache', () => {
     // Check config
     const { result: configResult } = renderHook(() => useContext(ApiConfigContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup globalCache>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup globalCache>{ children }</AlmaApiSetup>,
     });
 
     expect(configResult.current).toEqual({
@@ -60,7 +60,7 @@ describe('AlmaApiSetup', () => {
 
     // Check cache
     const { result: cacheResult } = renderHook(() => useContext(SwrCacheContext), {
-      wrapper: ({ children }) => (<AlmaApiSetup globalCache>{ children }</AlmaApiSetup>)
+      wrapper: ({ children }) => <AlmaApiSetup globalCache>{ children }</AlmaApiSetup>,
     });
 
     expect(cacheResult.current).toEqual({

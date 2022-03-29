@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { FC, useContext } from 'react';
 
-import { SwrCache, SwrCacheContext } from '../../src';
+import { SwrCache, SwrCacheContext } from '../../src/cache';
 
 // Setup
 beforeEach(() => {
@@ -24,10 +24,12 @@ describe('SwrCache', () => {
     expect(result.current.setCache).toBeDefined();
 
     // Change value
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     act(() => result.current.setCache!('test', true));
     expect(result.current.cache?.test?.data).toBe(true);
 
     // Change value again
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     act(() => result.current.setCache!('test', 85));
     expect(result.current.cache?.test?.data).toBe(85);
   });

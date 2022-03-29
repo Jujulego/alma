@@ -136,10 +136,7 @@ describe('useApiRequest', () => {
 
   it('should abort request on request cancel', async () => {
     // Mocks
-    let response: (error: unknown) => void = () => undefined;
-    const fetcher = jest.fn().mockReturnValue(new Promise((resolve, reject) => {
-      response = (error) => reject(error);
-    }));
+    const fetcher = jest.fn().mockReturnValue(new Promise(() => null));
 
     // Render
     const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
