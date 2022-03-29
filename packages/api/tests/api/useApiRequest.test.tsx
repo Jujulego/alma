@@ -24,7 +24,7 @@ describe('useApiRequest', () => {
     }));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+    const { result } = renderHook(() => useApiRequest<'get', 'json', unknown, string>(), {
       wrapper: ({ children }) => (
         <ApiConfigContext.Provider value={{ fetcher }}>
           { children }
@@ -38,7 +38,7 @@ describe('useApiRequest', () => {
     });
 
     // Call send
-    let prom: ApiPromise<ApiResponse<string>>;
+    let prom: ApiPromise<ApiResponse<'json', string>>;
     act(() => {
       prom = result.current.send({
         method: 'get',
@@ -46,6 +46,7 @@ describe('useApiRequest', () => {
         headers: {
           TEST: 'test',
         },
+        responseType: 'json'
       });
     });
 
@@ -59,7 +60,8 @@ describe('useApiRequest', () => {
       url: '/api/test',
       headers: {
         TEST: 'test',
-      }
+      },
+      responseType: 'json'
     }, expect.any(AbortSignal));
 
     // After receive
@@ -89,7 +91,7 @@ describe('useApiRequest', () => {
     }));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+    const { result } = renderHook(() => useApiRequest<'get', 'json', unknown, string>(), {
       wrapper: ({ children }) => (
         <ApiConfigContext.Provider value={{ fetcher }}>
           { children }
@@ -103,7 +105,7 @@ describe('useApiRequest', () => {
     });
 
     // Call send
-    let prom: ApiPromise<ApiResponse<string>>;
+    let prom: ApiPromise<ApiResponse<'json', string>>;
     act(() => {
       prom = result.current.send({
         method: 'get',
@@ -111,6 +113,7 @@ describe('useApiRequest', () => {
         headers: {
           TEST: 'test',
         },
+        responseType: 'json'
       });
     });
 
@@ -139,7 +142,7 @@ describe('useApiRequest', () => {
     const fetcher = jest.fn().mockReturnValue(new Promise(() => null));
 
     // Render
-    const { result } = renderHook(() => useApiRequest<'get', unknown, string>(), {
+    const { result } = renderHook(() => useApiRequest<'get', 'json', unknown, string>(), {
       wrapper: ({ children }) => (
         <ApiConfigContext.Provider value={{ fetcher }}>
           { children }
@@ -153,7 +156,7 @@ describe('useApiRequest', () => {
     });
 
     // Call send
-    let prom: ApiPromise<ApiResponse<string>>;
+    let prom: ApiPromise<ApiResponse<'json', string>>;
     act(() => {
       prom = result.current.send({
         method: 'get',
@@ -161,6 +164,7 @@ describe('useApiRequest', () => {
         headers: {
           TEST: 'test',
         },
+        responseType: 'json'
       });
     });
 

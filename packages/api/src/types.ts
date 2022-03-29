@@ -1,24 +1,38 @@
 // Types
 export type ApiMethod = 'get' | 'head' | 'options' | 'delete' | 'post' | 'patch' | 'put';
-export type ApiParams = Record<string, unknown>;
 export type ApiHeaders = Record<string, string>;
+export type ApiResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
+
+export type ApiFetcher = <M extends ApiMethod, T extends ApiResponseType, B, D extends ApiRTConstraint[T]>(req: ApiRequest<M, T, B>, signal: AbortSignal) => Promise<ApiResponse<T, D>>;
 
 // - request
-interface ApiMethodBody<B> {
-  get: { body?: B },
-  head: { body?: B },
-  options: { body?: B },
-  delete: { body?: B },
-  post: { body: B },
-  patch: { body: B },
-  put: { body: B },
+export interface ApiMethodBody<B> {
+  get: { body?: B };
+  head: { body?: B };
+  options: { body?: B };
+  delete: { body?: B };
+  post: { body: B };
+  patch: { body: B };
+  put: { body: B };
 }
 
-export type ApiRequest<M extends ApiMethod, B = unknown> = ApiMethodBody<B>[M] & {
+export interface ApiRTConstraint {
+  arraybuffer: ArrayBuffer;
+  blob: Blob;
+  json: unknown;
+  text: string;
+}
+
+export type ApiRequest<M extends ApiMethod, T extends ApiResponseType, B = unknown> = ApiMethodBody<B>[M] & {
   /**
    * Request method
    */
   method: M;
+
+  /**
+   * Response type
+   */
+  responseType: T;
 
   /**
    * Request url
@@ -32,7 +46,7 @@ export type ApiRequest<M extends ApiMethod, B = unknown> = ApiMethodBody<B>[M] &
 }
 
 // - response
-export interface ApiResponse<D = unknown> {
+export interface ApiResponse<T extends ApiResponseType, D extends ApiRTConstraint[T] = ApiRTConstraint[T]> {
   /**
    * Response status
    */

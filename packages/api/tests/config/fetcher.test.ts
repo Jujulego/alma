@@ -16,11 +16,65 @@ beforeEach(() => {
 // Tests
 describe('ApiConfigContext defaults (with fetch)', () => {
   describe('without body', () => {
+    it('should use fetch to send a get request (arraybuffer response)', async () => {
+      global.fetch.mockResponse('"test"', { status: 200 });
+
+      // Call fetcher
+      await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'arraybuffer' }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: expect.anything()
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'get',
+        headers: expect.any(Headers),
+        signal: abort.signal
+      });
+    });
+
+    it('should use fetch to send a get request (blob response)', async () => {
+      global.fetch.mockResponse('"test"', { status: 200 });
+
+      // Call fetcher
+      await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'blob' }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: expect.anything()
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'get',
+        headers: expect.any(Headers),
+        signal: abort.signal
+      });
+    });
+
     it('should use fetch to send a get request (json response)', async () => {
       global.fetch.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
-      await expect(fetcher({ method: 'get', url: '/test', headers: {} }, abort.signal))
+      await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'json' }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: 'test'
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'get',
+        headers: expect.any(Headers),
+        signal: abort.signal
+      });
+    });
+
+    it('should use fetch to send a get request (text response)', async () => {
+      global.fetch.mockResponse('test', { status: 200 });
+
+      // Call fetcher
+      await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -37,7 +91,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
 
   describe('with body', () => {
     beforeEach(() => {
-      global.fetch.mockResponse('"test"', { status: 200 });
+      global.fetch.mockResponse('test', { status: 200 });
     });
 
     it('should use fetch to send a post request (text body)', async () => {
@@ -47,7 +101,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = 'body';
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -70,7 +124,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new ArrayBuffer(5);
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -89,7 +143,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new Blob();
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -108,7 +162,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new FormData();
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -127,7 +181,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new URLSearchParams();
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -146,7 +200,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = { test: true, id: 5 };
 
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),

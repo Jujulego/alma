@@ -1,12 +1,13 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback } from 'react';
 
-import { ApiPromise } from '../api-promise';
-import { ApiHeaders, ApiResponse } from '../types';
+import { ApiLoadableHookConfig } from './useApiAutoLoad';
 import { useApiRequest } from './useApiRequest';
+import { ApiPromise } from '../api-promise';
+import { ApiHeaders, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
 
 // Types
-export interface ApiOptionsRequestState<D> {
+export interface ApiOptionsRequestState<D extends ApiRTConstraint[T], T extends ApiResponseType> {
   /**
    * Indicates if the request is running.
    */
@@ -15,27 +16,26 @@ export interface ApiOptionsRequestState<D> {
   /**
    * Callback that sends a options request and resolves to the response.
    */
-  send: (url?: string, headers?: ApiHeaders) => ApiPromise<ApiResponse<D>>;
+  send: (url?: string, headers?: ApiHeaders) => ApiPromise<ApiResponse<T, D>>;
 }
 
 // Hook
 /**
  * Send a options request, returns the current status of the request.
- *
- * @param defaultUrl: Default URL of the request (could be overridden by send call)
- * @param defaultHeaders: Default Headers of the request (could be overridden by send call)
  */
-export function useApiOptions<D>(defaultUrl: string, defaultHeaders: ApiHeaders = {}): ApiOptionsRequestState<D> {
+export function useApiOptions<D extends ApiRTConstraint[T], T extends ApiResponseType = 'json'>(defaultUrl: string, config: ApiLoadableHookConfig<T> = {}): ApiOptionsRequestState<D, T> {
+  const { responseType = 'json' as T, headers: defaultHeaders = {} } = config;
+
   // Stabilise objects
   const sDefaultHeaders = useDeepMemo(defaultHeaders);
 
   // Api call
-  const { loading, send } = useApiRequest<'options', unknown, D>();
+  const { loading, send } = useApiRequest<'options', T, unknown, D>();
 
   return {
     loading,
     send: useCallback((url = defaultUrl, headers= sDefaultHeaders) => {
-      return send({ method: 'options', url: url, headers });
-    }, [send, defaultUrl, sDefaultHeaders])
+      return send({ method: 'options', url, headers, responseType });
+    }, [send, defaultUrl, responseType, sDefaultHeaders])
   };
 }

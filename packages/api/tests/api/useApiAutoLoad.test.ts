@@ -38,7 +38,7 @@ describe('useApiAutoLoad', () => {
   // Tests
   it('should send api request and return result', async () => {
     // Mocks
-    const spySend = jest.fn<ApiPromise<ApiResponse<string>>, []>()
+    const spySend = jest.fn<ApiPromise<ApiResponse<'text'>>, []>()
       .mockResolvedValue({
         status: 200,
         data: 'success',
@@ -60,7 +60,7 @@ describe('useApiAutoLoad', () => {
     const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test'));
 
     expect(useSwrCache).toHaveBeenCalledWith('api:/api/test', undefined, false);
-    expect(useApiGet).toHaveBeenCalledWith('/api/test', undefined);
+    expect(useApiGet).toHaveBeenCalledWith('/api/test', { responseType: 'json' });
     expect(result.current).toEqual({
       loading: true,
       reload: expect.any(Function),
@@ -82,7 +82,7 @@ describe('useApiAutoLoad', () => {
   it('should send api request and return error', async () => {
     // Mocks
     const error = new Error();
-    const spySend = jest.fn<ApiPromise<ApiResponse<string>>, []>()
+    const spySend = jest.fn<ApiPromise<ApiResponse<'text'>>, []>()
       .mockRejectedValue(error);
 
     useApiGet.mockReturnValue({ loading: true, send: spySend });
@@ -100,7 +100,7 @@ describe('useApiAutoLoad', () => {
     const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test'));
 
     expect(useSwrCache).toHaveBeenCalledWith('api:/api/test', undefined, false);
-    expect(useApiGet).toHaveBeenCalledWith('/api/test', undefined);
+    expect(useApiGet).toHaveBeenCalledWith('/api/test', { responseType: 'json' });
     expect(result.current).toEqual({
       loading: true,
       reload: expect.any(Function),
@@ -121,7 +121,7 @@ describe('useApiAutoLoad', () => {
 
   it('should not send api request', () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, []>();
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, []>();
     useApiGet.mockReturnValue({
       loading: true,
       send: spy
@@ -136,7 +136,7 @@ describe('useApiAutoLoad', () => {
   it('should re-send api request', () => {
     // Mocks
     const spyCancel = jest.fn();
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, []>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, []>()
       .mockReturnValue(makeApiPromise(new Promise(() => undefined), spyCancel));
 
     useApiGet.mockReturnValue({
