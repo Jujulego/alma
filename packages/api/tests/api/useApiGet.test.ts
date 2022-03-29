@@ -1,8 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiGet, useApiRequest as _useApiRequest } from '../../src/api';
-import { ApiPromise } from '../../src/api-promise';
-import { ApiRequest, ApiResponse } from '../../src/types';
+import { ApiPromise, ApiRequest, ApiResponse, useApiGet, useApiRequest as _useApiRequest } from '../../src';
 
 // Mocks
 jest.mock('../../src/api/useApiRequest');
@@ -18,7 +16,7 @@ describe('useApiGet', () => {
   // Tests
   it('should call useApiRequest and generate a get request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'get'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'get', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -46,6 +44,7 @@ describe('useApiGet', () => {
       method: 'get',
       url: '/api/test',
       headers: {},
+      responseType: 'json'
     });
   });
 });

@@ -27,12 +27,12 @@ export function useGqlHttp<D, V extends GqlVariables = GqlVariables>(url: string
   const req = useMemo(() => buildRequest(sdoc), [sdoc]);
 
   // Request
-  const { loading, send } = useApiRequest<'post', GqlRequest<D, V>, GqlResponse<D>>();
+  const { loading, send } = useApiRequest<'post', 'json', GqlRequest<D, V>, GqlResponse<D>>();
 
   return {
     loading,
     send: useCallback((vars: V) => {
-      return send({ method: 'post', url, headers: {}, body: { ...req, variables: vars }})
+      return send({ method: 'post', url, headers: {}, body: { ...req, variables: vars }, responseType: 'json' })
         .then((res) => res.data);
     }, [send, url, req]),
   };

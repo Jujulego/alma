@@ -1,8 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiPatch, useApiRequest as _useApiRequest } from '../../src/api';
-import { ApiPromise } from '../../src/api-promise';
-import { ApiRequest, ApiResponse } from '../../src/types';
+import { ApiPromise, ApiRequest, ApiResponse, useApiPatch, useApiRequest as _useApiRequest } from '../../src';
 
 // Mocks
 jest.mock('../../src/api/useApiRequest');
@@ -18,7 +16,7 @@ describe('useApiPatch', () => {
   // Tests
   it('should call useApiRequest and generate a patch request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'patch'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'patch', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -46,7 +44,8 @@ describe('useApiPatch', () => {
       method: 'patch',
       url: '/api/test',
       headers: {},
-      body: 1
+      body: 1,
+      responseType: 'json'
     });
   });
 });

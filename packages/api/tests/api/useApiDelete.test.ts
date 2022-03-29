@@ -1,8 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiDelete, useApiRequest as _useApiRequest } from '../../src/api';
-import { ApiPromise } from '../../src/api-promise';
-import { ApiRequest, ApiResponse } from '../../src/types';
+import { ApiPromise, ApiRequest, ApiResponse, useApiDelete, useApiRequest as _useApiRequest } from '../../src';
 
 // Mocks
 jest.mock('../../src/api/useApiRequest');
@@ -18,7 +16,7 @@ describe('useApiDelete', () => {
   // Tests
   it('should call useApiRequest and generate a delete request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'delete'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'delete', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -46,6 +44,7 @@ describe('useApiDelete', () => {
       method: 'delete',
       url: '/api/test',
       headers: {},
+      responseType: 'json'
     });
   });
 });

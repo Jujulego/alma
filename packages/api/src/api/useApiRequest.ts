@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { useCallback, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import { ApiPromise, makeApiPromise } from '../api-promise';
-import { ApiMethod, ApiRequest, ApiResponse } from '../types';
+import { ApiConfigContext } from '../config';
+import { ApiMethod, ApiRequest, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
 
 // Types
-export interface ApiRequestState<M extends ApiMethod, B, D> {
+export interface ApiRequestState<M extends ApiMethod, T extends ApiResponseType, B, D extends ApiRTConstraint[T]> {
   /**
    * Indicates if the request is running.
    */
@@ -14,30 +14,27 @@ export interface ApiRequestState<M extends ApiMethod, B, D> {
   /**
    * Callback that sends the given request and resolves to the response.
    */
-  send: (req: ApiRequest<M, B>) => ApiPromise<ApiResponse<D>>;
+  send: (req: ApiRequest<M, T, B>) => ApiPromise<ApiResponse<T, D>>;
 }
 
 // Hook
 /**
- * Send http request with axios. Handle loading state and request cancellation.
+ * Send http request. Handle loading state and request cancellation.
  */
-export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B, D> {
+export function useApiRequest<M extends ApiMethod, T extends ApiResponseType, B, D extends ApiRTConstraint[T]>(): ApiRequestState<M, T, B, D> {
+  // Context
+  const { fetcher } = useContext(ApiConfigContext);
+
   // State
   const [loading, setLoading] = useState(false);
 
   // Callback
-  const send = useCallback((req: ApiRequest<M, B>) => {
+  const send = useCallback((req: ApiRequest<M, T, B>) => {
     setLoading(true);
 
     // Make request
     const abort = new AbortController();
-    return makeApiPromise(axios.request<D>({
-      method: req.method,
-      url: req.url,
-      headers: req.headers,
-      data: req.body,
-      signal: abort.signal
-    })
+    return makeApiPromise(fetcher<M, T, B, D>(req, abort.signal)
       .then((res) => {
         setLoading(false);
         return res;
@@ -46,7 +43,7 @@ export function useApiRequest<M extends ApiMethod, B, D>(): ApiRequestState<M, B
         setLoading(false);
         throw error;
       }), () => abort.abort());
-  }, []);
+  }, [fetcher]);
 
   return { loading, send };
 }

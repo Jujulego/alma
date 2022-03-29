@@ -1,19 +1,39 @@
 import { useCallback, useDebugValue, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
-import { ApiHeaders, ApiResponse } from '../types';
+import { ApiHeaders, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
 import { Updator } from '../utils';
 import { ApiPromise } from '../api-promise';
 
 // Types
-export interface ApiLoadableHookState<D> {
-  loading: boolean;
-  send: () => ApiPromise<ApiResponse<D>>;
+export interface ApiLoadableHookConfig<T extends ApiResponseType> {
+  /**
+   * Default Headers of the request (could be overridden by send call)
+   */
+  headers?: ApiHeaders;
+
+  /**
+   * Response type
+   * @default 'json'
+   */
+  responseType?: T;
 }
 
-export type ApiLoadableHook<D> = (url: string, headers?: ApiHeaders) => ApiLoadableHookState<D>;
+export interface ApiLoadableHookState<D extends ApiRTConstraint[T], T extends ApiResponseType> {
+  /**
+   * Indicates if the request is running.
+   */
+  loading: boolean;
 
-export interface ApiAutoLoadConfig {
+  /**
+   * Callback that sends a get request and resolves to the response.
+   */
+  send: () => ApiPromise<ApiResponse<T, D>>;
+}
+
+export type ApiLoadableHook<D extends ApiRTConstraint[T], T extends ApiResponseType> = (url: string, config?: ApiLoadableHookConfig<T>) => ApiLoadableHookState<D, T>;
+
+export interface ApiAutoLoadConfig<T extends ApiResponseType> {
   /**
    * Load request on mount
    *
@@ -32,9 +52,14 @@ export interface ApiAutoLoadConfig {
    * Request headers
    */
   headers?: ApiHeaders;
+
+  /**
+   * Response type
+   */
+  responseType?: T;
 }
 
-export interface ApiAutoLoadState<D> {
+export interface ApiAutoLoadState<D extends ApiRTConstraint[T], T extends ApiResponseType> {
   /**
    * Indicates if the request is running.
    */
@@ -62,8 +87,8 @@ export interface ApiAutoLoadState<D> {
 }
 
 // Hook
-export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config: ApiAutoLoadConfig = {}): ApiAutoLoadState<D> {
-  const { load = true, disableSwr = false, headers } = config;
+export function useApiAutoLoad<D extends ApiRTConstraint[T], T extends ApiResponseType = 'json'>(hook: ApiLoadableHook<D, T>, url: string, config: ApiAutoLoadConfig<T> = {}): ApiAutoLoadState<D, T> {
+  const { load = true, disableSwr = false, headers, responseType = 'json' as T } = config;
 
   // Cache
   const { data, setData } = useSwrCache<D | undefined>(`api:${url}`, undefined, disableSwr);
@@ -74,7 +99,7 @@ export function useApiAutoLoad<D>(hook: ApiLoadableHook<D>, url: string, config:
   const [error, setError] = useState<unknown>();
 
   // Api call
-  const { loading, send } = hook(url, headers);
+  const { loading, send } = hook(url, { headers, responseType });
 
   // Effects
   useEffect(() => {

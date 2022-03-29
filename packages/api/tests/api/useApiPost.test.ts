@@ -1,8 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { useApiPost, useApiRequest as _useApiRequest } from '../../src/api';
-import { ApiPromise } from '../../src/api-promise';
-import { ApiRequest, ApiResponse } from '../../src/types';
+import { ApiPromise, ApiRequest, ApiResponse, useApiPost, useApiRequest as _useApiRequest } from '../../src';
 
 // Mocks
 jest.mock('../../src/api/useApiRequest');
@@ -18,7 +16,7 @@ describe('useApiPost', () => {
   // Tests
   it('should call useApiRequest and generate a post request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<string>>, [ApiRequest<'post'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'post', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -46,7 +44,8 @@ describe('useApiPost', () => {
       method: 'post',
       url: '/api/test',
       headers: {},
-      body: 1
+      body: 1,
+      responseType: 'json'
     });
   });
 });
