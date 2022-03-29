@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { FC, useContext } from 'react';
 
-import { SwrCache, SwrCacheContext } from '../../src/cache';
+import { SwrCache, SwrCacheContext } from '../../src';
 
 // Setup
 beforeEach(() => {
