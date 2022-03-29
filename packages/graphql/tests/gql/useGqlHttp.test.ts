@@ -25,7 +25,7 @@ beforeEach(() => {
 describe('useGqlHttp', () => {
   it('should call useApiRequest and send given request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<GqlResponse<string>>>, [ApiRequest<'post', GqlRequest<string>>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'json', GqlResponse<string>>>, [ApiRequest<'post', 'json', GqlRequest<string>>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: { data: 'test' } });
 
     useApiRequest.mockReturnValue({
@@ -58,7 +58,8 @@ describe('useGqlHttp', () => {
         operationName: 'operationName',
         query: 'query',
         variables: { test: 1 }
-      }
+      },
+      responseType: 'json'
     });
   });
 });
