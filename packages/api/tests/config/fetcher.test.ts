@@ -41,8 +41,13 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     });
 
     it('should use fetch to send a post request (text body)', async () => {
+      const headers = {
+        'Content-Type': 'text/test'
+      };
+      const body = 'body';
+
       // Call fetcher
-      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body: 'body' }, abort.signal))
+      await expect(fetcher({ method: 'post', url: '/test', headers, body }, abort.signal))
         .resolves.toEqual({
           status: 200,
           headers: expect.anything(),
@@ -52,7 +57,87 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       expect(global.fetch).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
-        body: 'body',
+        body,
+        signal: abort.signal
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      expect((global.fetch.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
+        .toBe('text/test');
+    });
+
+    it('should use fetch to send a post request (ArrayBuffer body)', async () => {
+      const body = new ArrayBuffer(5);
+
+      // Call fetcher
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: 'test'
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'post',
+        headers: expect.any(Headers),
+        body,
+        signal: abort.signal
+      });
+    });
+
+    it('should use fetch to send a post request (Blob body)', async () => {
+      const body = new Blob();
+
+      // Call fetcher
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: 'test'
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'post',
+        headers: expect.any(Headers),
+        body,
+        signal: abort.signal
+      });
+    });
+
+    it('should use fetch to send a post request (FormData body)', async () => {
+      const body = new FormData();
+
+      // Call fetcher
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: 'test'
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'post',
+        headers: expect.any(Headers),
+        body,
+        signal: abort.signal
+      });
+    });
+
+    it('should use fetch to send a post request (URLSearchParams body)', async () => {
+      const body = new URLSearchParams();
+
+      // Call fetcher
+      await expect(fetcher({ method: 'post', url: '/test', headers: {}, body }, abort.signal))
+        .resolves.toEqual({
+          status: 200,
+          headers: expect.anything(),
+          data: 'test'
+        });
+
+      expect(global.fetch).toHaveBeenCalledWith('/test', {
+        method: 'post',
+        headers: expect.any(Headers),
+        body,
         signal: abort.signal
       });
     });
@@ -76,8 +161,8 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       });
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const { headers } = global.fetch.mock.calls[0][1]!;
-      expect((headers as Headers).get('Content-Type')).toBe('application/json; charset=utf-8');
+      expect((global.fetch.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
+        .toBe('application/json; charset=utf-8');
     });
   });
 });

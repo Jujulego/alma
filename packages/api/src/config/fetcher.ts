@@ -30,7 +30,8 @@ function decodeHeaders(headers: Headers): ApiHeaders {
 
 /**
  * Default fetcher uses fetch API to send requests.
- * Will encode body in JSON, expect if it's one of the following types:
+ *
+ * It will encode body in JSON, expect if it's one of the following types:
  * - string
  * - ArrayBuffer
  * - Blob
