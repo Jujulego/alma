@@ -1,8 +1,6 @@
-import { renderHook } from '@testing-library/react-hooks';
 import { enableFetchMocks } from 'jest-fetch-mock';
-import { useContext } from 'react';
 
-import { ApiConfigContext } from '../../src';
+import { fetcher } from '../../src';
 
 // Setup
 enableFetchMocks();
@@ -19,11 +17,8 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     // Mocks
     const abort = new AbortController();
 
-    // Render
-    const { result } = renderHook(() => useContext(ApiConfigContext));
-
     // Call fetcher
-    await expect(result.current.fetcher({ method: 'get', url: '/test', headers: {} }, abort.signal))
+    await expect(fetcher({ method: 'get', url: '/test', headers: {} }, abort.signal))
       .resolves.toEqual({
         status: 200,
         headers: expect.anything(),
@@ -43,11 +38,8 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     // Mocks
     const abort = new AbortController();
 
-    // Render
-    const { result } = renderHook(() => useContext(ApiConfigContext));
-
     // Call fetcher
-    await expect(result.current.fetcher({ method: 'post', url: '/test', headers: {}, body: 'body' }, abort.signal))
+    await expect(fetcher({ method: 'post', url: '/test', headers: {}, body: 'body' }, abort.signal))
       .resolves.toEqual({
         status: 200,
         headers: expect.anything(),
