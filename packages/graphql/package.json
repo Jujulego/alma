@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-graphql",
-  "version": "2.0.8",
+  "version": "2.1.0",
   "license": "MIT",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -32,7 +32,7 @@
     "react-dom": "^17.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-api": "^2.2.0",
+    "@jujulego/alma-api": "^2.3.0",
     "@jujulego/alma-utils": "^1.1.1",
     "graphql-ws": "^5.5.0"
   },
