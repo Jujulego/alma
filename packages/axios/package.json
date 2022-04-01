@@ -40,7 +40,7 @@
     "@babel/runtime": "7.17.8",
     "@jujulego/alma-api": "2.2.0",
     "@testing-library/jest-dom": "5.16.3",
-    "@testing-library/react": "12.1.4",
+    "@testing-library/react": "13.0.0",
     "@testing-library/react-hooks": "7.0.2",
     "@types/gulp": "4.0.9",
     "@types/jest": "27.4.1",
