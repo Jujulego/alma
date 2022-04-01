@@ -29,8 +29,8 @@
   "peerDependencies": {
     "@jujulego/alma-api": "^2.2.0",
     "axios": "^0.26.0",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@babel/core": "7.17.8",
@@ -62,8 +62,8 @@
     "gulp-cli": "2.3.0",
     "jest": "27.5.1",
     "jest-fetch-mock": "3.0.3",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "4.6.3"
