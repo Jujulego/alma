@@ -1,6 +1,10 @@
-import { babel, dest, dts, flow, src, ts } from 'alma-tools';
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import { babel, dest, dts, flow, rollup, src, terser, ts } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
+import filter from 'gulp-filter';
+import externals from 'rollup-plugin-node-externals';
 
 // Config
 const paths = {
@@ -36,11 +40,35 @@ gulp.task('build:types', () => flow(
   dest('dist/types')
 ));
 
+gulp.task('bundle:umd', () => flow(
+  rollup({
+    input: 'dist/esm/index.js',
+    output: {
+      file: 'alma-graphql.js',
+      format: 'umd',
+      name: '@jujulego/alma-graphql',
+    },
+    plugins: [
+      externals(),
+      nodeResolve(),
+      commonjs(),
+    ]
+  }),
+  dest('dist/umd'),
+  filter('alma-graphql.js'),
+  terser('.min', { keep_fnames: true, mangle: false }),
+  dest('dist/umd'),
+));
+
 gulp.task('build', gulp.series(
   'clean',
   gulp.parallel('build:cjs', 'build:esm', 'build:types'),
+  'bundle:umd'
 ));
 
 gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
-  gulp.parallel('build:cjs', 'build:esm', 'build:types'),
+  gulp.series(
+    gulp.parallel('build:cjs', 'build:esm', 'build:types'),
+    'bundle:umd',
+  )
 ));
