@@ -1,5 +1,0 @@
-releases:
-  "@jujulego/alma-api": patch
-  "@jujulego/alma-axios": patch
-  "@jujulego/alma-graphql": patch
-  "@jujulego/alma-utils": patch
