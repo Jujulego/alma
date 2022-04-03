@@ -1,7 +1,9 @@
+import nodeResolve from '@rollup/plugin-node-resolve';
 import { babel, dest, dts, flow, rollup, src, terser, ts } from 'alma-tools';
 import del from 'del';
 import gulp from 'gulp';
 import filter from 'gulp-filter';
+import externals from 'rollup-plugin-node-externals';
 
 // Config
 const paths = {
@@ -38,16 +40,15 @@ gulp.task('build:types', () => flow(
 gulp.task('bundle:umd', () => flow(
   rollup({
     input: 'dist/esm/index.js',
-    external: ['react', 'dequal/lite'],
     output: {
       file: 'alma-utils.js',
       format: 'umd',
       name: '@jujulego/alma-utils',
-      globals: {
-        'react': 'react',
-        'dequal/lite': 'dequal',
-      },
-    }
+    },
+    plugins: [
+      externals(),
+      nodeResolve()
+    ]
   }),
   dest('dist/umd'),
   filter('alma-utils.js'),
