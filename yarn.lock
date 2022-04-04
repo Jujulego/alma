@@ -2291,7 +2291,7 @@ __metadata:
     eslint-plugin-jest: 26.1.3
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    eslint-plugin-testing-library: 5.2.0
+    eslint-plugin-testing-library: 5.2.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -2338,7 +2338,7 @@ __metadata:
     eslint-plugin-jest: 26.1.3
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    eslint-plugin-testing-library: 5.1.0
+    eslint-plugin-testing-library: 5.2.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -2388,7 +2388,7 @@ __metadata:
     eslint-plugin-jest: 26.1.3
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    eslint-plugin-testing-library: 5.2.0
+    eslint-plugin-testing-library: 5.2.1
     eslint-plugin-workspaces: 0.7.0
     graphql: 16.3.0
     graphql-tag: 2.12.6
@@ -2437,7 +2437,7 @@ __metadata:
     eslint-plugin-jest: 26.1.3
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    eslint-plugin-testing-library: 5.2.0
+    eslint-plugin-testing-library: 5.2.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
@@ -3539,7 +3539,7 @@ __metadata:
     eslint-plugin-jest: 26.1.3
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    eslint-plugin-testing-library: 5.2.0
+    eslint-plugin-testing-library: 5.2.1
     eslint-plugin-workspaces: 0.7.0
     jest: 27.5.1
     typescript: 4.6.3
@@ -5466,25 +5466,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-testing-library@npm:5.1.0":
-  version: 5.1.0
-  resolution: "eslint-plugin-testing-library@npm:5.1.0"
+"eslint-plugin-testing-library@npm:5.2.1":
+  version: 5.2.1
+  resolution: "eslint-plugin-testing-library@npm:5.2.1"
   dependencies:
     "@typescript-eslint/utils": ^5.13.0
   peerDependencies:
     eslint: ^7.5.0 || ^8.0.0
-  checksum: 38e5fd43b22406baf16034384834052eb2fd6f270eb562be9d3033e6c7c3d97a5d058f2bf7c6ed04f77ddf56ece4c7d0ff61865456c4d8642efa04c365ffbee9
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-testing-library@npm:5.2.0":
-  version: 5.2.0
-  resolution: "eslint-plugin-testing-library@npm:5.2.0"
-  dependencies:
-    "@typescript-eslint/utils": ^5.13.0
-  peerDependencies:
-    eslint: ^7.5.0 || ^8.0.0
-  checksum: 43b75b26d04771f3b8c494785e1e6a95c5526d4d51615e6c544ad74f879ee943df731a567785a8ffe240a77082d854be51aa4079745f6387963af7e8f4887a7b
+  checksum: dc433a0e0033572463a859bdfb8e375885e81757b16c0d2b77a5f2cb231651962cfcaba0e1076edb4af95689aaf9fa029454c9dde3e28b6d46a4234561305b9c
   languageName: node
   linkType: hard
 
