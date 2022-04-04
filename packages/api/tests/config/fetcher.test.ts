@@ -1,4 +1,4 @@
-import { enableFetchMocks } from 'jest-fetch-mock';
+import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
 import { fetcher } from '../../src';
 
@@ -8,7 +8,7 @@ enableFetchMocks();
 let abort: AbortController;
 
 beforeEach(() => {
-  global.fetch.resetMocks();
+  fetchMock.resetMocks();
 
   abort = new AbortController();
 });
@@ -17,7 +17,7 @@ beforeEach(() => {
 describe('ApiConfigContext defaults (with fetch)', () => {
   describe('without body', () => {
     it('should use fetch to send a get request (arraybuffer response)', async () => {
-      global.fetch.mockResponse('"test"', { status: 200 });
+      fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'arraybuffer' }, abort.signal))
@@ -27,7 +27,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: expect.anything()
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -35,7 +35,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     });
 
     it('should use fetch to send a get request (blob response)', async () => {
-      global.fetch.mockResponse('"test"', { status: 200 });
+      fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'blob' }, abort.signal))
@@ -45,7 +45,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: expect.anything()
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -53,7 +53,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     });
 
     it('should use fetch to send a get request (json response)', async () => {
-      global.fetch.mockResponse('"test"', { status: 200 });
+      fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'json' }, abort.signal))
@@ -63,7 +63,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -71,7 +71,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
     });
 
     it('should use fetch to send a get request (text response)', async () => {
-      global.fetch.mockResponse('test', { status: 200 });
+      fetchMock.mockResponse('test', { status: 200 });
 
       // Call fetcher
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'text' }, abort.signal))
@@ -81,7 +81,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -91,7 +91,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
 
   describe('with body', () => {
     beforeEach(() => {
-      global.fetch.mockResponse('test', { status: 200 });
+      fetchMock.mockResponse('test', { status: 200 });
     });
 
     it('should use fetch to send a post request (text body)', async () => {
@@ -108,7 +108,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -116,7 +116,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       });
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      expect((global.fetch.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
+      expect((fetchMock.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
         .toBe('text/test');
     });
 
@@ -131,7 +131,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -150,7 +150,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -169,7 +169,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -188,7 +188,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -207,7 +207,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(global.fetch).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('/test', {
         method: 'post',
         headers: expect.any(Headers),
         body: JSON.stringify(body),
@@ -215,7 +215,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       });
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      expect((global.fetch.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
+      expect((fetchMock.mock.calls[0][1]!.headers as Headers).get('Content-Type'))
         .toBe('application/json; charset=utf-8');
     });
   });
