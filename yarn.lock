@@ -2443,7 +2443,6 @@ __metadata:
   resolution: "@jujulego/alma-resources@workspace:packages/resources"
   dependencies:
     "@babel/core": 7.17.8
-    "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.8

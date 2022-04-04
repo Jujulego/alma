@@ -8,7 +8,5 @@ module.exports = (api) => ({
       runtime: 'automatic'
     }]
   ],
-  plugins: [
-    '@babel/proposal-class-properties'
-  ]
+  plugins: []
 });
