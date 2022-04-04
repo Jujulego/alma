@@ -2438,9 +2438,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/alma-promises@workspace:packages/promises":
+"@jujulego/alma-resources@workspace:packages/resources":
   version: 0.0.0-use.local
-  resolution: "@jujulego/alma-promises@workspace:packages/promises"
+  resolution: "@jujulego/alma-resources@workspace:packages/resources"
   dependencies:
     "@babel/core": 7.17.8
     "@babel/plugin-proposal-class-properties": 7.16.7

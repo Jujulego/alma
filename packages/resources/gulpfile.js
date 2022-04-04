@@ -41,9 +41,9 @@ gulp.task('bundle:umd', () => flow(
   rollup({
     input: 'dist/esm/index.js',
     output: {
-      file: 'alma-promises.js',
+      file: 'alma-resources.js',
       format: 'umd',
-      name: '@jujulego/alma-promises',
+      name: '@jujulego/alma-resources',
     },
     plugins: [
       externals(),
@@ -51,7 +51,7 @@ gulp.task('bundle:umd', () => flow(
     ]
   }),
   dest('dist/umd'),
-  filter('alma-promises.js'),
+  filter('alma-resources.js'),
   terser('.min', { keep_fnames: true, mangle: false }),
   dest('dist/umd'),
 ));

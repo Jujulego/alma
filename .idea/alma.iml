@@ -6,7 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/packages/utils/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/graphql/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/packages/axios/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/packages/promises/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/packages/resources/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
@@ -15,7 +15,7 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/api/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/graphql/coverage" />
       <excludeFolder url="file://$MODULE_DIR$/packages/axios/coverage" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/promises/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/packages/resources/coverage" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
