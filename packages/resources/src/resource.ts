@@ -18,10 +18,30 @@ export type ResourceState<T> = ResourceStatePending | ResourceStateSuccess<T> | 
 export type ResourceStatus = ResourceState<unknown>['status'];
 
 // Events
-export type ResourceStatusEventListener = (event: ResourceStatusEvent) => void;
-export class ResourceStatusEvent extends CustomEvent<ResourceStatus> {}
+export interface ResourceUpdateEvent<T> extends Event {
+  // Attributes
+  type: 'update';
+}
 
-// Class
+export class ResourceUpdateEvent<T> extends Event {
+  // Constructor
+  constructor(
+    readonly newState: Readonly<ResourceState<T>>
+  ) {
+    super('update');
+  }
+}
+
+export type ResourceUpdateEventListener<T> = (event: ResourceUpdateEvent<T>) => void;
+
+// Resource
+export interface Resource<T> extends EventTarget {
+  // Methods
+  dispatchEvent(event: ResourceUpdateEvent<T>): boolean;
+  addEventListener(type: 'update', callback: ResourceUpdateEventListener<T>, options?: AddEventListenerOptions | boolean): void;
+  removeEventListener(type: 'update', callback: ResourceUpdateEventListener<T>, options?: EventListenerOptions | boolean): void;
+}
+
 export class Resource<T> extends EventTarget {
   // Attributes
   private _state: ResourceState<T>;
@@ -31,14 +51,14 @@ export class Resource<T> extends EventTarget {
     switch (this._state.status) {
       case 'pending':
         throw new Promise<void>((resolve) => {
-          const listener: ResourceStatusEventListener = (evt) => {
-            if (evt.detail !== 'pending') {
+          const listener: ResourceUpdateEventListener<T> = (evt) => {
+            if (evt.newState.status !== 'pending') {
               resolve();
-              this.removeEventListener('status', listener);
+              this.removeEventListener('update', listener);
             }
           };
 
-          this.addEventListener('status', listener);
+          this.addEventListener('update', listener);
         });
 
       case 'success':
@@ -49,14 +69,14 @@ export class Resource<T> extends EventTarget {
     }
   }
 
-  update(result: T): void {
+  success(result: T): void {
     this._state = { status: 'success', result };
-    this.dispatchEvent(new ResourceStatusEvent('status', { detail: 'success' }));
+    this.dispatchEvent(new ResourceUpdateEvent<T>(this._state));
   }
 
   error(result: Error): void {
     this._state = { status: 'error', result };
-    this.dispatchEvent(new ResourceStatusEvent('status', { detail: 'error' }));
+    this.dispatchEvent(new ResourceUpdateEvent<T>(this._state));
   }
 
   // Properties
