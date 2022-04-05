@@ -52,7 +52,7 @@ gulp.task('bundle:umd', () => flow(
   }),
   dest('dist/umd'),
   filter('alma-resources.js'),
-  terser('.min', { keep_fnames: true, mangle: false }),
+  terser('.min', { mangle: { toplevel: false } }),
   dest('dist/umd'),
 ));
 
