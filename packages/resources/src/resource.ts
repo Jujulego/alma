@@ -44,7 +44,7 @@ export interface Resource<T> extends EventTarget {
 
 export class Resource<T> extends EventTarget {
   // Attributes
-  private _state: ResourceState<T>;
+  private _state: ResourceState<T> = { status: 'pending' };
 
   // Methods
   read(): T {
