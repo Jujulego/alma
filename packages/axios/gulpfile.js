@@ -55,7 +55,7 @@ gulp.task('bundle:umd', () => flow(
   }),
   dest('dist/umd'),
   filter('alma-axios.js'),
-  terser('.min', { keep_fnames: true, mangle: false }),
+  terser('.min', { mangle: { toplevel: false } }),
   dest('dist/umd'),
 ));
 

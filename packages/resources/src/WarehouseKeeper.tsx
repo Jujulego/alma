@@ -1,9 +1,14 @@
 import { WarehouseCtx } from './useWarehouse';
 import { Warehouse } from './warehouse';
-import { FC, useRef } from 'react';
+import { FC, ReactNode, useRef } from 'react';
+
+// Types
+export interface WarehouseKeeperProps {
+  children?: ReactNode;
+}
 
 // Component
-export const WarehouseKeeper: FC = ({ children }) => {
+export const WarehouseKeeper: FC<WarehouseKeeperProps> = ({ children }) => {
   // Refs
   const { current: warehouse } = useRef(new Warehouse());
 
