@@ -1,7 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { GLOBAL_WAREHOUSE, useWarehouse, Warehouse, WarehouseCtx } from '../src';
-import { WarehouseKeeper } from '../src/WarehouseKeeper';
+import { GLOBAL_WAREHOUSE, useWarehouse, Warehouse, WarehouseCtx, WarehouseKeeper } from '../src';
 
 // Setup
 beforeEach(() => {

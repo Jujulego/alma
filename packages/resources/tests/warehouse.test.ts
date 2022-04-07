@@ -25,6 +25,7 @@ it('should replace an existing resource', () => {
   const old = warehouse.create('test');
   const res = warehouse.create('test');
 
+  expect(res).not.toBe(old);
   expect(warehouse.get('test')).toBe(res);
   expect(updateEventSpy).toHaveBeenCalledTimes(2);
   expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
