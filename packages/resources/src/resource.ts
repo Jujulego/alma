@@ -21,8 +21,16 @@ export type ResourceStatus = ResourceState<unknown>['status'];
 export interface ResourceUpdateEvent<T> extends Event {
   // Attributes
   type: 'update';
+
+  /**
+   * Updated resource's state
+   */
+  readonly newState: Readonly<ResourceState<T>>
 }
 
+/**
+ * Emitted when a resource is updated
+ */
 export class ResourceUpdateEvent<T> extends Event {
   // Constructor
   constructor(
@@ -47,6 +55,10 @@ export class Resource<T> extends EventTarget {
   private _state: ResourceState<T> = { status: 'pending' };
 
   // Methods
+  /**
+   * Return the resource's result, or throw if it failed.
+   * If it's still pending, make React wait for the resource to end (use Suspense to handle this case).
+   */
   read(): T {
     switch (this._state.status) {
       case 'pending':
@@ -69,11 +81,19 @@ export class Resource<T> extends EventTarget {
     }
   }
 
+  /**
+   * Store the result and move resource into "success" status
+   * @param result
+   */
   success(result: T): void {
     this._state = { status: 'success', result };
     this.dispatchEvent(new ResourceUpdateEvent<T>(this._state));
   }
 
+  /**
+   * Store the error and move resource into "error" status
+   * @param result
+   */
   error(result: Error): void {
     this._state = { status: 'error', result };
     this.dispatchEvent(new ResourceUpdateEvent<T>(this._state));
