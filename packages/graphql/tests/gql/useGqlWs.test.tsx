@@ -1,6 +1,6 @@
 import { ApiPromise } from '@jujulego/alma-api';
 import { act, renderHook } from '@testing-library/react-hooks';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import {
   buildRequest as _buildRequest,
@@ -58,7 +58,7 @@ describe('useGqlWs.send', () => {
     const spySubscribe = jest.fn()
       .mockReturnValue(spyUnsubscribe);
 
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <GqlWsClientContext.Provider value={{
         client: {
           on: () => () => undefined,
@@ -133,7 +133,7 @@ describe('useGqlWs.send', () => {
     const spySubscribe = jest.fn()
       .mockReturnValue(() => undefined);
 
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <GqlWsClientContext.Provider value={{
         client: {
           on: () => () => undefined,
@@ -222,7 +222,7 @@ describe('useGqlWs.subscribe', () => {
     const spySubscribe = jest.fn()
       .mockReturnValue(spyUnsubscribe);
 
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <GqlWsClientContext.Provider value={{
         client: {
           on: () => () => undefined,
@@ -297,7 +297,7 @@ describe('useGqlWs.subscribe', () => {
     const spySubscribe = jest.fn()
       .mockReturnValue(() => undefined);
 
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <GqlWsClientContext.Provider value={{
         client: {
           on: () => () => undefined,
