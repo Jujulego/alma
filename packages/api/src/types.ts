@@ -62,3 +62,17 @@ export interface ApiResponse<T extends ApiResponseType, D extends ApiRTConstrain
    */
   data: D;
 }
+
+// - hooks
+export interface ApiLoadableHookConfig<T extends ApiResponseType> {
+  /**
+   * Default Headers of the request (could be overridden by send call)
+   */
+  headers?: ApiHeaders;
+
+  /**
+   * Response type
+   * @default 'json'
+   */
+  responseType?: T;
+}

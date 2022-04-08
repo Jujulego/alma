@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { SwrCache } from './cache';
 import { ApiConfig, ApiConfigProps } from './config';
 
 // Props
 export interface AlmaApiSetupProps extends ApiConfigProps {
+  children?: ReactNode;
   globalCache?: boolean;
 }
 

@@ -6,13 +6,13 @@ import {
   ApiPromise,
   makeApiPromise,
   useApiAutoLoad,
-  useApiGet as _useApiGet,
+  useApiRequest as _useApiRequest,
   useSwrCache as _useSwrCache
 } from '../../src';
 
 // Mocks
-jest.mock('../../src/api/useApiGet');
-const useApiGet = _useApiGet as jest.MockedFunction<typeof _useApiGet>;
+jest.mock('../../src/api/useApiRequest');
+const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
 jest.mock('../../src/cache/useSwrCache');
 const useSwrCache = _useSwrCache as jest.MockedFunction<typeof _useSwrCache>;
@@ -22,7 +22,7 @@ beforeEach(() => {
   jest.resetAllMocks();
 
   // Mocks
-  useApiGet.mockReturnValue({
+  useApiRequest.mockReturnValue({
     loading: false,
     send: jest.fn()
   });
@@ -45,7 +45,7 @@ describe('useApiAutoLoad', () => {
         headers: {}
       });
 
-    useApiGet.mockReturnValue({ loading: true, send: spySend });
+    useApiRequest.mockReturnValue({ loading: true, send: spySend });
 
     const spySetData = jest.fn<void, [string | undefined]>();
 
@@ -57,10 +57,10 @@ describe('useApiAutoLoad', () => {
     });
 
     // Render
-    const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test'));
+    const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>('get', '/api/test'));
 
     expect(useSwrCache).toHaveBeenCalledWith('api:/api/test', undefined, false);
-    expect(useApiGet).toHaveBeenCalledWith('/api/test', { responseType: 'json' });
+    expect(useApiRequest).toHaveBeenCalled();
     expect(result.current).toEqual({
       loading: true,
       reload: expect.any(Function),
@@ -68,6 +68,7 @@ describe('useApiAutoLoad', () => {
     });
 
     expect(spySend).toHaveBeenCalledTimes(1);
+    expect(spySend).toHaveBeenCalledWith({ method: 'get', url: '/api/test', headers: {}, responseType: 'json' });
 
     // After receive
     await waitForNextUpdate();
@@ -85,7 +86,7 @@ describe('useApiAutoLoad', () => {
     const spySend = jest.fn<ApiPromise<ApiResponse<'text'>>, []>()
       .mockRejectedValue(error);
 
-    useApiGet.mockReturnValue({ loading: true, send: spySend });
+    useApiRequest.mockReturnValue({ loading: true, send: spySend });
 
     const spySetData = jest.fn<void, [string | undefined]>();
 
@@ -97,10 +98,10 @@ describe('useApiAutoLoad', () => {
     });
 
     // Render
-    const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test'));
+    const { result, waitForNextUpdate } = renderHook(() => useApiAutoLoad<string>('get', '/api/test'));
 
     expect(useSwrCache).toHaveBeenCalledWith('api:/api/test', undefined, false);
-    expect(useApiGet).toHaveBeenCalledWith('/api/test', { responseType: 'json' });
+    expect(useApiRequest).toHaveBeenCalled();
     expect(result.current).toEqual({
       loading: true,
       reload: expect.any(Function),
@@ -108,6 +109,7 @@ describe('useApiAutoLoad', () => {
     });
 
     expect(spySend).toHaveBeenCalledTimes(1);
+    expect(spySend).toHaveBeenCalledWith({ method: 'get', url: '/api/test', headers: {}, responseType: 'json' });
 
     // After receive
     await waitForNextUpdate();
@@ -122,13 +124,13 @@ describe('useApiAutoLoad', () => {
   it('should not send api request', () => {
     // Mocks
     const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, []>();
-    useApiGet.mockReturnValue({
+    useApiRequest.mockReturnValue({
       loading: true,
       send: spy
     });
 
     // Render
-    renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test', { load: false }));
+    renderHook(() => useApiAutoLoad<string>('get', '/api/test', { load: false }));
 
     expect(spy).not.toHaveBeenCalled();
   });
@@ -139,13 +141,13 @@ describe('useApiAutoLoad', () => {
     const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, []>()
       .mockReturnValue(makeApiPromise(new Promise(() => undefined), spyCancel));
 
-    useApiGet.mockReturnValue({
+    useApiRequest.mockReturnValue({
       loading: true,
       send: spy
     });
 
     // Render
-    const { result } = renderHook(() => useApiAutoLoad<string>(useApiGet, '/api/test'));
+    const { result } = renderHook(() => useApiAutoLoad<string>('get', '/api/test'));
 
     // After receive
     expect(spy).toHaveBeenCalledTimes(1);

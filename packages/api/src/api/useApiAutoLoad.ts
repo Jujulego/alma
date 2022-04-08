@@ -1,38 +1,12 @@
+import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useDebugValue, useEffect, useState } from 'react';
 
 import { useSwrCache } from '../cache';
-import { ApiHeaders, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
+import { ApiHeaders, ApiMethod, ApiResponseType, ApiRTConstraint } from '../types';
 import { Updator } from '../utils';
-import { ApiPromise } from '../api-promise';
+import { useApiRequest } from './useApiRequest';
 
 // Types
-export interface ApiLoadableHookConfig<T extends ApiResponseType> {
-  /**
-   * Default Headers of the request (could be overridden by send call)
-   */
-  headers?: ApiHeaders;
-
-  /**
-   * Response type
-   * @default 'json'
-   */
-  responseType?: T;
-}
-
-export interface ApiLoadableHookState<D extends ApiRTConstraint[T], T extends ApiResponseType> {
-  /**
-   * Indicates if the request is running.
-   */
-  loading: boolean;
-
-  /**
-   * Callback that sends a get request and resolves to the response.
-   */
-  send: () => ApiPromise<ApiResponse<T, D>>;
-}
-
-export type ApiLoadableHook<D extends ApiRTConstraint[T], T extends ApiResponseType> = (url: string, config?: ApiLoadableHookConfig<T>) => ApiLoadableHookState<D, T>;
-
 export interface ApiAutoLoadConfig<T extends ApiResponseType> {
   /**
    * Load request on mount
@@ -87,8 +61,11 @@ export interface ApiAutoLoadState<D extends ApiRTConstraint[T], T extends ApiRes
 }
 
 // Hook
-export function useApiAutoLoad<D extends ApiRTConstraint[T], T extends ApiResponseType = 'json'>(hook: ApiLoadableHook<D, T>, url: string, config: ApiAutoLoadConfig<T> = {}): ApiAutoLoadState<D, T> {
-  const { load = true, disableSwr = false, headers, responseType = 'json' as T } = config;
+export function useApiAutoLoad<D extends ApiRTConstraint[T], T extends ApiResponseType = 'json'>(method: ApiMethod, url: string, config: ApiAutoLoadConfig<T> = {}): ApiAutoLoadState<D, T> {
+  const { load = true, disableSwr = false, headers = {}, responseType = 'json' as T } = config;
+
+  // Stabilise objects
+  const sHeaders = useDeepMemo(headers);
 
   // Cache
   const { data, setData } = useSwrCache<D | undefined>(`api:${url}`, undefined, disableSwr);
@@ -99,13 +76,13 @@ export function useApiAutoLoad<D extends ApiRTConstraint[T], T extends ApiRespon
   const [error, setError] = useState<unknown>();
 
   // Api call
-  const { loading, send } = hook(url, { headers, responseType });
+  const { loading, send } = useApiRequest<ApiMethod, T, unknown, D>();
 
   // Effects
   useEffect(() => {
     if (reload === 0) return;
 
-    const prom = send()
+    const prom = send({ method, url, headers: sHeaders, responseType })
       .then((res) => {
         setData(res.data);
       })
@@ -114,7 +91,7 @@ export function useApiAutoLoad<D extends ApiRTConstraint[T], T extends ApiRespon
       });
 
     return () => prom.cancel();
-  }, [reload, send, setData]);
+  }, [method, url, sHeaders, responseType, reload, send, setData]);
 
   return {
     loading,
