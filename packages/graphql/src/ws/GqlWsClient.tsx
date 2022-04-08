@@ -1,11 +1,12 @@
 import { createClient, Client } from 'graphql-ws';
-import { FC, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 
 import { GqlWsClientContext } from './GqlWsClientContext';
 
 // Types
 export interface GqlWsClientProps {
   endpoint: string;
+  children?: ReactNode;
 }
 
 // Component
