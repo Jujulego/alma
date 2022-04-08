@@ -31,8 +31,7 @@
     "lint": "eslint {src,tests}/**/*.*",
     "clean": "gulp clean",
     "build": "gulp build",
-    "watch": "gulp watch",
-    "test": "jest"
+    "watch": "gulp watch"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0"
