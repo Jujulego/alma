@@ -1,6 +1,6 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { fetcher } from '../../../old';
+import { fetcher } from '../src';
 
 // Setup
 enableFetchMocks();
@@ -23,6 +23,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'arraybuffer' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: expect.anything()
         });
@@ -41,6 +42,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'blob' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: expect.anything()
         });
@@ -59,6 +61,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'json' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -77,6 +80,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -104,6 +108,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -127,6 +132,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -146,6 +152,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -165,6 +172,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -184,6 +192,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
@@ -203,6 +212,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       await expect(fetcher({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
+          statusText: 'OK',
           headers: expect.anything(),
           data: 'test'
         });
