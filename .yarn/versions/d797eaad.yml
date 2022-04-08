@@ -1,4 +1,0 @@
-releases:
-  "@jujulego/alma-api": minor
-  "@jujulego/alma-axios": patch
-  "@jujulego/alma-graphql": patch
