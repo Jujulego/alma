@@ -50,20 +50,13 @@ export class Warehouse extends EventTarget {
   private readonly _resources = new Map<string, Resource<unknown>>();
 
   // Methods
-  private _update(key: string, resource: Resource<unknown>) {
-    const old = this._resources.get(key);
-    this._resources.set(key, resource);
-
-    this.dispatchEvent(new WarehouseUpdateEvent(key, resource, old));
-  }
-
   /**
    * Create a new resource. Erase previous resource at the same key.
    * @param key
    */
   create<T>(key: string): Resource<T> {
     const res = new Resource<T>();
-    this._update(key, res);
+    this.set(key, res);
 
     return res;
   }
@@ -82,5 +75,21 @@ export class Warehouse extends EventTarget {
    */
   getOrCreate<T>(key: string): Resource<T> {
     return this.get(key) || this.create(key);
+  }
+
+  /**
+   * Update resource at the given key.
+   * Returns the previous resource, if any.
+   *
+   * @param key
+   * @param resource
+   */
+  set(key: string, resource: Resource<unknown>): Resource<unknown> | undefined {
+    const old = this._resources.get(key);
+    this._resources.set(key, resource);
+
+    this.dispatchEvent(new WarehouseUpdateEvent(key, resource, old));
+
+    return old;
   }
 }
