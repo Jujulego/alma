@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { useContext } from 'react';
 
-import { AlmaApiSetup, ApiConfigContext, ApiFetcher, fetcher as defaultFetcher, SwrCacheContext } from '../src';
+import { AlmaApiSetup, ApiConfigContext, ApiFetcher, fetcher as defaultFetcher, SwrCacheContext } from '../../old';
 
 // Setup
 beforeEach(() => {

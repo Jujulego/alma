@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, ApiRequest, ApiResponse, useApiPatch, useApiRequest as _useApiRequest } from '../../src';
+import { ApiPromise, ApiRequest, ApiResponse, useApiPatch, useApiRequest as _useApiRequest } from '../../../old';
 
 // Mocks
-jest.mock('../../src/api/useApiRequest');
+jest.mock('../../../old/api/useApiRequest');
 const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
 // Setup

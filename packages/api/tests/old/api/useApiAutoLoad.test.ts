@@ -8,13 +8,13 @@ import {
   useApiAutoLoad,
   useApiRequest as _useApiRequest,
   useSwrCache as _useSwrCache
-} from '../../src';
+} from '../../../old';
 
 // Mocks
-jest.mock('../../src/api/useApiRequest');
+jest.mock('../../../old/api/useApiRequest');
 const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
-jest.mock('../../src/cache/useSwrCache');
+jest.mock('../../../old/cache/useSwrCache');
 const useSwrCache = _useSwrCache as jest.MockedFunction<typeof _useSwrCache>;
 
 // Setup

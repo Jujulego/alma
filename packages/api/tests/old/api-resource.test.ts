@@ -6,19 +6,19 @@ import {
   useApiDelete as _useApiDelete,
   useApiGet as _useApiGet,
   useApiPut as _useApiPut
-} from '../src';
+} from '../../old';
 
 // Mocks
-jest.mock('../src/api/useApiAutoLoad');
+jest.mock('../../old/api/useApiAutoLoad');
 const useApiAutoLoad = _useApiAutoLoad as jest.MockedFunction<typeof _useApiAutoLoad>;
 
-jest.mock('../src/api/useApiDelete');
+jest.mock('../../old/api/useApiDelete');
 const useApiDelete = _useApiDelete as jest.MockedFunction<typeof _useApiDelete>;
 
-jest.mock('../src/api/useApiGet');
+jest.mock('../../old/api/useApiGet');
 const useApiGet = _useApiGet as jest.MockedFunction<typeof _useApiGet>;
 
-jest.mock('../src/api/useApiPut');
+jest.mock('../../old/api/useApiPut');
 const useApiPut = _useApiPut as jest.MockedFunction<typeof _useApiPut>;
 
 // Setup

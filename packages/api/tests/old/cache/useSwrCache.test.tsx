@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 import { FC, ReactNode } from 'react';
 
-import { SwrCacheContext, useSwrCache } from '../../src/cache';
-import { Updator } from '../../src/utils';
+import { SwrCacheContext, useSwrCache } from '../../../old/cache';
+import { Updator } from '../../../old/utils';
 
 // Setup
 beforeEach(() => {

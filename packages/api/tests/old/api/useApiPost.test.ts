@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, ApiRequest, ApiResponse, useApiHead, useApiRequest as _useApiRequest } from '../../src';
+import { ApiPromise, ApiRequest, ApiResponse, useApiPost, useApiRequest as _useApiRequest } from '../../../old';
 
 // Mocks
-jest.mock('../../src/api/useApiRequest');
+jest.mock('../../../old/api/useApiRequest');
 const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
 // Setup
@@ -12,11 +12,11 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useApiHead', () => {
+describe('useApiPost', () => {
   // Tests
-  it('should call useApiRequest and generate a head request', async () => {
+  it('should call useApiRequest and generate a post request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'head', 'json'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'post', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -25,7 +25,7 @@ describe('useApiHead', () => {
     });
 
     // Render
-    const { result } = renderHook(() => useApiHead<string>('/api/test'));
+    const { result } = renderHook(() => useApiPost<number, string>('/api/test'));
 
     expect(result.current).toEqual({
       loading: false,
@@ -36,14 +36,15 @@ describe('useApiHead', () => {
 
     // Call send
     await act(async () => {
-      await expect(result.current.send())
+      await expect(result.current.send(1))
         .resolves.toEqual({ status: 200, headers: {}, data: 'test' });
     });
 
     expect(spy).toHaveBeenCalledWith({
-      method: 'head',
+      method: 'post',
       url: '/api/test',
       headers: {},
+      body: 1,
       responseType: 'json'
     });
   });

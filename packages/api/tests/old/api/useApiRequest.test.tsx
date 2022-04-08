@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiConfigContext, ApiPromise, ApiResponse, useApiRequest } from '../../src';
+import { ApiConfigContext, ApiPromise, ApiResponse, useApiRequest } from '../../../old';
 
 // Setup
 beforeEach(() => {

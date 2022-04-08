@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, ApiRequest, ApiResponse, useApiGet, useApiRequest as _useApiRequest } from '../../src';
+import { ApiPromise, ApiRequest, ApiResponse, useApiHead, useApiRequest as _useApiRequest } from '../../../old';
 
 // Mocks
-jest.mock('../../src/api/useApiRequest');
+jest.mock('../../../old/api/useApiRequest');
 const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
 // Setup
@@ -12,11 +12,11 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useApiGet', () => {
+describe('useApiHead', () => {
   // Tests
-  it('should call useApiRequest and generate a get request', async () => {
+  it('should call useApiRequest and generate a head request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'get', 'json'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'head', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -25,7 +25,7 @@ describe('useApiGet', () => {
     });
 
     // Render
-    const { result } = renderHook(() => useApiGet<string>('/api/test'));
+    const { result } = renderHook(() => useApiHead<string>('/api/test'));
 
     expect(result.current).toEqual({
       loading: false,
@@ -41,7 +41,7 @@ describe('useApiGet', () => {
     });
 
     expect(spy).toHaveBeenCalledWith({
-      method: 'get',
+      method: 'head',
       url: '/api/test',
       headers: {},
       responseType: 'json'

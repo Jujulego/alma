@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { ApiPromise, ApiRequest, ApiResponse, useApiDelete, useApiRequest as _useApiRequest } from '../../src';
+import { ApiPromise, ApiRequest, ApiResponse, useApiGet, useApiRequest as _useApiRequest } from '../../../old';
 
 // Mocks
-jest.mock('../../src/api/useApiRequest');
+jest.mock('../../../old/api/useApiRequest');
 const useApiRequest = _useApiRequest as jest.MockedFunction<typeof _useApiRequest>;
 
 // Setup
@@ -12,11 +12,11 @@ beforeEach(() => {
 });
 
 // Test suites
-describe('useApiDelete', () => {
+describe('useApiGet', () => {
   // Tests
-  it('should call useApiRequest and generate a delete request', async () => {
+  it('should call useApiRequest and generate a get request', async () => {
     // Mocks
-    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'delete', 'json'>]>()
+    const spy = jest.fn<ApiPromise<ApiResponse<'text'>>, [ApiRequest<'get', 'json'>]>()
       .mockResolvedValue({ status: 200, headers: {}, data: 'test' });
 
     useApiRequest.mockReturnValue({
@@ -25,7 +25,7 @@ describe('useApiDelete', () => {
     });
 
     // Render
-    const { result } = renderHook(() => useApiDelete<string>('/api/test'));
+    const { result } = renderHook(() => useApiGet<string>('/api/test'));
 
     expect(result.current).toEqual({
       loading: false,
@@ -41,7 +41,7 @@ describe('useApiDelete', () => {
     });
 
     expect(spy).toHaveBeenCalledWith({
-      method: 'delete',
+      method: 'get',
       url: '/api/test',
       headers: {},
       responseType: 'json'
