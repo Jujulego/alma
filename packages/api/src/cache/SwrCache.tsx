@@ -1,10 +1,10 @@
-import { FC, useCallback, useState } from 'react';
+import { FC, ReactNode, useCallback, useState } from 'react';
 
 import { SwrCacheContext, SwrCacheState } from './SwrCacheContext';
 import { normalizeUpdator, Updator } from '../utils';
 
 // Component
-export const SwrCache: FC = ({ children }) => {
+export const SwrCache: FC<{ children?: ReactNode }> = ({ children }) => {
   // State
   const [cache, setCache] = useState<Partial<Record<string, SwrCacheState>>>({});
 

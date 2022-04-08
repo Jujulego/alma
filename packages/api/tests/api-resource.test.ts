@@ -44,7 +44,7 @@ describe('apiResource', () => {
   // Tests
   it('should call useApiAutoLoad with given url and hook and return results', () => {
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text');
+    const useApiTest = apiResource('get', '/api/test', 'text');
     const { result } = renderHook(() => useApiTest());
 
     // Check
@@ -55,12 +55,12 @@ describe('apiResource', () => {
       setData: expect.any(Function),
     });
 
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
   });
 
   it('should call useApiAutoLoad with built url', () => {
     // Render
-    const useApiTest = apiResource<'text', string, number>(useApiGet, (id: number) => `/api/test/${id}`, 'text');
+    const useApiTest = apiResource<'text', string, number>('get', (id: number) => `/api/test/${id}`, 'text');
     const { result } = renderHook(() => useApiTest(1));
 
     // Check
@@ -71,7 +71,7 @@ describe('apiResource', () => {
       setData: expect.any(Function),
     });
 
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test/1', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test/1', { responseType: 'text' });
   });
 });
 
@@ -102,7 +102,7 @@ describe('apiResource.query', () => {
     useApiDelete.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .query('remove', useApiDelete, null, spyMerge);
 
     const { result } = renderHook(() => useApiTest());
@@ -112,7 +112,7 @@ describe('apiResource.query', () => {
       remove: expect.any(Function),
     }));
 
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiDelete).toHaveBeenCalledWith('/api/test');
 
     // Call send
@@ -151,13 +151,13 @@ describe('apiResource.query', () => {
     useApiDelete.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .query('remove', useApiDelete, '/api/test/delete', jest.fn());
 
     const { result } = renderHook(() => useApiTest());
 
     // Check
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiDelete).toHaveBeenCalledWith('/api/test');
 
     // Call send
@@ -176,13 +176,13 @@ describe('apiResource.query', () => {
     useApiDelete.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .query('remove', useApiDelete, (id: number) => `/api/test/${id}/delete`, jest.fn());
 
     const { result } = renderHook(() => useApiTest());
 
     // Check
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiDelete).toHaveBeenCalledWith('/api/test');
 
     // Call send
@@ -221,7 +221,7 @@ describe('apiResource.mutate', () => {
     useApiPut.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .mutate('put', useApiPut, null, spyMerge);
 
     const { result } = renderHook(() => useApiTest());
@@ -231,7 +231,7 @@ describe('apiResource.mutate', () => {
       put: expect.any(Function),
     }));
 
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiPut).toHaveBeenCalledWith('/api/test');
 
     // Call send
@@ -270,13 +270,13 @@ describe('apiResource.mutate', () => {
     useApiPut.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .mutate('put', useApiPut, '/api/test/put', jest.fn());
 
     const { result } = renderHook(() => useApiTest());
 
     // Check
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiPut).toHaveBeenCalledWith('/api/test');
 
     // Call send
@@ -295,13 +295,13 @@ describe('apiResource.mutate', () => {
     useApiPut.mockReturnValue({ loading: false, send: spySend });
 
     // Render
-    const useApiTest = apiResource(useApiGet, '/api/test', 'text')
+    const useApiTest = apiResource('get', '/api/test', 'text')
       .mutate('put', useApiPut, (id: number) => `/api/test/${id}/put`, jest.fn());
 
     const { result } = renderHook(() => useApiTest());
 
     // Check
-    expect(useApiAutoLoad).toHaveBeenCalledWith(useApiGet, '/api/test', { responseType: 'text' });
+    expect(useApiAutoLoad).toHaveBeenCalledWith('get', '/api/test', { responseType: 'text' });
     expect(useApiPut).toHaveBeenCalledWith('/api/test');
 
     // Call send

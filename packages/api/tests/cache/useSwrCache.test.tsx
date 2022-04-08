@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { SwrCacheContext, useSwrCache } from '../../src/cache';
 import { Updator } from '../../src/utils';
@@ -14,7 +14,7 @@ describe('useSwrCache', () => {
   // Tests
   it('should return cached value', () => {
     // Render
-    const wrapper: FC<{ value: number }> = ({ value, children }) => (
+    const wrapper: FC<{ value: number, children?: ReactNode }> = ({ value, children }) => (
       <SwrCacheContext.Provider
         value={{
           cache: {
@@ -44,7 +44,7 @@ describe('useSwrCache', () => {
   it('should update cached value', () => {
     // Render
     const setCache = jest.fn<void, [unknown | Updator]>();
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <SwrCacheContext.Provider
         value={{
           cache: {},
@@ -86,7 +86,7 @@ describe('useSwrCache', () => {
   it('should ignore cache', () => {
     // Render
     const setCache = jest.fn<void, [unknown | Updator]>();
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <SwrCacheContext.Provider
         value={{
           cache: {

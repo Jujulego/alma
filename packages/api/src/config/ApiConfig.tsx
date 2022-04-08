@@ -1,10 +1,12 @@
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
 
 import { ApiConfigContext, ApiConfigContextProps } from './ApiConfigContext';
 import { fetcher as defaultFetcher } from './fetcher';
 
 // Types
-export type ApiConfigProps = Partial<ApiConfigContextProps>;
+export interface ApiConfigProps extends Partial<ApiConfigContextProps> {
+  children?: ReactNode;
+}
 
 // Component
 /**

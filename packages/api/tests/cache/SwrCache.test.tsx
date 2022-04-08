@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react-hooks';
-import { FC, useContext } from 'react';
+import { useContext } from 'react';
 
 import { SwrCache, SwrCacheContext } from '../../src/cache';
 
@@ -13,11 +13,7 @@ describe('SwrCache', () => {
   // Tests
   it('should update cache', () => {
     // Render
-    const wrapper: FC = ({ children }) => (
-      <SwrCache>{ children }</SwrCache>
-    );
-
-    const { result } = renderHook(() => useContext(SwrCacheContext), { wrapper });
+    const { result } = renderHook(() => useContext(SwrCacheContext), { wrapper: SwrCache });
 
     // Checks
     expect(result.current.cache).toBeDefined();

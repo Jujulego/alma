@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { createClient as _createClient, Client } from 'graphql-ws';
-import { FC, useContext } from 'react';
+import { FC, ReactNode, useContext } from 'react';
 
 import { GqlWsClientContext, GqlWsClient } from '../../src';
 
@@ -27,7 +27,7 @@ describe('GqlWsClient', () => {
   // Tests
   it('should provide a graphql-ws Client instance', () => {
     // Render
-    const wrapper: FC = ({ children }) => (
+    const wrapper: FC<{ children?: ReactNode }> = ({ children }) => (
       <GqlWsClient endpoint="/api/graphql">{ children }</GqlWsClient>
     );
 

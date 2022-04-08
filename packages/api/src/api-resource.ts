@@ -1,9 +1,9 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useMemo } from 'react';
 
-import { ApiAutoLoadState, ApiLoadableHook, useApiAutoLoad } from './api';
+import { ApiAutoLoadState, useApiAutoLoad } from './api';
 import { ApiPromise } from './api-promise';
-import { ApiResponse, ApiResponseType, ApiRTConstraint } from './types';
+import { ApiMethod, ApiResponse, ApiResponseType, ApiRTConstraint } from './types';
 
 // Types
 export type ApiUrlBuilder<A> = (args: A) => string;
@@ -110,7 +110,7 @@ function addMutationCall<N extends string, T extends ApiResponseType, BM, D exte
 }
 
 // Hook builder
-export function apiResource<T extends ApiResponseType, D extends ApiRTConstraint[T] = ApiRTConstraint[T], A = void>(hook: ApiLoadableHook<D, T>, url: string | ApiUrlBuilder<A>, responseType: T): ApiHook<T, D, A, ApiAutoLoadState<D, T>> {
+export function apiResource<T extends ApiResponseType, D extends ApiRTConstraint[T] = ApiRTConstraint[T], A = void>(method: ApiMethod, url: string | ApiUrlBuilder<A>, responseType: T): ApiHook<T, D, A, ApiAutoLoadState<D, T>> {
   const builder = typeof url === 'string' ? () => url : url;
 
   // Hook
@@ -120,7 +120,7 @@ export function apiResource<T extends ApiResponseType, D extends ApiRTConstraint
     const url = useMemo(() => builder(sargs), [sargs]);
 
     // Api
-    return useApiAutoLoad<D, T>(hook, url, { responseType });
+    return useApiAutoLoad<D, T>(method, url, { responseType });
   }
 
   return Object.assign(useApiResource, hookMethods<T, D, A, ApiAutoLoadState<D, T>>(builder));

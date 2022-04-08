@@ -1,10 +1,9 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback } from 'react';
 
-import { ApiLoadableHookConfig } from './useApiAutoLoad';
 import { useApiRequest } from './useApiRequest';
 import { ApiPromise } from '../api-promise';
-import { ApiHeaders, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
+import { ApiHeaders, ApiLoadableHookConfig, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
 
 // Types
 export interface ApiPostRequestState<B, D extends ApiRTConstraint[T], T extends ApiResponseType> {
