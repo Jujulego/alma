@@ -1,4 +1,4 @@
-import { ApiHeaders, ApiRequest, ApiResponseFor, ApiRTConstraint } from './types';
+import { ApiHeaders, ApiMethod, ApiRequest, ApiResponse, ApiResponseTypeFor } from './types';
 import { ApiResponseType } from '../old';
 
 // Utils
@@ -29,22 +29,20 @@ function decodeHeaders(headers: Headers): ApiHeaders {
   return res;
 }
 
-async function decodeBody<RT extends ApiResponseType>(responseType: RT, res: Response): Promise<ApiRTConstraint[RT]> {
+async function decodeBody(responseType: ApiResponseType, res: Response): Promise<unknown> {
   switch (responseType) {
     case 'arraybuffer':
-      return await res.arrayBuffer() as ApiRTConstraint[RT];
+      return await res.arrayBuffer();
 
     case 'blob':
-      return await res.blob() as ApiRTConstraint[RT];
+      return await res.blob();
 
     case 'json':
-      return await res.json() as ApiRTConstraint[RT];
+      return await res.json();
 
     case 'text':
-      return await res.text() as ApiRTConstraint[RT];
+      return await res.text();
   }
-
-  throw new Error(`Unsupported responseType ${responseType}`);
 }
 
 /**
@@ -62,7 +60,7 @@ async function decodeBody<RT extends ApiResponseType>(responseType: RT, res: Res
  * @param req: request to send
  * @param signal: AbortSignal used to interrupt the call
  */
-export async function fetcher<Rq extends ApiRequest>(req: Rq, signal: AbortSignal): Promise<ApiResponseFor<Rq>> {
+export async function fetcher<D>(req: ApiRequest<ApiMethod, ApiResponseTypeFor<D>>, signal: AbortSignal): Promise<ApiResponse<D>> {
   const headers = new Headers(req.headers);
 
   const res = await fetch(req.url, {
@@ -76,6 +74,6 @@ export async function fetcher<Rq extends ApiRequest>(req: Rq, signal: AbortSigna
     status: res.status,
     statusText: res.statusText,
     headers: decodeHeaders(res.headers),
-    data: await decodeBody<Rq['responseType']>(req.responseType, res),
+    data: await decodeBody(req.responseType, res) as D,
   };
 }

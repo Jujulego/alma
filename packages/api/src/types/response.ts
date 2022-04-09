@@ -1,8 +1,8 @@
-import { ApiHeaders, ApiRTConstraint } from './utils';
+import { ApiHeaders, ApiDataConstraint } from './utils';
 import { ApiRequest } from './request';
 
 // Utils
-export type ApiResponseFor<Rq extends ApiRequest, D extends ApiRTConstraint[Rq['responseType']] = ApiRTConstraint[Rq['responseType']]> = ApiResponse<D>;
+export type ApiResponseFor<Rq extends ApiRequest, D extends ApiDataConstraint<Rq['responseType']> = ApiDataConstraint<Rq['responseType']>> = ApiResponse<D>;
 
 // Response
 export interface ApiResponse<D> {

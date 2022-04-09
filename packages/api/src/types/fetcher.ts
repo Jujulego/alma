@@ -1,5 +1,6 @@
 import { ApiRequest } from './request';
-import { ApiResponseFor } from './response';
+import { ApiResponse } from './response';
+import { ApiMethod, ApiResponseTypeFor } from './utils';
 
 // Fetcher
-export type ApiFetcher = <Rq extends ApiRequest>(req: Rq, signal: AbortSignal) => Promise<ApiResponseFor<Rq>>;
+export type ApiFetcher = <D>(req: ApiRequest<ApiMethod, ApiResponseTypeFor<D>>, signal: AbortSignal) => Promise<ApiResponse<D>>;
