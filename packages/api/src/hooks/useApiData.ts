@@ -1,5 +1,4 @@
 import { useWarehouse } from '@jujulego/alma-resources';
-import { useId } from 'react';
 
 import { ApiResource } from '../ApiResource';
 import { useApiRequest, RequestOptions } from './useApiRequest';
@@ -14,7 +13,7 @@ export function useApiData<D>(url: string, options?: RequestOptions<ARTF<D>>): A
   const wharehouse = useWarehouse();
   const api = useApiRequest();
 
-  const id = `${useId()}:${url}`;
+  const id = `useDataApi:${url}`;
   let res = wharehouse.get(id) as ApiResource<D>;
 
   if (!res) {
