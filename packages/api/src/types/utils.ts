@@ -13,3 +13,15 @@ export type ApiResponseTypeFor<D> =
   D extends ArrayBuffer ? 'arraybuffer' :
     D extends Blob ? 'blob' :
       D extends string ? 'text' | 'json' : 'json';
+
+interface RequestTypeOptionJson {
+  responseType?: 'json';
+}
+
+interface RequestTypeOptionOthers<RT extends ApiResponseType> {
+  responseType: RT;
+}
+
+export type RequestTypeOption<RT extends ApiResponseType> = RT extends 'json'
+  ? RequestTypeOptionJson | RequestTypeOptionOthers<RT>
+  : RequestTypeOptionOthers<RT>;
