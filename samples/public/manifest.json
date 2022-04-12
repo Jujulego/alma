@@ -1,0 +1,8 @@
+{
+  "short_name": "Alma samples",
+  "name": "Alma samples",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
