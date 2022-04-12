@@ -65,8 +65,8 @@ export class Warehouse extends EventTarget {
    * Returns the resource associated to the key, if any.
    * @param key
    */
-  get<T>(key: string): Resource<T> | undefined {
-    return this._resources.get(key) as Resource<T> | undefined;
+  get<T, R extends Resource<T> = Resource<T>>(key: string): R | undefined {
+    return this._resources.get(key) as R | undefined;
   }
 
   /**

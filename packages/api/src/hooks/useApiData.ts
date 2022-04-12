@@ -14,7 +14,7 @@ export function useApiData<D>(url: string, options?: RequestOptions<ARTF<D>>): A
   const api = useApiRequest();
 
   const id = `useDataApi:${url}`;
-  let res = wharehouse.get(id) as ApiResource<D>;
+  let res = wharehouse.get<ApiResponse<D>, ApiResource<D>>(id);
 
   if (!res) {
     res = api.get<D>(url, options);
