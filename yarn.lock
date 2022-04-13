@@ -60,29 +60,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.17.8":
-  version: 7.17.8
-  resolution: "@babel/core@npm:7.17.8"
-  dependencies:
-    "@ampproject/remapping": ^2.1.0
-    "@babel/code-frame": ^7.16.7
-    "@babel/generator": ^7.17.7
-    "@babel/helper-compilation-targets": ^7.17.7
-    "@babel/helper-module-transforms": ^7.17.7
-    "@babel/helpers": ^7.17.8
-    "@babel/parser": ^7.17.8
-    "@babel/template": ^7.16.7
-    "@babel/traverse": ^7.17.3
-    "@babel/types": ^7.17.0
-    convert-source-map: ^1.7.0
-    debug: ^4.1.0
-    gensync: ^1.0.0-beta.2
-    json5: ^2.1.2
-    semver: ^6.3.0
-  checksum: 0e686b1be444d25494424065238931f2b3df908bf072b72bab973acfd6d27a481fc280c9cd8a3c6fe2c46beee50e0d2307468d8b15b64dc4036f025e75f6609d
-  languageName: node
-  linkType: hard
-
 "@babel/core@npm:7.17.9":
   version: 7.17.9
   resolution: "@babel/core@npm:7.17.9"
@@ -196,7 +173,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.17.7, @babel/generator@npm:^7.17.9":
+"@babel/generator@npm:^7.17.9":
   version: 7.17.9
   resolution: "@babel/generator@npm:7.17.9"
   dependencies:
@@ -707,7 +684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helpers@npm:^7.17.8, @babel/helpers@npm:^7.17.9":
+"@babel/helpers@npm:^7.17.9":
   version: 7.17.9
   resolution: "@babel/helpers@npm:7.17.9"
   dependencies:
@@ -776,7 +753,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.17.8, @babel/parser@npm:^7.17.9":
+"@babel/parser@npm:^7.17.9":
   version: 7.17.9
   resolution: "@babel/parser@npm:7.17.9"
   bin:
@@ -1798,15 +1775,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:7.17.8":
-  version: 7.17.8
-  resolution: "@babel/runtime@npm:7.17.8"
-  dependencies:
-    regenerator-runtime: ^0.13.4
-  checksum: 68d195c1630bb91ac20e86635d292a17ebab7f361cfe79406b3f5a6cc2e59fa283ae5006568899abf869312c2b35b744bd407aea8ffdb650f1a68d07785d47e9
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:7.17.9":
   version: 7.17.9
   resolution: "@babel/runtime@npm:7.17.9"
@@ -2372,7 +2340,6 @@ __metadata:
   resolution: "@jujulego/alma-api@workspace:packages/api"
   dependencies:
     "@babel/core": 7.17.9
-    "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
@@ -2391,6 +2358,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     alma-tools: "workspace:*"
+    babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.14.0
     eslint-plugin-jest: 26.1.5
@@ -2411,7 +2379,7 @@ __metadata:
     ts-node: 10.7.0
     typescript: 4.6.4
   peerDependencies:
-    react: ^17.0.0 || ^18.0.0
+    react: ^18.0.0
   languageName: unknown
   linkType: soft
 
@@ -2519,10 +2487,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-resources@workspace:packages/resources"
   dependencies:
-    "@babel/core": 7.17.8
+    "@babel/core": 7.17.9
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
-    "@babel/runtime": 7.17.8
+    "@babel/runtime": 7.17.9
+    "@rollup/plugin-commonjs": 21.0.3
     "@rollup/plugin-node-resolve": 13.2.1
     "@testing-library/jest-dom": 5.16.3
     "@testing-library/react-hooks": 7.0.2
@@ -2535,6 +2504,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     alma-tools: "workspace:*"
+    babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.14.0
     eslint-plugin-jest: 26.1.5
@@ -2563,10 +2533,10 @@ __metadata:
   resolution: "@jujulego/alma-utils@workspace:packages/utils"
   dependencies:
     "@babel/core": 7.17.9
-    "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
+    "@rollup/plugin-commonjs": 21.0.3
     "@rollup/plugin-node-resolve": 13.2.1
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react-hooks": 7.0.2
@@ -2579,6 +2549,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     alma-tools: "workspace:*"
+    babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     dequal: ^2.0.2
     eslint: 8.14.0
@@ -2737,6 +2708,23 @@ __metadata:
   version: 3.0.4
   resolution: "@repeaterjs/repeater@npm:3.0.4"
   checksum: cca0db3e802bc26fcce0b4a574074d9956da53bf43094de03c0e4732d05e13441279a92f0b96e2a7a39da50933684947a138c1213406eaafe39cfd4683d6c0df
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-commonjs@npm:21.0.3":
+  version: 21.0.3
+  resolution: "@rollup/plugin-commonjs@npm:21.0.3"
+  dependencies:
+    "@rollup/pluginutils": ^3.1.0
+    commondir: ^1.0.1
+    estree-walker: ^2.0.1
+    glob: ^7.1.6
+    is-reference: ^1.2.1
+    magic-string: ^0.25.7
+    resolve: ^1.17.0
+  peerDependencies:
+    rollup: ^2.38.3
+  checksum: 23307d3b7eb8d64dd966fbe380b85bf3b5f4908c7344427d45918d570cf6b48710ef6f155bea74545127c10de9d64f87dd2219078e83dbccf927505d38774de8
   languageName: node
   linkType: hard
 
@@ -3237,6 +3225,13 @@ __metadata:
   version: 16.11.31
   resolution: "@types/node@npm:16.11.31"
   checksum: 0bad289e12c7066cd2ea7a204d051a0bb09a32a29da39850812ea14c075f9e2b4aeaab23aa23447ef9e3aa6a30173bf3d3524e37bbeeb56fb8ffa4bbd783c5db
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:16.11.7":
+  version: 16.11.7
+  resolution: "@types/node@npm:16.11.7"
+  checksum: 2706403e6efc4aa40fdce8f0b5d9884d5600c3c8610aedc7fa5e7e298d30366f7e8b7296028d52898dca3edef4c3e827b03bf20952c4780f13fa4e79864f7a86
   languageName: node
   linkType: hard
 
@@ -4295,6 +4290,8 @@ __metadata:
     "@babel/preset-react": 7.16.7
     "@babel/preset-typescript": 7.16.7
     "@babel/runtime": 7.17.9
+    "@jujulego/alma-api": ^2.4.0
+    "@types/node": 16.11.7
     "@types/react": ^18.0.3
     "@types/react-dom": ^18.0.0
     "@types/webpack": 5.28.0
@@ -4846,6 +4843,17 @@ __metadata:
     "@babel/core": ^7.0.0
     webpack: ">=2"
   checksum: 4968251fc4af4279c8e44adba523ed4ad18942f04b37061298e81640d09a570f66e6d53948e39a7d3c3d24ca2b025f0a07c606fadd8e3fbffa8912fd789fd4f0
+  languageName: node
+  linkType: hard
+
+"babel-plugin-add-import-extension@npm:1.6.0":
+  version: 1.6.0
+  resolution: "babel-plugin-add-import-extension@npm:1.6.0"
+  dependencies:
+    "@babel/helper-plugin-utils": ^7.14.5
+  peerDependencies:
+    "@babel/core": ">=7.0.0"
+  checksum: 63723b2db364e621228de433ab38abf4df5f9ef148c46760ad5db447a82171d2f1fcd48e681f9fc03f502e81029fd0ff5b7fb7c2bbf37d4bb1361e919e5b836e
   languageName: node
   linkType: hard
 
