@@ -1,14 +1,13 @@
-import { useApiData } from '@jujulego/alma-api';
+import { useInterval } from '@jujulego/alma-utils';
 import { FC } from 'react';
 
-// Constants
-const URL = 'https://datausa.io/api/data?drilldowns=Nation&measures=Population';
+import { ApiData } from './ApiData';
 
 // Component
 export const App: FC = () => {
-  const { data } = useApiData(URL);
+  useInterval(5000);
 
-  return <code style={{ whiteSpace: 'pre-wrap' }}>
-    { JSON.stringify(data, null, 2) }
-  </code>;
+  return (
+    <ApiData />
+  );
 };

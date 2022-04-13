@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useDebugValue } from 'react';
 
 import { Warehouse } from './warehouse';
 
@@ -25,5 +25,6 @@ export function useWarehouse(): Warehouse {
     warehouse = self[GLOBAL_WAREHOUSE] ??= new Warehouse();
   }
 
+  useDebugValue(warehouse);
   return warehouse;
 }
