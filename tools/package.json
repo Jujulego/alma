@@ -7,7 +7,7 @@
   "peerDependencies": {
     "@babel/core": "7.17.9",
     "gulp": "4.0.2",
-    "rollup": "2.70.1",
+    "rollup": "2.70.2",
     "typescript": "4.6.3"
   },
   "dependencies": {
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@babel/core": "7.17.9",
     "gulp": "4.0.2",
-    "rollup": "2.70.1",
+    "rollup": "2.70.2",
     "typescript": "4.6.3"
   }
 }
