@@ -1,5 +1,5 @@
-import { useResourceStatus, useWarehouse } from '@jujulego/alma-resources';
-import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useState } from 'react';
+import { useWarehouse } from '@jujulego/alma-resources';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { ApiResource } from '../ApiResource';
 import { useApiRequest, RequestOptions } from './useApiRequest';
@@ -60,13 +60,14 @@ export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): A
 
   // Effect
   useEffect(() => {
-    const res = warehouse.get<ApiResponse<D>, ApiResource<D>>(id);
-
     if (res) {
       res.then(({ data }) => setData(data));
-      //return () => res.cancel();
+
+      return () => {
+        setTimeout(() => res?.cancel(), 0);
+      };
     }
-  }, [warehouse, id]);
+  }, [res]);
 
   // Return
   return {
