@@ -1,5 +1,5 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { ApiResource } from '../ApiResource';
 import {
@@ -11,38 +11,58 @@ import {
   RequestTypeOption
 } from '../types';
 import { useApiRequest } from './useApiRequest';
+import { ApiUrl, normalizeUrl } from '../utils';
 
 // Types
 export type RequestOptions<RT extends ApiResponseType> = RequestTypeOption<RT> & {
   headers?: ApiHeaders;
 };
 
+export type QuerySender<A, D> = A extends void ? () => ApiResource<D> : (arg: A) => ApiResource<D>;
+export type MutationSender<A, B, D> = A extends void ? (body: B) => ApiResource<D> : (arg: A, body: B) => ApiResource<D>;
+export type RequestSender<A, B, D> = A extends void ? (body?: B) => ApiResource<D> : (arg: A, body?: B) => ApiResource<D>;
+
 // Hook
-export function useApi<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(method: 'get' | 'head' | 'options' | 'delete', url: string, options: RequestOptions<'arraybuffer'>): () => ApiResource<D>;
-export function useApi<D extends ADC<'blob'> = ADC<'blob'>>(method: 'get' | 'head' | 'options' | 'delete', url: string, options: RequestOptions<'blob'>): () => ApiResource<D>;
-export function useApi<D extends ADC<'json'> = ADC<'json'>>(method: 'get' | 'head' | 'options' | 'delete', url: string, options?: RequestOptions<'json'>): () => ApiResource<D>;
-export function useApi<D extends ADC<'text'> = ADC<'text'>>(method: 'get' | 'head' | 'options' | 'delete', url: string, options: RequestOptions<'text'>): () => ApiResource<D>;
-export function useApi<D>(method: 'get' | 'head' | 'options' | 'delete', url: string, options?: RequestOptions<ARTF<D>>): () => ApiResource<D>;
+export function useApi<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>, A = void>(method: 'get' | 'head' | 'options' | 'delete', url: ApiUrl<A>, options: RequestOptions<'arraybuffer'>): QuerySender<A, D>;
+export function useApi<D extends ADC<'blob'> = ADC<'blob'>, A = void>(method: 'get' | 'head' | 'options' | 'delete', url: ApiUrl<A>, options: RequestOptions<'blob'>): QuerySender<A, D>;
+export function useApi<D extends ADC<'json'> = ADC<'json'>, A = void>(method: 'get' | 'head' | 'options' | 'delete', url: ApiUrl<A>, options?: RequestOptions<'json'>): QuerySender<A, D>;
+export function useApi<D extends ADC<'text'> = ADC<'text'>, A = void>(method: 'get' | 'head' | 'options' | 'delete', url: ApiUrl<A>, options: RequestOptions<'text'>): QuerySender<A, D>;
+export function useApi<D, A = void>(method: 'get' | 'head' | 'options' | 'delete', url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): QuerySender<A, D>;
 
-export function useApi<B, D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(method: 'post' | 'patch' | 'put', url: string, options: RequestOptions<'arraybuffer'>): (body: B) => ApiResource<D>;
-export function useApi<B, D extends ADC<'blob'> = ADC<'blob'>>(method: 'post' | 'patch' | 'put', url: string, options: RequestOptions<'blob'>): (body: B) => ApiResource<D>;
-export function useApi<B, D extends ADC<'json'> = ADC<'json'>>(method: 'post' | 'patch' | 'put', url: string, options?: RequestOptions<'json'>): (body: B) => ApiResource<D>;
-export function useApi<B, D extends ADC<'text'> = ADC<'text'>>(method: 'post' | 'patch' | 'put', url: string, options: RequestOptions<'text'>): (body: B) => ApiResource<D>;
-export function useApi<B, D>(method: 'post' | 'patch' | 'put', url: string, options?: RequestOptions<ARTF<D>>): (body: B) => ApiResource<D>;
+export function useApi<B, D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>, A = void>(method: 'post' | 'patch' | 'put', url: ApiUrl<A>, options: RequestOptions<'arraybuffer'>): MutationSender<A, B, D>;
+export function useApi<B, D extends ADC<'blob'> = ADC<'blob'>, A = void>(method: 'post' | 'patch' | 'put', url: ApiUrl<A>, options: RequestOptions<'blob'>): MutationSender<A, B, D>;
+export function useApi<B, D extends ADC<'json'> = ADC<'json'>, A = void>(method: 'post' | 'patch' | 'put', url: ApiUrl<A>, options?: RequestOptions<'json'>): MutationSender<A, B, D>;
+export function useApi<B, D extends ADC<'text'> = ADC<'text'>, A = void>(method: 'post' | 'patch' | 'put', url: ApiUrl<A>, options: RequestOptions<'text'>): MutationSender<A, B, D>;
+export function useApi<B, D, A = void>(method: 'post' | 'patch' | 'put', url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): MutationSender<A, B, D>;
 
-export function useApi<B, D>(method: ApiMethod, url: string, options?: RequestOptions<ARTF<D>>): (body?: B) => ApiResource<D> {
+export function useApi<B, D, A = void>(method: ApiMethod, url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): RequestSender<A, B, D> {
   const { headers = {}, responseType = 'json' } = options ?? {};
 
   const _headers = useDeepMemo(headers);
+  const _url = useMemo(() => normalizeUrl(url), [url]);
 
   // Contexts
   const { request } = useApiRequest();
 
   // Callbacks
-  return useCallback((body?: B) => request<ApiMethod, D>({
-    method, url,
-    headers: _headers,
-    body,
-    responseType: responseType as ARTF<D>,
-  }), [request, method, url, _headers, responseType]);
+  return useCallback((...args: unknown[]) => {
+    let arg: A | void;
+    let body: B | undefined = undefined;
+
+    if (args.length >= 2) {
+      [arg, body] = args as [A, B];
+    } else if (_url.length === 0) {
+      [body] = args as [B];
+    } else {
+      [arg] = args as [A];
+    }
+
+    return request<ApiMethod, D>({
+      method,
+      url: arg === undefined ? (_url as () => string)() : _url(arg),
+      headers: _headers,
+      body,
+      responseType: responseType as ARTF<D>,
+    });
+  }, [request, method, _url, _headers, responseType]) as RequestSender<A, B, D>;
 }
