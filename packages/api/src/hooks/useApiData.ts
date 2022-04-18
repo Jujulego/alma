@@ -2,7 +2,7 @@ import { useWarehouse } from '@jujulego/alma-resources';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { ApiResource } from '../ApiResource';
-import { useApiRequest, RequestOptions } from './useApiRequest';
+import { RequestOptions, useApi } from './useApi';
 import { ApiDataConstraint as ADC, ApiResponse, ApiResponseType, ApiResponseTypeFor as ARTF } from '../types';
 
 // Types
@@ -35,23 +35,25 @@ export function useApiData<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(ur
 export function useApiData<D extends ADC<'blob'> = ADC<'blob'>>(url: string, options: ApiDataOptionsEffect<'blob'>): ApiDataResultEffect<D>;
 export function useApiData<D extends ADC<'json'> = ADC<'json'>>(url: string, options: ApiDataOptionsEffect<'json'>): ApiDataResultEffect<D>;
 export function useApiData<D extends ADC<'text'> = ADC<'text'>>(url: string, options: ApiDataOptionsEffect<'text'>): ApiDataResultEffect<D>;
+
 export function useApiData<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(url: string, options: ApiDataOptionsSuspense<'arraybuffer'>): ApiDataResultSuspense<D>;
 export function useApiData<D extends ADC<'blob'> = ADC<'blob'>>(url: string, options: ApiDataOptionsSuspense<'blob'>): ApiDataResultSuspense<D>;
 export function useApiData<D extends ADC<'json'> = ADC<'json'>>(url: string, options?: ApiDataOptionsSuspense<'json'>): ApiDataResultSuspense<D>;
 export function useApiData<D extends ADC<'text'> = ADC<'text'>>(url: string, options: ApiDataOptionsSuspense<'text'>): ApiDataResultSuspense<D>;
+
 export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D> {
   const suspense = options?.suspense ?? true;
 
   // Contexts
   const warehouse = useWarehouse();
-  const api = useApiRequest();
+  const send = useApi<D>('get', url, options);
 
   // Resource
   const id = `useDataApi:${url}`;
   let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(id);
 
   if (!res) {
-    res = api.get<D>(url, options);
+    res = send();
     warehouse.set(id, res);
   }
 
