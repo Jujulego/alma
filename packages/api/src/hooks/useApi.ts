@@ -11,7 +11,7 @@ import {
   RequestTypeOption
 } from '../types';
 import { useApiRequest } from './useApiRequest';
-import { ApiUrl, normalizeUrl } from '../utils';
+import { ApiUrl, normalizeUrl, URL_DEPS_SYMBOL } from '../utils';
 
 // Types
 export type RequestOptions<RT extends ApiResponseType> = RequestTypeOption<RT> & {
@@ -39,7 +39,7 @@ export function useApi<B, D, A = void>(method: ApiMethod, url: ApiUrl<A>, option
   const { headers = {}, responseType = 'json' } = options ?? {};
 
   const _headers = useDeepMemo(headers);
-  const _url = useMemo(() => normalizeUrl(url), [url]);
+  const _url = useMemo(() => normalizeUrl(url), useDeepMemo((url as any)[URL_DEPS_SYMBOL]));
 
   // Contexts
   const { request } = useApiRequest();
