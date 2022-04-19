@@ -3,6 +3,7 @@ import { FC } from 'react';
 
 // Constants
 const useUSAPopulation = api('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+useUSAPopulation.prefetch();
 
 // Component
 export const ApiData: FC<{ n: number }> = () => {
