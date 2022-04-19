@@ -1,5 +1,5 @@
 import { useDeepMemo } from '@jujulego/alma-utils';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { ApiResource } from '../ApiResource';
 import {
@@ -10,8 +10,9 @@ import {
   ApiResponseTypeFor as ARTF,
   RequestTypeOption
 } from '../types';
+import { ApiUrl } from '../utils';
 import { useApiRequest } from './useApiRequest';
-import { ApiUrl, normalizeUrl, URL_DEPS_SYMBOL } from '../utils';
+import { useApiUrl } from './useApiUrl';
 
 // Types
 export type RequestOptions<RT extends ApiResponseType> = RequestTypeOption<RT> & {
@@ -39,7 +40,7 @@ export function useApi<B, D, A = void>(method: ApiMethod, url: ApiUrl<A>, option
   const { headers = {}, responseType = 'json' } = options ?? {};
 
   const _headers = useDeepMemo(headers);
-  const _url = useMemo(() => normalizeUrl(url), useDeepMemo((url as any)[URL_DEPS_SYMBOL]));
+  const _url = useApiUrl(url);
 
   // Contexts
   const { request } = useApiRequest();

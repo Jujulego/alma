@@ -1,18 +1,30 @@
-import { normalizeUrl } from '../../src';
+import { url, urlBuilder } from '../../src';
 
-describe('normalizeUrl', () => {
+// Tests
+describe('url', () => {
+  // Test
+  it('should return the same string', () => {
+    expect(url`/test`).toBe('/test');
+  });
+
+  it('should return a builder', () => {
+    const builder = url`/test/${'id'}`;
+    expect(builder({ id: 8 })).toBe('/test/8');
+  });
+});
+
+describe('urlBuilder', () => {
   // Test
   it('should return the same function', () => {
-    const builder = (arg: string) => `/test/${arg}`;
-    const url = normalizeUrl(builder);
+    const arg = (arg: string) => `/test/${arg}`;
+    const builder = urlBuilder(arg);
 
-    expect(url).toBe(builder);
-    expect(url('arg')).toBe('/test/arg');
+    expect(builder).toBe(arg);
   });
 
   it('should return a function returning given url', () => {
-    const url = normalizeUrl('/test');
+    const builder = urlBuilder('/test');
 
-    expect(url()).toBe('/test');
+    expect(builder()).toBe('/test');
   });
 });
