@@ -45,7 +45,7 @@ gulp.task('bundle:umd', () => flow(
     output: {
       file: 'alma-api.js',
       format: 'umd',
-      name: '@jujulego/alma-api',
+      name: 'almaApi',
     },
     plugins: [
       externals(),
