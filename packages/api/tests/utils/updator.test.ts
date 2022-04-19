@@ -1,4 +1,4 @@
-import { normalizeUpdator } from '../../old';
+import { normalizeUpdator } from '../../src';
 
 // Setup
 beforeEach(() => {
