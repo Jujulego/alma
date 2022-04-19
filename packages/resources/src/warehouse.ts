@@ -1,5 +1,15 @@
 import { Resource } from './resource';
 
+// Constants
+export const GLOBAL_WAREHOUSE = Symbol('jujulego:alma-resources:global-warehouse');
+
+// Types
+declare global {
+  interface Window {
+    [GLOBAL_WAREHOUSE]?: Warehouse;
+  }
+}
+
 // Events
 export interface WarehouseUpdateEvent<T = unknown> extends Event {
   // Attributes
@@ -92,4 +102,9 @@ export class Warehouse extends EventTarget {
 
     return old;
   }
+}
+
+// Utils
+export function globalWarehouse(): Warehouse {
+  return self[GLOBAL_WAREHOUSE] ??= new Warehouse();
 }

@@ -1,16 +1,6 @@
 import { createContext, useContext, useDebugValue } from 'react';
 
-import { Warehouse } from './warehouse';
-
-// Constants
-export const GLOBAL_WAREHOUSE = Symbol('jujulego:alma-resources:global-warehouse');
-
-// Types
-declare global {
-  interface Window {
-    [GLOBAL_WAREHOUSE]?: Warehouse;
-  }
-}
+import { globalWarehouse, Warehouse } from './warehouse';
 
 // Context
 export const WarehouseCtx = createContext<Warehouse | null>(null);
@@ -22,7 +12,7 @@ export function useWarehouse(): Warehouse {
 
   // Use global instance if no context
   if (!warehouse) {
-    warehouse = self[GLOBAL_WAREHOUSE] ??= new Warehouse();
+    warehouse = globalWarehouse();
   }
 
   useDebugValue(warehouse);

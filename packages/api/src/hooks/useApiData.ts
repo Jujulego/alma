@@ -41,6 +41,8 @@ export function useApiData<D extends ADC<'blob'> = ADC<'blob'>>(url: string, opt
 export function useApiData<D extends ADC<'json'> = ADC<'json'>>(url: string, options?: ApiDataOptionsSuspense<'json'>): ApiDataResultSuspense<D>;
 export function useApiData<D extends ADC<'text'> = ADC<'text'>>(url: string, options: ApiDataOptionsSuspense<'text'>): ApiDataResultSuspense<D>;
 
+export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D>;
+
 export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D> {
   const suspense = options?.suspense ?? true;
 

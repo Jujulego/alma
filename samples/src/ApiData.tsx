@@ -1,16 +1,12 @@
-import { url, useApi, useApiData } from '@jujulego/alma-api';
-import { FC, useEffect } from 'react';
+import { api } from '@jujulego/alma-api';
+import { FC } from 'react';
 
 // Constants
-const URL = 'https://datausa.io/api/data?drilldowns=Nation&measures=Population';
+const useUSAPopulation = api('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
 
 // Component
 export const ApiData: FC<{ n: number }> = () => {
-  const { data, isLoading } = useApiData(URL, { suspense: false });
-  const send = useApi('get', url`/test/${'id'}`);
-
-  console.log('new render');
-  useEffect(() => console.log('new send'), [send]);
+  const { data, isLoading } = useUSAPopulation();
 
   return (
     <>

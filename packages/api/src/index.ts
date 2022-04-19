@@ -1,4 +1,5 @@
 export * from './AlmaApiSetup';
+export * from './api';
 export * from './ApiConfigContext';
 export * from './ApiResource';
 export * from './fetcher';
