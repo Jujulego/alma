@@ -12,10 +12,9 @@ import {
 // Types
 export interface UseApiRequestProps {
   // Generic method
-  request<M extends ApiMethod, D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(req: ApiRequest<M, 'arraybuffer'>): ApiResource<D>;
-  request<M extends ApiMethod, D extends ADC<'blob'> = ADC<'blob'>>(req: ApiRequest<M, 'blob'>): ApiResource<D>;
-  request<M extends ApiMethod, D extends ADC<'json'> = ADC<'json'>>(req: ApiRequest<M, 'json'>): ApiResource<D>;
-  request<M extends ApiMethod, D extends ADC<'text'> = ADC<'text'>>(req: ApiRequest<M, 'text'>): ApiResource<D>;
+  request<M extends ApiMethod, D = ADC<'arraybuffer'>>(req: ApiRequest<M, 'arraybuffer'>): ApiResource<D>;
+  request<M extends ApiMethod, D = ADC<'blob'>>(req: ApiRequest<M, 'blob'>): ApiResource<D>;
+  request<M extends ApiMethod, D = ADC<'text'>>(req: ApiRequest<M, 'text'>): ApiResource<D>;
   request<M extends ApiMethod, D>(req: ApiRequest<M, ARTF<D>>): ApiResource<D>;
 }
 

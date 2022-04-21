@@ -1,50 +1,39 @@
 import { globalWarehouse } from '@jujulego/alma-resources';
 
 import { ApiResource } from './ApiResource';
-import { ApiDataResultEffect, ApiDataResultSuspense, RequestOptions, useApiData } from './hooks';
-import { ApiDataConstraint as ADC, ApiResponse, ApiResponseType, ApiResponseTypeFor as ARTF } from './types';
+import {
+  ApiDataOptions,
+  ApiDataOptionsEffect,
+  ApiDataOptionsSuspense,
+  ApiDataResult,
+  useApiData
+} from './hooks';
+import { ApiDataConstraint as ADC, ApiResponse, ApiResponseTypeFor as ARTF, EnforceRequestType as ERT } from './types';
 import { ApiUrl, urlBuilder } from './utils';
 import { fetcher } from './fetcher';
 
 // Types
-export type ApiOptionsEffect<RT extends ApiResponseType> = RequestOptions<RT> & {
-  suspense: false;
-}
-
-export type ApiOptionsSuspense<RT extends ApiResponseType> = RequestOptions<RT> & {
-  suspense?: true;
-}
-
-export type ApiOptions<RT extends ApiResponseType> = ApiOptionsEffect<RT> | ApiOptionsSuspense<RT>;
-
-export interface ApiHookEffect<D, A> {
-  (arg: A): ApiDataResultEffect<D>;
+export interface ApiHook<D, A> {
+  (arg: A): ApiDataResult<D>;
 
   // Methods
   prefetch(arg: A): void;
 }
-
-export interface ApiHookSuspense<D, A> {
-  (arg: A): ApiDataResultSuspense<D>;
-
-  // Methods
-  prefetch(arg: A): void;
-}
-
-export type ApiHook<D, A> = ApiHookEffect<D, A> | ApiHookSuspense<D, A>;
 
 // Hook builder
-export function api<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ApiOptionsEffect<'arraybuffer'>): ApiHookEffect<D, A>;
-export function api<D extends ADC<'blob'> = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ApiOptionsEffect<'blob'>): ApiHookEffect<D, A>;
-export function api<D extends ADC<'json'> = ADC<'json'>, A = void>(url: ApiUrl<A>, options: ApiOptionsEffect<'json'>): ApiHookEffect<D, A>;
-export function api<D extends ADC<'text'> = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ApiOptionsEffect<'text'>): ApiHookEffect<D, A>;
+export function api<D = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsEffect, 'arraybuffer'>): ApiHook<D | undefined, A>;
+export function api<D = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsEffect, 'blob'>): ApiHook<D | undefined, A>;
+export function api<D = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsEffect, 'text'>): ApiHook<D | undefined, A>;
+export function api<D, A = void>(url: ApiUrl<A>, options: ApiDataOptionsEffect<ARTF<D>>): ApiHook<D | undefined, A>;
 
-export function api<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ApiOptionsSuspense<'arraybuffer'>): ApiHookSuspense<D, A>;
-export function api<D extends ADC<'blob'> = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ApiOptionsSuspense<'blob'>): ApiHookSuspense<D, A>;
-export function api<D extends ADC<'json'> = ADC<'json'>, A = void>(url: ApiUrl<A>, options?: ApiOptionsSuspense<'json'>): ApiHookSuspense<D, A>;
-export function api<D extends ADC<'text'> = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ApiOptionsSuspense<'text'>): ApiHookSuspense<D, A>;
+export function api<D = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsSuspense, 'arraybuffer'>): ApiHook<D, A>;
+export function api<D = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsSuspense, 'blob'>): ApiHook<D, A>;
+export function api<D = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ERT<ApiDataOptionsSuspense, 'text'>): ApiHook<D, A>;
+export function api<D, A = void>(url: ApiUrl<A>, options?: ApiDataOptionsSuspense<ARTF<D>>): ApiHook<D, A>;
 
-export function api<D, A>(url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): ApiHook<D, A> {
+export function api<D, A>(url: ApiUrl<A>, options?: ApiDataOptions<ARTF<D>>): ApiHook<D | undefined, A>;
+
+export function api<D, A>(url: ApiUrl<A>, options: ApiDataOptions<ARTF<D>> = {}): ApiHook<D | undefined, A> {
   const builder = urlBuilder(url);
 
   return Object.assign((arg: A) => useApiData<D>(builder(arg), options), {

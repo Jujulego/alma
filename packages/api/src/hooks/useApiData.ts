@@ -1,54 +1,57 @@
-import { useWarehouse } from '@jujulego/alma-resources';
+import { useWarehouse, Warehouse } from '@jujulego/alma-resources';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { ApiResource } from '../ApiResource';
-import { RequestOptions, useApi } from './useApi';
-import { ApiDataConstraint as ADC, ApiResponse, ApiResponseType, ApiResponseTypeFor as ARTF } from '../types';
+import { useApi } from './useApi';
+import {
+  ApiDataConstraint as ADC,
+  ApiResponse,
+  ApiResponseType,
+  ApiResponseTypeFor as ARTF,
+  EnforceRequestType as ERT,
+  RequestOptions
+} from '../types';
 
 // Types
-export type ApiDataOptionsEffect<RT extends ApiResponseType> = RequestOptions<RT> & {
+export interface ApiDataOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
+  warehouse?: Warehouse;
+  suspense?: boolean;
+}
+
+export interface ApiDataOptionsEffect<RT extends ApiResponseType = ApiResponseType> extends ApiDataOptions<RT> {
   suspense: false;
 }
 
-export type ApiDataOptionsSuspense<RT extends ApiResponseType> = RequestOptions<RT> & {
+export interface ApiDataOptionsSuspense<RT extends ApiResponseType = ApiResponseType> extends ApiDataOptions<RT> {
   suspense?: true;
 }
 
-export type ApiDataOptions<RT extends ApiResponseType> = ApiDataOptionsEffect<RT> | ApiDataOptionsSuspense<RT>;
-
-export interface ApiDataResultEffect<D> {
-  isLoading: boolean;
-  data?: D;
-  setData: Dispatch<SetStateAction<D | undefined>>;
-}
-
-export interface ApiDataResultSuspense<D> {
+export interface ApiDataResult<D> {
   isLoading: boolean;
   data: D;
   setData: Dispatch<SetStateAction<D>>;
 }
 
-export type ApiDataResult<D> = ApiDataResultEffect<D> | ApiDataResultSuspense<D>;
-
 // Hook
-export function useApiData<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(url: string, options: ApiDataOptionsEffect<'arraybuffer'>): ApiDataResultEffect<D>;
-export function useApiData<D extends ADC<'blob'> = ADC<'blob'>>(url: string, options: ApiDataOptionsEffect<'blob'>): ApiDataResultEffect<D>;
-export function useApiData<D extends ADC<'json'> = ADC<'json'>>(url: string, options: ApiDataOptionsEffect<'json'>): ApiDataResultEffect<D>;
-export function useApiData<D extends ADC<'text'> = ADC<'text'>>(url: string, options: ApiDataOptionsEffect<'text'>): ApiDataResultEffect<D>;
+export function useApiData<D = ADC<'arraybuffer'>>(url: string, options: ERT<ApiDataOptionsEffect, 'arraybuffer'>): ApiDataResult<D | undefined>;
+export function useApiData<D = ADC<'blob'>>(url: string, options: ERT<ApiDataOptionsEffect, 'blob'>): ApiDataResult<D | undefined>;
+export function useApiData<D = ADC<'text'>>(url: string, options: ERT<ApiDataOptionsEffect, 'text'>): ApiDataResult<D | undefined>;
+export function useApiData<D>(url: string, options: ApiDataOptionsEffect<ARTF<D>>): ApiDataResult<D | undefined>;
 
-export function useApiData<D extends ADC<'arraybuffer'> = ADC<'arraybuffer'>>(url: string, options: ApiDataOptionsSuspense<'arraybuffer'>): ApiDataResultSuspense<D>;
-export function useApiData<D extends ADC<'blob'> = ADC<'blob'>>(url: string, options: ApiDataOptionsSuspense<'blob'>): ApiDataResultSuspense<D>;
-export function useApiData<D extends ADC<'json'> = ADC<'json'>>(url: string, options?: ApiDataOptionsSuspense<'json'>): ApiDataResultSuspense<D>;
-export function useApiData<D extends ADC<'text'> = ADC<'text'>>(url: string, options: ApiDataOptionsSuspense<'text'>): ApiDataResultSuspense<D>;
+export function useApiData<D = ADC<'arraybuffer'>>(url: string, options: ERT<ApiDataOptionsSuspense, 'arraybuffer'>): ApiDataResult<D>;
+export function useApiData<D = ADC<'blob'>>(url: string, options: ERT<ApiDataOptionsSuspense, 'blob'>): ApiDataResult<D>;
+export function useApiData<D = ADC<'text'>>(url: string, options: ERT<ApiDataOptionsSuspense, 'text'>): ApiDataResult<D>;
+export function useApiData<D>(url: string, options?: ApiDataOptionsSuspense<ARTF<D>>): ApiDataResult<D>;
 
-export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D>;
+export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D | undefined>;
 
-export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): ApiDataResult<D> {
-  const suspense = options?.suspense ?? true;
-
+export function useApiData<D>(url: string, options: ApiDataOptions<ARTF<D>> = {}): ApiDataResult<D | undefined> {
   // Contexts
-  const warehouse = useWarehouse();
-  const send = useApi<D>('get', url, options);
+  const _warehouse = useWarehouse();
+  const send = useApi<D, void>('get', url, options);
+
+  // Options
+  const { suspense = true, warehouse = _warehouse } = options ?? {};
 
   // Resource
   const id = `useDataApi:${url}`;

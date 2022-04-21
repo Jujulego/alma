@@ -1,6 +1,18 @@
 // Types
-export type ApiMethod = 'get' | 'head' | 'options' | 'delete' | 'post' | 'patch' | 'put';
+/**
+ * All HTTP methods that **does not carry** a body
+ */
+export type ApiQueryMethod = 'get' | 'head' | 'options' | 'delete';
+
+/**
+ * All HTTP methods that **carry** a body
+ */
+export type ApiMutationMethod = 'post' | 'patch' | 'put';
+
+export type ApiMethod = ApiQueryMethod | ApiMutationMethod;
+
 export type ApiHeaders = Record<string, string>;
+
 export type ApiResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
 // Utils
@@ -13,15 +25,3 @@ export type ApiResponseTypeFor<D> =
   D extends ArrayBuffer ? 'arraybuffer' :
     D extends Blob ? 'blob' :
       D extends string ? 'text' | 'json' : 'json';
-
-interface RequestTypeOptionJson {
-  responseType?: 'json';
-}
-
-interface RequestTypeOptionOthers<RT extends ApiResponseType> {
-  responseType: RT;
-}
-
-export type RequestTypeOption<RT extends ApiResponseType> = RT extends 'json'
-  ? RequestTypeOptionJson | RequestTypeOptionOthers<RT>
-  : RequestTypeOptionOthers<RT>;

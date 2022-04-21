@@ -33,3 +33,13 @@ export type ApiRequest<M extends ApiMethod = ApiMethod, RT extends ApiResponseTy
    */
   responseType: RT;
 }
+
+// Options
+export interface RequestOptions<RT extends ApiResponseType = ApiResponseType> {
+  headers?: ApiHeaders;
+  responseType?: RT;
+}
+
+export type EnforceRequestType<O extends RequestOptions, RT extends ApiResponseType> = O & {
+  responseType: RT;
+}
