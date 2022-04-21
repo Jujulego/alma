@@ -36,9 +36,21 @@ export function api<D, A>(url: ApiUrl<A>, options?: ApiDataOptions<ARTF<D>>): Ap
 export function api<D, A>(url: ApiUrl<A>, options: ApiDataOptions<ARTF<D>> = {}): ApiHook<D | undefined, A> {
   const builder = urlBuilder(url);
 
+  // Options
+  const {
+    headers = {},
+    responseType = 'json' as ARTF<D>,
+    warehouse = globalWarehouse(),
+  } = options;
+
+  // Propagate defaults
+  options.headers = headers;
+  options.responseType = responseType;
+  options.warehouse = warehouse;
+
+  // Hook
   return Object.assign((arg: A) => useApiData<D>(builder(arg), options), {
     prefetch(arg: A) {
-      const warehouse = globalWarehouse();
       const url = builder(arg);
 
       const id = `useDataApi:${url}`;
@@ -49,8 +61,8 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiDataOptions<ARTF<D>> = {})
         res = new ApiResource<D>(fetcher<D>({
           method: 'get',
           url,
-          headers: options?.headers ?? {},
-          responseType: (options?.responseType ?? 'json') as ARTF<D>,
+          headers,
+          responseType,
         }, abort.signal), abort);
 
         warehouse.set(id, res);
