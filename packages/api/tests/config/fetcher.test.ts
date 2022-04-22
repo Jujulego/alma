@@ -1,6 +1,6 @@
 import fetchMock, { enableFetchMocks } from 'jest-fetch-mock';
 
-import { fetcher } from '../src';
+import { fetcher } from '../../src';
 
 // Setup
 enableFetchMocks();

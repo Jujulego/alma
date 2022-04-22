@@ -1,5 +1,4 @@
-import { useWarehouse, Warehouse } from '@jujulego/alma-resources';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
 import { ApiResource } from '../ApiResource';
 import { useApi } from './useApi';
@@ -11,11 +10,12 @@ import {
   EnforceRequestType as ERT,
   RequestOptions
 } from '../types';
+import { ApiConfig, ApiConfigContext } from '../config';
 
 // Types
 export interface ApiDataOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
-  warehouse?: Warehouse;
   suspense?: boolean;
+  config?: Partial<ApiConfig>;
 }
 
 export interface ApiDataOptionsEffect<RT extends ApiResponseType = ApiResponseType> extends ApiDataOptions<RT> {
@@ -47,11 +47,12 @@ export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): A
 
 export function useApiData<D>(url: string, options: ApiDataOptions<ARTF<D>> = {}): ApiDataResult<D | undefined> {
   // Contexts
-  const _warehouse = useWarehouse();
+  const ctxConfig = useContext(ApiConfigContext);
   const send = useApi<D, void>('get', url, options);
 
   // Options
-  const { suspense = true, warehouse = _warehouse } = options ?? {};
+  const { suspense = true, config: optConfig } = options ?? {};
+  const { warehouse } = { ...ctxConfig, ...optConfig };
 
   // Resource
   const id = `useDataApi:${url}`;

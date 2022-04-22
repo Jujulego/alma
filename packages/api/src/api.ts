@@ -1,6 +1,5 @@
-import { globalWarehouse } from '@jujulego/alma-resources';
-
 import { ApiResource } from './ApiResource';
+import { globalApiConfig } from './config';
 import {
   ApiDataOptions,
   ApiDataOptionsEffect,
@@ -10,7 +9,6 @@ import {
 } from './hooks';
 import { ApiDataConstraint as ADC, ApiResponse, ApiResponseTypeFor as ARTF, EnforceRequestType as ERT } from './types';
 import { ApiUrl, urlBuilder } from './utils';
-import { fetcher } from './fetcher';
 
 // Types
 export interface ApiHook<D, A> {
@@ -40,17 +38,19 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiDataOptions<ARTF<D>> = {})
   const {
     headers = {},
     responseType = 'json' as ARTF<D>,
-    warehouse = globalWarehouse(),
   } = options;
+
+  const config = { ...globalApiConfig(), ...options.config };
 
   // Propagate defaults
   options.headers = headers;
   options.responseType = responseType;
-  options.warehouse = warehouse;
+  options.config = config;
 
   // Hook
   return Object.assign((arg: A) => useApiData<D>(builder(arg), options), {
     prefetch(arg: A) {
+      const { fetcher, warehouse } = config;
       const url = builder(arg);
 
       const id = `useDataApi:${url}`;

@@ -1,22 +1,24 @@
 import { FC, ReactNode } from 'react';
 
-import { ApiConfigContext } from './ApiConfigContext';
-import { fetcher as defaultFetcher } from './fetcher';
-import { ApiFetcher } from './types';
+import { ApiConfig, ApiConfigContext, globalApiConfig } from './config';
 
 // Props
-export interface AlmaApiSetupProps {
-  fetcher?: ApiFetcher;
+export interface AlmaApiSetupProps extends Partial<ApiConfig> {
   children: ReactNode;
 }
 
 // Component
 export const AlmaApiSetup: FC<AlmaApiSetupProps> = (props) => {
-  const { fetcher = defaultFetcher, children } = props;
+  const global = globalApiConfig();
+  const {
+    fetcher = global.fetcher,
+    warehouse = global.warehouse,
+    children
+  } = props;
 
   // Render
   return (
-    <ApiConfigContext.Provider value={{ fetcher }}>
+    <ApiConfigContext.Provider value={{ fetcher, warehouse }}>
       { children }
     </ApiConfigContext.Provider>
   );

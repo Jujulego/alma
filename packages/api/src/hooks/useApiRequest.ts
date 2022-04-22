@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react';
 
-import { ApiConfigContext } from '../ApiConfigContext';
 import { ApiResource } from '../ApiResource';
+import { ApiConfig, ApiConfigContext } from '../config';
 import {
   ApiDataConstraint as ADC,
   ApiMethod,
@@ -19,9 +19,10 @@ export interface UseApiRequestProps {
 }
 
 // Hook
-export function useApiRequest(): UseApiRequestProps {
+export function useApiRequest(config: Partial<ApiConfig> = {}): UseApiRequestProps {
   // Contexts
-  const { fetcher } = useContext(ApiConfigContext);
+  const ctxConfig = useContext(ApiConfigContext);
+  const { fetcher = ctxConfig.fetcher } = config;
 
   // Callback
   const request = useCallback(<M extends ApiMethod, D>(req: ApiRequest<M, ARTF<D>>): ApiResource<D> => {
