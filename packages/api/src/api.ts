@@ -4,18 +4,20 @@ import {
   ApiDataOptions,
   ApiDataOptionsEffect,
   ApiDataOptionsSuspense,
-  ApiDataResult,
+  ApiDataResult, useApi,
   useApiData
 } from './hooks';
 import { ApiDataConstraint as ADC, ApiResponse, ApiResponseTypeFor as ARTF, EnforceRequestType as ERT } from './types';
-import { ApiUrl, urlBuilder } from './utils';
+import { ApiTypedMethod, ApiUrl, urlBuilder } from './utils';
+import { useCallback } from 'react';
 
 // Types
-export interface ApiHook<D, A> {
-  (arg: A): ApiDataResult<D>;
+export interface ApiHook<D, A, M = unknown> {
+  (arg: A): ApiDataResult<D> & M;
 
   // Methods
   prefetch(arg: A): void;
+  mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<D, A, M & { [K in N]: (body: BM) => ApiResource<DM> }>
 }
 
 // Hook builder
@@ -67,6 +69,23 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiDataOptions<ARTF<D>> = {})
 
         warehouse.set(id, res);
       }
+    },
+    mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D) {
+      return Object.assign((arg: A) => {
+        const state: ApiDataResult<D> = this(arg);
+        const send = useApi<DM, BM, void>(method, builder(arg) + url);
+
+        const { setData } = state;
+
+        return Object.assign(state, {
+          [name]: useCallback((body: BM) => {
+            const res = send(body);
+            res.then(({ data }) => setData((old) => merge(old, data)));
+
+            return res;
+          }, [send, setData])
+        });
+      }, this);
     }
   });
 }

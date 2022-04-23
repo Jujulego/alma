@@ -1,16 +1,15 @@
-import { api, $get, $url, useApi } from '@jujulego/alma-api';
+import { api, $post } from '@jujulego/alma-api';
 import { FC } from 'react';
 
 // Constants
-const useUSAPopulation = api('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+const useUSAPopulation = api<number>('https://datausa.io/api/data?drilldowns=Nation&measures=Population')
+  .mutation('add', $post<number, string>(), '/add', (old, res) => old + res);
+
 useUSAPopulation.prefetch();
 
 // Component
 export const ApiData: FC<{ n: number }> = () => {
-  const { data, isLoading } = useUSAPopulation();
-
-  const send = useApi($get(), $url`/test/${'id'}`, { responseType: 'arraybuffer' });
-  const res = send({ id: 'test' });
+  const { data, isLoading, add } = useUSAPopulation();
 
   return (
     <>
