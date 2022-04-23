@@ -1,4 +1,4 @@
-import { api } from '@jujulego/alma-api';
+import { api, $get, $url, useApi } from '@jujulego/alma-api';
 import { FC } from 'react';
 
 // Constants
@@ -8,6 +8,9 @@ useUSAPopulation.prefetch();
 // Component
 export const ApiData: FC<{ n: number }> = () => {
   const { data, isLoading } = useUSAPopulation();
+
+  const send = useApi($get(), $url`/test/${'id'}`, { responseType: 'arraybuffer' });
+  const res = send({ id: 'test' });
 
   return (
     <>

@@ -5,35 +5,29 @@ import { ApiResource } from '../ApiResource';
 import { ApiConfig, ApiConfigContext } from '../config';
 import {
   ApiDataConstraint as ADC,
-  ApiMethod, ApiMutationMethod, ApiQueryMethod, ApiResponseType,
+  ApiMethod, ApiResponseType,
   ApiResponseTypeFor as ARTF,
   EnforceRequestType as ERT,
   RequestOptions
 } from '../types';
 import { ApiUrl } from '../utils';
 import { useApiUrl } from './useApiUrl';
+import { ApiTypedMethod } from '../utils/methods';
 
 // Types
 export interface ApiOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
   config?: Partial<ApiConfig>;
 }
 
-export type QuerySender<A, D> = A extends void ? () => ApiResource<D> : (arg: A) => ApiResource<D>;
-export type MutationSender<A, B, D> = A extends void ? (body: B) => ApiResource<D> : (arg: A, body: B) => ApiResource<D>;
 export type RequestSender<A, B, D> = A extends void ? (body?: B) => ApiResource<D> : (arg: A, body?: B) => ApiResource<D>;
 
 // Hook
-export function useApi<D = ADC<'arraybuffer'>, A = void>(method: ApiQueryMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'arraybuffer'>): QuerySender<A, D>;
-export function useApi<D = ADC<'blob'>, A = void>(method: ApiQueryMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'blob'>): QuerySender<A, D>;
-export function useApi<D = ADC<'text'>, A = void>(method: ApiQueryMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'text'>): QuerySender<A, D>;
-export function useApi<D, A = void>(method: ApiQueryMethod, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): QuerySender<A, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'arraybuffer'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'blob'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'text'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): RequestSender<A, B, D>;
 
-export function useApi<B, D = ADC<'arraybuffer'>, A = void>(method: ApiMutationMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'arraybuffer'>): MutationSender<A, B, D>;
-export function useApi<B, D = ADC<'blob'>, A = void>(method: ApiMutationMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'blob'>): MutationSender<A, B, D>;
-export function useApi<B, D = ADC<'text'>, A = void>(method: ApiMutationMethod, url: ApiUrl<A>, options: ERT<ApiOptions, 'text'>): MutationSender<A, B, D>;
-export function useApi<B, D, A = void>(method: ApiMutationMethod, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): MutationSender<A, B, D>;
-
-export function useApi<B, D, A>(method: ApiMethod, url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): RequestSender<A, B, D> {
+export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): RequestSender<A, B, D> {
   const { headers = {}, responseType = 'json' as ARTF<D>, config: optConfig = {} } = options;
 
   // Contexts

@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 
 import { ApiResource } from '../ApiResource';
-import { useApi } from './useApi';
 import {
   ApiDataConstraint as ADC,
   ApiResponse,
@@ -11,6 +10,8 @@ import {
   RequestOptions
 } from '../types';
 import { ApiConfig, ApiConfigContext } from '../config';
+import { $get } from '../utils';
+import { useApi } from './useApi';
 
 // Types
 export interface ApiDataOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
@@ -48,7 +49,7 @@ export function useApiData<D>(url: string, options?: ApiDataOptions<ARTF<D>>): A
 export function useApiData<D>(url: string, options: ApiDataOptions<ARTF<D>> = {}): ApiDataResult<D | undefined> {
   // Contexts
   const ctxConfig = useContext(ApiConfigContext);
-  const send = useApi<D, void>('get', url, options);
+  const send = useApi($get<D>(), url, options);
 
   // Options
   const { suspense = true, config: optConfig } = options ?? {};

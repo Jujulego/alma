@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { url, useApiUrl } from '../../src';
+import { $url, useApiUrl } from '../../src';
 
 // Tests
 describe('useApiUrl', () => {
@@ -30,7 +30,7 @@ describe('useApiUrl', () => {
 
   it('should return a stable builder for the given url template', async () => {
     // Render
-    const { result, rerender } = renderHook(() => useApiUrl(url`/test/${'id'}`));
+    const { result, rerender } = renderHook(() => useApiUrl($url`/test/${'id'}`));
     rerender();
 
     // Checks

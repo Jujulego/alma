@@ -1,14 +1,14 @@
-import { url, urlBuilder } from '../../src';
+import { $url, urlBuilder } from '../../src';
 
 // Tests
 describe('url', () => {
   // Test
   it('should return the same string', () => {
-    expect(url`/test`).toBe('/test');
+    expect($url`/test`).toBe('/test');
   });
 
   it('should return a builder', () => {
-    const builder = url`/test/${'id'}`;
+    const builder = $url`/test/${'id'}`;
     expect(builder({ id: 8 })).toBe('/test/8');
   });
 });

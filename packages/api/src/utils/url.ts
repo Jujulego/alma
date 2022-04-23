@@ -23,15 +23,13 @@ export interface ApiUrlBuilder<A> {
  * Generates an url builder.
  * This will return the string as it was given.
  *
- * @deprecated Without any parameters this is pretty useless. Please use just a string.
- *
  * @example
  * url`/example/` === '/example/';
  *
  * @see useApi
  * @see useApiUrl
  */
-export function url(strings: TemplateStringsArray): string;
+export function $url(strings: TemplateStringsArray): string;
 
 /**
  * Generates an url builder. Allow to define an url with parameters.
@@ -44,9 +42,9 @@ export function url(strings: TemplateStringsArray): string;
  * @see useApi
  * @see useApiUrl
  */
-export function url<P extends string[]>(strings: TemplateStringsArray, ...param: P): ApiUrlBuilder<ApiUrlArg<P>>;
+export function $url<P extends string[]>(strings: TemplateStringsArray, ...param: P): ApiUrlBuilder<ApiUrlArg<P>>;
 
-export function url<P extends string[]>(strings: TemplateStringsArray, ...param: P) {
+export function $url<P extends string[]>(strings: TemplateStringsArray, ...param: P) {
   // No parameters => just a string
   if (param.length === 0) {
     return strings.join('');

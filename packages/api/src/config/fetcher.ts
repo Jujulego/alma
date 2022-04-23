@@ -1,5 +1,4 @@
-import { ApiHeaders, ApiMethod, ApiRequest, ApiResponse, ApiResponseTypeFor } from './types';
-import { ApiResponseType } from '../old';
+import { ApiHeaders, ApiMethod, ApiRequest, ApiResponse, ApiResponseType, ApiResponseTypeFor as ARTF } from '../types';
 
 // Utils
 function encodeBody(body: unknown, headers: Headers): BodyInit | undefined {
@@ -60,7 +59,7 @@ async function decodeBody(responseType: ApiResponseType, res: Response): Promise
  * @param req: request to send
  * @param signal: AbortSignal used to interrupt the call
  */
-export async function fetcher<D>(req: ApiRequest<ApiMethod, ApiResponseTypeFor<D>>, signal: AbortSignal): Promise<ApiResponse<D>> {
+export async function fetcher<D>(req: ApiRequest<ApiMethod, ARTF<D>>, signal: AbortSignal): Promise<ApiResponse<D>> {
   const headers = new Headers(req.headers);
 
   const res = await fetch(req.url, {

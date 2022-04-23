@@ -1,18 +1,6 @@
 // Types
-/**
- * All HTTP methods that **does not carry** a body
- */
-export type ApiQueryMethod = 'get' | 'head' | 'options' | 'delete';
-
-/**
- * All HTTP methods that **carry** a body
- */
-export type ApiMutationMethod = 'post' | 'patch' | 'put';
-
-export type ApiMethod = ApiQueryMethod | ApiMutationMethod;
-
 export type ApiHeaders = Record<string, string>;
-
+export type ApiMethod = 'get' | 'head' | 'options' | 'delete' | 'post' | 'patch' | 'put';
 export type ApiResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
 
 // Utils

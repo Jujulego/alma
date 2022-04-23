@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 
-import { AlmaApiSetup, ApiFetcher, ApiResource, ApiResponse, url, useApi } from '../../src';
+import { AlmaApiSetup, ApiFetcher, ApiResource, ApiResponse, $url, useApi } from '../../src';
 
 // Setup
 const fetcher: jest.MockedFunction<ApiFetcher> = jest.fn();
@@ -46,7 +46,7 @@ describe('useApi', () => {
 
     it('should send request to the built url', () => {
       // Render
-      const { result } = renderHook(() => useApi('get', url`/test/${'id'}`), {
+      const { result } = renderHook(() => useApi('get', $url`/test/${'id'}`), {
         wrapper: ({ children }) => (
           <AlmaApiSetup fetcher={fetcher}>
             { children }
@@ -93,7 +93,7 @@ describe('useApi', () => {
 
     it('should send request to the built url', () => {
       // Render
-      const { result } = renderHook(() => useApi('post', url`/test/${'id'}`), {
+      const { result } = renderHook(() => useApi('post', $url`/test/${'id'}`), {
         wrapper: ({ children }) => (
           <AlmaApiSetup fetcher={fetcher}>
             { children }
