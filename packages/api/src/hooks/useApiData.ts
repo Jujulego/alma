@@ -57,12 +57,7 @@ export function useApiData<D>(url: string, options: ApiDataOptions<ARTF<D>> = {}
 
   // Resource
   const id = `useDataApi:${url}`;
-  let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(id);
-
-  if (!res) {
-    res = send();
-    warehouse.set(id, res);
-  }
+  const res = warehouse.getOrCreate<ApiResponse<D>, ApiResource<D>>(id, send);
 
   // State
   const [data, setData] = useState<D | undefined>(suspense ? res.read().data : undefined);

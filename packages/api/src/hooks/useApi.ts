@@ -10,9 +10,8 @@ import {
   EnforceRequestType as ERT,
   RequestOptions
 } from '../types';
-import { ApiUrl } from '../utils';
+import { ApiTypedMethod, ApiUrl } from '../utils';
 import { useApiUrl } from './useApiUrl';
-import { ApiTypedMethod } from '../utils/methods';
 
 // Types
 export interface ApiOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {

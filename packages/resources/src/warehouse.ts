@@ -64,8 +64,10 @@ export class Warehouse extends EventTarget {
    * Create a new resource. Erase previous resource at the same key.
    * @param key
    */
-  create<T>(key: string): Resource<T> {
-    const res = new Resource<T>();
+  create<T>(key: string): Resource<T>;
+  create<T, R extends Resource<T>>(key: string, creator: () => R): R;
+  create<T>(key: string, creator = () => new Resource<T>()): Resource<T> {
+    const res = creator();
     this.set(key, res);
 
     return res;
@@ -83,8 +85,10 @@ export class Warehouse extends EventTarget {
    * Returns the resource associated to the key, if not found return a new one.
    * @param key
    */
-  getOrCreate<T>(key: string): Resource<T> {
-    return this.get(key) || this.create(key);
+  getOrCreate<T>(key: string): Resource<T>;
+  getOrCreate<T, R extends Resource<T>>(key: string, creator: () => R): R;
+  getOrCreate<T>(key: string, creator = () => new Resource<T>()): Resource<T> {
+    return this.get(key) || this.create(key, creator);
   }
 
   /**
