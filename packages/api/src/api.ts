@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { useResource } from '@jujulego/alma-resources';
 
 import { ApiResource } from './ApiResource';
 import { globalApiConfig } from './config';
@@ -29,6 +30,7 @@ export interface ApiHookState<D> {
   isLoading: boolean;
   data: D;
   setData: Dispatch<SetStateAction<D>>;
+  refresh(): ApiResource<D>;
 }
 
 export type ApiHookMutator<N extends string, DM, BM> = {
@@ -78,7 +80,9 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
       query: { ..._query, ...query },
       headers, responseType, config
     });
-    const res = warehouse.getOrCreate(`api:${url}:${JSON.stringify({ ..._query, ...query })}`, send);
+
+    const key = `api:${url}:${JSON.stringify({ ..._query, ...query })}`;
+    const res = useResource(key, { warehouse, creator: send });
 
     // State
     const [data, setData] = useState<D | undefined>(suspense ? res.read().data : undefined);
@@ -88,7 +92,16 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
 
     return {
       isLoading: res.status === 'pending',
-      data, setData
+      data, setData,
+      refresh: useCallback(() => {
+        if (res.status === 'pending') return res;
+
+        // Refresh data
+        const newResource = send();
+        warehouse.set(key, newResource);
+
+        return newResource;
+      }, [res, warehouse, key, send]),
     };
   }
 

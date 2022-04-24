@@ -1,24 +1,34 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Resource } from './resource';
+import { Warehouse, WarehouseUpdateEventListener } from './warehouse';
 import { useWarehouse } from './useWarehouse';
-import { WarehouseUpdateEventListener } from './warehouse';
+
+// Types
+export interface UseResourceOptions<T> {
+  warehouse?: Warehouse;
+  creator?: () => Resource<T>;
+}
 
 // Hook
-export function useResource<T>(key: string, options: { create: true }): Resource<T>;
-export function useResource<T>(key: string, options?: { create?: false }): Resource<T> | undefined;
-export function useResource<T>(key: string, options?: { create?: boolean }): Resource<T> | undefined {
-  const warehouse = useWarehouse();
+export function useResource<T>(key: string, options?: Omit<UseResourceOptions<T>, 'creator'>): Resource<T>;
+export function useResource<T, R extends Resource<T>>(key: string, options?: UseResourceOptions<T> & { creator: () => R }): R;
+export function useResource<T>(key: string, options: UseResourceOptions<T> = {}): Resource<T> {
+  const _warehouse = useWarehouse();
+  const { warehouse = _warehouse, creator = () => new Resource<T>() } = options;
 
-  return useSyncExternalStore(
-    (cb: () => void) => {
-      const listener: WarehouseUpdateEventListener = (evt) => {
-        if (evt.key === key) cb();
-      };
+  const [res, setRes] = useState(warehouse.getOrCreate(key, creator));
 
-      warehouse.addEventListener('update', listener);
-      return () => warehouse.removeEventListener('update', listener);
-    },
-    () => options?.create ? warehouse.getOrCreate<T>(key) : warehouse.get<T>(key)
-  );
+  useEffect(() => {
+    const listener: WarehouseUpdateEventListener<T> = (evt) => {
+      if (evt.key === key) {
+        setRes(evt.newResource);
+      }
+    };
+
+    warehouse.addEventListener('update', listener);
+    return () => warehouse.removeEventListener('update', listener);
+  }, [key, warehouse]);
+
+  return res;
 }

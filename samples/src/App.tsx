@@ -5,9 +5,9 @@ import { ApiData } from './ApiData';
 
 // Component
 export const App: FC = () => {
-  const n = useInterval(5000);
+  //const n = useInterval(5000);
 
   return (
-    <ApiData n={n} />
+    <ApiData n={0} />
   );
 };
