@@ -23,12 +23,13 @@ export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<
 export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): RequestSender<A, B, D>;
 
 export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: RequestOptions<ARTF<D>> = {}): RequestSender<A, B, D> {
-  const { headers = {}, responseType = 'json' as ARTF<D>, config: optConfig = {} } = options;
+  const { query = {}, headers = {}, responseType = 'json' as ARTF<D>, config: optConfig = {} } = options;
 
   // Contexts
   const ctxConfig = useContext(ApiConfigContext);
 
   // Memos
+  const _query = useDeepMemo(query);
   const _headers = useDeepMemo(headers);
   const _url = useApiUrl(url);
 
@@ -53,11 +54,12 @@ export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: Requ
     const promise = fetcher<D>({
       method,
       url: arg === undefined ? (_url as () => string)() : _url(arg),
+      query: _query,
       headers: _headers,
       body,
       responseType,
     }, abort.signal);
 
     return new ApiResource<D>(promise, abort);
-  }, [fetcher, method, _url, _headers, responseType]) as RequestSender<A, B, D>;
+  }, [fetcher, method, _url, _query, _headers, responseType]) as RequestSender<A, B, D>;
 }

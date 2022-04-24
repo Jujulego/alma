@@ -1,4 +1,4 @@
-import { ApiHeaders, ApiMethod, ApiResponseType } from './utils';
+import { ApiHeaders, ApiMethod, ApiQuery, ApiResponseType } from './utils';
 import { ApiConfig } from './config';
 
 // Utils
@@ -25,6 +25,11 @@ export type ApiRequest<M extends ApiMethod = ApiMethod, RT extends ApiResponseTy
   url: string;
 
   /**
+   * Request query parameters
+   */
+  query: ApiQuery;
+
+  /**
    * Request headers
    */
   headers: ApiHeaders;
@@ -37,6 +42,7 @@ export type ApiRequest<M extends ApiMethod = ApiMethod, RT extends ApiResponseTy
 
 // Options
 export interface RequestOptions<RT extends ApiResponseType = ApiResponseType> {
+  query?: ApiQuery;
   headers?: ApiHeaders;
   responseType?: RT;
   config?: Partial<ApiConfig>;

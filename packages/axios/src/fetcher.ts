@@ -6,6 +6,7 @@ export async function fetcher<D>(req: ApiRequest<ApiMethod, ApiResponseTypeFor<D
   return axios.request<D>({
     method: req.method,
     url: req.url,
+    params: req.query,
     headers: req.headers,
     data: req.body,
     responseType: req.responseType,

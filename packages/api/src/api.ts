@@ -4,7 +4,7 @@ import { ApiResource } from './ApiResource';
 import { globalApiConfig } from './config';
 import { useApi } from './hooks';
 import {
-  ApiDataConstraint as ADC,
+  ApiDataConstraint as ADC, ApiQuery,
   ApiResponse,
   ApiResponseType,
   ApiResponseTypeFor as ARTF,
@@ -36,10 +36,10 @@ export type ApiHookMutator<N extends string, DM, BM> = {
 }
 
 export interface ApiHook<D, A, M = unknown> {
-  (arg: A): ApiHookState<D> & M;
+  (arg: A, query?: ApiQuery): ApiHookState<D> & M;
 
   // Methods
-  prefetch(arg: A): void;
+  prefetch(arg: A, query?: ApiQuery): ApiResource<D>;
   mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<D, A, M & ApiHookMutator<N, DM, BM>>
 }
 
@@ -62,24 +62,23 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
   // Options
   const {
     suspense = true,
+    query: _query = {},
     headers = {},
     responseType = 'json' as ARTF<D>,
   } = options;
 
   const config = { ...globalApiConfig(), ...options.config };
 
-  // Propagate defaults
-  options.headers = headers;
-  options.responseType = responseType;
-  options.config = config;
-
   // Hook
-  function useApiData(arg: A) {
+  function useApiData(arg: A, query: ApiQuery = {}) {
     const { warehouse } = config;
 
     // Create resource
-    const send = useApi($get<D>(), builder(arg), options);
-    const res = warehouse.getOrCreate(`api:${url}`, send);
+    const send = useApi($get<D>(), builder(arg), {
+      query: { ..._query, ...query },
+      headers, responseType, config
+    });
+    const res = warehouse.getOrCreate(`api:${url}:${JSON.stringify({ ..._query, ...query })}`, send);
 
     // State
     const [data, setData] = useState<D | undefined>(suspense ? res.read().data : undefined);
@@ -102,11 +101,11 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
   }
 
   return Object.assign(useApiData, {
-    prefetch(arg: A) {
+    prefetch(arg: A, query: ApiQuery = {}) {
       const { fetcher, warehouse } = config;
       const url = builder(arg);
 
-      const id = `api:${url}`;
+      const id = `api:${url}:${JSON.stringify({ ..._query, ...query })}`;
       let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(id);
 
       if (!res) {
@@ -114,12 +113,15 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
         res = new ApiResource<D>(fetcher<D>({
           method: 'get',
           url,
+          query: { ..._query, ...query },
           headers,
           responseType,
         }, abort.signal), abort);
 
         warehouse.set(id, res);
       }
+
+      return res;
     },
     mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D) {
       return Object.assign((arg: A) => {

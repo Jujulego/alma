@@ -1,4 +1,5 @@
 // Types
+export type ApiQuery = Record<string, string | number | boolean>;
 export type ApiHeaders = Record<string, string>;
 export type ApiMethod = 'get' | 'head' | 'options' | 'delete' | 'post' | 'patch' | 'put';
 export type ApiResponseType = 'arraybuffer' | 'blob' | 'json' | 'text';
