@@ -3,7 +3,7 @@ import { FC } from 'react';
 
 // Constants
 const useUSAPopulation = api<number>('https://datausa.io/api/data?drilldowns=Nation&measures=Population')
-  .mutation('add', $post<number, string>(), '/add', (old, res) => old + res);
+  .mutation('add', $post<number, string>(), '/add', (old = 0, res) => old + res);
 
 useUSAPopulation.prefetch();
 

@@ -2,10 +2,10 @@ import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext } from 'react';
 
 import { ApiResource } from '../ApiResource';
-import { ApiConfig, ApiConfigContext } from '../config';
+import { ApiConfigContext } from '../config';
 import {
   ApiDataConstraint as ADC,
-  ApiMethod, ApiResponseType,
+  ApiMethod,
   ApiResponseTypeFor as ARTF,
   EnforceRequestType as ERT,
   RequestOptions
@@ -14,19 +14,15 @@ import { ApiTypedMethod, ApiUrl } from '../utils';
 import { useApiUrl } from './useApiUrl';
 
 // Types
-export interface ApiOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
-  config?: Partial<ApiConfig>;
-}
-
 export type RequestSender<A, B, D> = A extends void ? (body?: B) => ApiResource<D> : (arg: A, body?: B) => ApiResource<D>;
 
 // Hook
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'arraybuffer'>): RequestSender<A, B, D>;
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'blob'>): RequestSender<A, B, D>;
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptions, 'text'>): RequestSender<A, B, D>;
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'arraybuffer'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'blob'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'text'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): RequestSender<A, B, D>;
 
-export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): RequestSender<A, B, D> {
+export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: RequestOptions<ARTF<D>> = {}): RequestSender<A, B, D> {
   const { headers = {}, responseType = 'json' as ARTF<D>, config: optConfig = {} } = options;
 
   // Contexts

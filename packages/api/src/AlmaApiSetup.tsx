@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react';
 
-import { ApiConfig, ApiConfigContext, globalApiConfig } from './config';
+import { ApiConfigContext, globalApiConfig } from './config';
+import { ApiConfig } from './types';
 
 // Props
 export interface AlmaApiSetupProps extends Partial<ApiConfig> {

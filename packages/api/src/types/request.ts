@@ -1,4 +1,5 @@
 import { ApiHeaders, ApiMethod, ApiResponseType } from './utils';
+import { ApiConfig } from './config';
 
 // Utils
 export interface ApiMethodBody<B> {
@@ -38,6 +39,7 @@ export type ApiRequest<M extends ApiMethod = ApiMethod, RT extends ApiResponseTy
 export interface RequestOptions<RT extends ApiResponseType = ApiResponseType> {
   headers?: ApiHeaders;
   responseType?: RT;
+  config?: Partial<ApiConfig>;
 }
 
 export type EnforceRequestType<O extends RequestOptions, RT extends ApiResponseType> = O & {
