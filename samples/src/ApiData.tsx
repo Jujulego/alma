@@ -9,11 +9,11 @@ const useUSAPopulation = api<number>('https://datausa.io/api/data', {
   }
 });
 
-useUSAPopulation.prefetch(undefined, { n: 0 });
+useUSAPopulation.prefetch();
 
 // Component
-export const ApiData: FC<{ n: number }> = ({ n }) => {
-  const { data, isLoading } = useUSAPopulation(undefined, { n: n % 2 });
+export const ApiData: FC<{ n: number }> = () => {
+  const { data, isLoading } = useUSAPopulation();
 
   return (
     <>

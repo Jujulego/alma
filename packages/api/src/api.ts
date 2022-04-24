@@ -84,15 +84,7 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
     const [data, setData] = useState<D | undefined>(suspense ? res.read().data : undefined);
 
     // Effect
-    useEffect(() => {
-      if (res) {
-        res.then(({ data }) => setData(data));
-
-        return () => {
-          setTimeout(() => res?.cancel(), 0);
-        };
-      }
-    }, [res]);
+    useEffect(() => res?.subscribe(({ data }) => setData(data)), [res]);
 
     return {
       isLoading: res.status === 'pending',
@@ -124,21 +116,24 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
       return res;
     },
     mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D) {
-      return Object.assign((arg: A) => {
-        const state: ApiHookState<D> = this(arg);
+      const useApiDataMutation = (arg: A, query?: ApiQuery) => {
+        const state: ApiHookState<D> = this(arg, query);
         const send = useApi<DM, BM, void>(method, builder(arg) + url);
 
         const { setData } = state;
 
         return Object.assign(state, {
-          [name]: useCallback((body: BM) => {
-            const res = send(body);
-            res.then(({ data }) => setData((old) => merge(old, data)));
-
-            return res;
-          }, [send, setData])
+          [name]: useCallback((body: BM) => send(body)
+            .then((result) => {
+              setData((old) => merge(old, result.data));
+              return result;
+            }),
+            [send, setData]
+          )
         });
-      }, this);
+      };
+
+      return Object.assign(useApiDataMutation, this);
     }
   });
 }
