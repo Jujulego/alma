@@ -7,7 +7,7 @@ const useUSAPopulation = api<number>('https://datausa.io/api/data', {
     drilldowns: 'Nation',
     measures: 'Population'
   },
-  suspense: true,
+  suspense: false,
 });
 
 useUSAPopulation.prefetch();

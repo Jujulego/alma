@@ -13,6 +13,11 @@ export class ApiResource<D> extends AbortResource<ApiResponse<D>> {
   }
 
   // Methods
+  read(): ApiResponse<D> {
+    this._subscribers++;
+    return super.read();
+  }
+
   /**
    * Will call cb when the promise completes.
    * Returns an unsubscribe function, witch prevent cb to be called.
@@ -28,13 +33,16 @@ export class ApiResource<D> extends AbortResource<ApiResponse<D>> {
       if (subscribed) cb(res);
     });
 
-    return () => setTimeout(() => {
+    return () => {
       this._subscribers--;
       subscribed = false;
 
-      if (this._subscribers <= 0 && this.status === 'pending') {
-        this.abort();
-      }
-    });
+      // setTimeout required to prevent useEffect to cancel request in api
+      setTimeout(() => {
+        if (this._subscribers <= 0 && this.status === 'pending') {
+          this.abort();
+        }
+      });
+    };
   }
 }
