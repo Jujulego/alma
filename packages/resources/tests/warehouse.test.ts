@@ -12,40 +12,65 @@ beforeEach(() => {
 });
 
 // Tests
-it('should create a new resource and emit an update event', () => {
-  const res = warehouse.create('test');
+describe('Warehouse.create', () => {
+  it('should create a new resource and emit an update event', () => {
+    const res = warehouse.create('test');
 
-  expect(res).toBeInstanceOf(Resource);
-  expect(warehouse.get('test')).toBe(res);
-  expect(updateEventSpy).toHaveBeenCalledTimes(1);
-  expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+    expect(res).toBeInstanceOf(Resource);
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+  });
+
+  it('should use creator to create new resource', () => {
+    const creator = jest.fn(() => new Resource());
+    const res = warehouse.create('test', creator);
+
+    expect(creator).toHaveBeenCalled();
+    expect(res).toBe(creator.mock.results[0].value);
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+  });
+
+  it('should replace an existing resource', () => {
+    const old = warehouse.create('test');
+    const res = warehouse.create('test');
+
+    expect(res).not.toBe(old);
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(2);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res, old));
+  });
 });
 
-it('should replace an existing resource', () => {
-  const old = warehouse.create('test');
-  const res = warehouse.create('test');
+describe('Warehouse.getOrCreate', () => {
+  it('should not replace an existing resource', () => {
+    const old = warehouse.create('test');
+    const res = warehouse.getOrCreate('test');
 
-  expect(res).not.toBe(old);
-  expect(warehouse.get('test')).toBe(res);
-  expect(updateEventSpy).toHaveBeenCalledTimes(2);
-  expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
-  expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res, old));
-});
+    expect(res).toBe(old);
+    expect(warehouse.get('test')).toBe(old);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
+  });
 
-it('should not replace an existing resource', () => {
-  const old = warehouse.create('test');
-  const res = warehouse.getOrCreate('test');
+  it('should create a missing resource', () => {
+    const res = warehouse.getOrCreate('test');
 
-  expect(res).toBe(old);
-  expect(warehouse.get('test')).toBe(old);
-  expect(updateEventSpy).toHaveBeenCalledTimes(1);
-  expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
-});
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+  });
 
-it('should create a missing resource', () => {
-  const res = warehouse.getOrCreate('test');
+  it('should use creator to create new resource', () => {
+    const creator = jest.fn(() => new Resource());
+    const res = warehouse.getOrCreate('test', creator);
 
-  expect(warehouse.get('test')).toBe(res);
-  expect(updateEventSpy).toHaveBeenCalledTimes(1);
-  expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+    expect(creator).toHaveBeenCalled();
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+  });
 });

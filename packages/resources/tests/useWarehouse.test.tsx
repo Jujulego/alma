@@ -9,6 +9,14 @@ beforeEach(() => {
 
 // Tests
 describe('useWarehouse', () => {
+  it('should return given instance of Warehouse', () => {
+    const warehouse = new Warehouse();
+    const { result } = renderHook(() => useWarehouse(warehouse));
+
+    expect(self[GLOBAL_WAREHOUSE]).toBeUndefined();
+    expect(result.current).toBe(warehouse);
+  });
+
   it('should return context instance of Warehouse', () => {
     const warehouse = new Warehouse();
     const { result } = renderHook(() => useWarehouse(), {

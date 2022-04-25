@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { Resource } from './resource';
 import { Warehouse, WarehouseUpdateEventListener } from './warehouse';
@@ -14,12 +14,20 @@ export interface UseResourceOptions<T> {
 export function useResource<T>(key: string, options?: Omit<UseResourceOptions<T>, 'creator'>): Resource<T>;
 export function useResource<T, R extends Resource<T>>(key: string, options?: UseResourceOptions<T> & { creator: () => R }): R;
 export function useResource<T>(key: string, options: UseResourceOptions<T> = {}): Resource<T> {
-  const _warehouse = useWarehouse();
-  const { warehouse = _warehouse, creator = () => new Resource<T>() } = options;
+  const { creator = () => new Resource<T>() } = options;
 
+  // Context
+  const warehouse = useWarehouse(options.warehouse);
+
+  // State
   const [res, setRes] = useState(warehouse.getOrCreate(key, creator));
 
-  useEffect(() => {
+  // Effects
+  useLayoutEffect(() => {
+    // Get resource
+    setRes(warehouse.getOrCreate(key, creator));
+
+    // Listen for updates
     const listener: WarehouseUpdateEventListener<T> = (evt) => {
       if (evt.key === key) {
         setRes(evt.newResource);
@@ -28,7 +36,7 @@ export function useResource<T>(key: string, options: UseResourceOptions<T> = {})
 
     warehouse.addEventListener('update', listener);
     return () => warehouse.removeEventListener('update', listener);
-  }, [key, warehouse]);
+  }, [key, creator, warehouse]);
 
   return res;
 }
