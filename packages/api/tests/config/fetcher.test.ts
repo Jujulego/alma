@@ -20,7 +20,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
-      await expect(fetcher<ArrayBuffer>({ method: 'get', url: '/test', headers: {}, responseType: 'arraybuffer' }, abort.signal))
+      await expect(fetcher<ArrayBuffer>({ method: 'get', url: '/test', query: {}, headers: {}, responseType: 'arraybuffer' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -28,7 +28,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: expect.anything()
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -39,7 +39,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
-      await expect(fetcher<Blob>({ method: 'get', url: '/test', headers: {}, responseType: 'blob' }, abort.signal))
+      await expect(fetcher<Blob>({ method: 'get', url: '/test', query: {}, headers: {}, responseType: 'blob' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -47,7 +47,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: expect.anything()
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -58,7 +58,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       fetchMock.mockResponse('"test"', { status: 200 });
 
       // Call fetcher
-      await expect(fetcher({ method: 'get', url: '/test', headers: {}, responseType: 'json' }, abort.signal))
+      await expect(fetcher({ method: 'get', url: '/test', query: {}, headers: {}, responseType: 'json' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -66,7 +66,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -77,7 +77,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       fetchMock.mockResponse('test', { status: 200 });
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'get', url: '/test', headers: {}, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'get', url: '/test', query: {}, headers: {}, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -85,7 +85,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'get',
         headers: expect.any(Headers),
         signal: abort.signal
@@ -105,7 +105,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = 'body';
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -113,7 +113,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -129,7 +129,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new ArrayBuffer(5);
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -137,7 +137,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -149,7 +149,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new Blob();
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -157,7 +157,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -169,7 +169,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new FormData();
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -177,7 +177,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -189,7 +189,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = new URLSearchParams();
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -197,7 +197,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body,
@@ -209,7 +209,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
       const body = { test: true, id: 5 };
 
       // Call fetcher
-      await expect(fetcher<string>({ method: 'post', url: '/test', headers: {}, body, responseType: 'text' }, abort.signal))
+      await expect(fetcher<string>({ method: 'post', url: '/test', query: {}, headers: {}, body, responseType: 'text' }, abort.signal))
         .resolves.toEqual({
           status: 200,
           statusText: 'OK',
@@ -217,7 +217,7 @@ describe('ApiConfigContext defaults (with fetch)', () => {
           data: 'test'
         });
 
-      expect(fetchMock).toHaveBeenCalledWith('/test', {
+      expect(fetchMock).toHaveBeenCalledWith('http://localhost/test', {
         method: 'post',
         headers: expect.any(Headers),
         body: JSON.stringify(body),

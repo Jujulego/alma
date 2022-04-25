@@ -39,6 +39,7 @@ describe('useApi', () => {
       expect(fetcher).toHaveBeenCalledWith({
         method: 'get',
         url: '/test/8',
+        query: {},
         headers: {},
         responseType: 'json',
       }, expect.any(AbortSignal));
@@ -61,6 +62,7 @@ describe('useApi', () => {
       expect(fetcher).toHaveBeenCalledWith({
         method: 'get',
         url: '/test/8',
+        query: {},
         headers: {},
         responseType: 'json',
       }, expect.any(AbortSignal));
@@ -85,6 +87,7 @@ describe('useApi', () => {
       expect(fetcher).toHaveBeenCalledWith({
         method: 'post',
         url: '/test/8',
+        query: {},
         headers: {},
         body: 'body',
         responseType: 'json',
@@ -108,6 +111,7 @@ describe('useApi', () => {
       expect(fetcher).toHaveBeenCalledWith({
         method: 'post',
         url: '/test/8',
+        query: {},
         headers: {},
         body: 'body',
         responseType: 'json',

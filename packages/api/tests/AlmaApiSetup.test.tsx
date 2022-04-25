@@ -1,7 +1,8 @@
+import { Warehouse } from '@jujulego/alma-resources';
 import { renderHook } from '@testing-library/react-hooks';
 import { useContext } from 'react';
 
-import { AlmaApiSetup, ApiConfigContext, ApiFetcher, fetcher as defaultFetcher } from '../src';
+import { AlmaApiSetup, ApiConfigContext, ApiFetcher, globalApiConfig } from '../src';
 
 // Setup
 beforeEach(() => {
@@ -16,21 +17,21 @@ describe('AlmaApiSetup', () => {
       wrapper: ({ children }) => <AlmaApiSetup>{ children }</AlmaApiSetup>,
     });
 
-    expect(configResult.current).toEqual({
-      fetcher: defaultFetcher
-    });
+    expect(configResult.current).toEqual(globalApiConfig());
   });
 
   it('should setup config with given fetcher', () => {
     const fetcher: ApiFetcher = jest.fn();
+    const warehouse = new Warehouse();
 
     // Check config
     const { result: configResult } = renderHook(() => useContext(ApiConfigContext), {
-      wrapper: ({ children }) => <AlmaApiSetup fetcher={fetcher}>{ children }</AlmaApiSetup>,
+      wrapper: ({ children }) => <AlmaApiSetup fetcher={fetcher} warehouse={warehouse}>{ children }</AlmaApiSetup>,
     });
 
     expect(configResult.current).toEqual({
-      fetcher
+      fetcher,
+      warehouse
     });
   });
 });

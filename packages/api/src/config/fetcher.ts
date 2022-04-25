@@ -60,7 +60,7 @@ async function decodeBody(responseType: ApiResponseType, res: Response): Promise
  * @param signal: AbortSignal used to interrupt the call
  */
 export async function fetcher<D>(req: ApiRequest<ApiMethod, ARTF<D>>, signal: AbortSignal): Promise<ApiResponse<D>> {
-  const url = new URL(req.url);
+  const url = new URL(req.url, self.origin);
   const headers = new Headers(req.headers);
 
   for (const [key, value] of Object.entries(req.query)) {
