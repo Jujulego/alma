@@ -5,7 +5,7 @@ import { ApiResource } from '../ApiResource';
 import { ApiConfigContext } from '../config';
 import {
   ApiDataConstraint as ADC,
-  ApiMethod,
+  ApiMethod, ApiQuery,
   ApiResponseTypeFor as ARTF,
   EnforceRequestType as ERT,
   RequestOptions
@@ -14,7 +14,9 @@ import { ApiTypedMethod, ApiUrl } from '../utils';
 import { useApiUrl } from './useApiUrl';
 
 // Types
-export type RequestSender<A, B, D> = A extends void ? (body?: B) => ApiResource<D> : (arg: A, body?: B) => ApiResource<D>;
+export type RequestSender<A, B, D> = A extends void
+  ? (body?: B, query?: ApiQuery) => ApiResource<D>
+  : (arg: A, body?: B, query?: ApiQuery) => ApiResource<D>;
 
 // Hook
 export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'arraybuffer'>): RequestSender<A, B, D>;
@@ -39,14 +41,13 @@ export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: Requ
   return useCallback((...args: unknown[]) => {
     // Parse arguments
     let arg: A | void;
-    let body: B | undefined = undefined;
+    let body: B | undefined;
+    let query: ApiQuery;
 
-    if (args.length >= 2) {
-      [arg, body] = args as [A, B];
-    } else if (_url.length === 0) {
-      [body] = args as [B];
+    if (_url.length === 0) {
+      [body, query = {}] = args as [B | undefined, ApiQuery | undefined];
     } else {
-      [arg] = args as [A];
+      [arg, body, query = {}] = args as [A, B | undefined, ApiQuery | undefined];
     }
 
     // Send request
@@ -54,7 +55,7 @@ export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: Requ
     const promise = fetcher<D>({
       method,
       url: arg === undefined ? (_url as () => string)() : _url(arg),
-      query: _query,
+      query: { ..._query, ...query },
       headers: _headers,
       body,
       responseType,

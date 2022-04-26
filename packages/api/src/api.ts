@@ -11,7 +11,7 @@ import {
   ApiResponseTypeFor as ARTF,
   EnforceRequestType as ERT, RequestOptions
 } from './types';
-import { $get, ApiTypedMethod, ApiUrl, urlBuilder } from './utils';
+import { ApiTypedMethod, ApiUrl, ApiUrlBuilder, urlBuilder } from './utils';
 
 // Types
 export interface ApiOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
@@ -33,32 +33,50 @@ export interface ApiHookState<D> {
   refresh(): ApiResource<D>;
 }
 
+export type ApiHookSender<A, B, R> = A extends void
+  ? (body?: B, query?: ApiQuery) => R
+  : (arg: A, body?: B, query?: ApiQuery) => R;
+
 export type ApiHookMutator<N extends string, DM, BM> = {
   [K in N]: (body: BM) => ApiResource<DM>
 }
 
-export interface ApiHook<D, A, M = unknown> {
-  (arg: A, query?: ApiQuery): ApiHookState<D> & M;
+export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> & M> & {
+    // Methods
+    prefetch: ApiHookSender<A, B, ApiResource<D>>;
+    mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<D, A, M & ApiHookMutator<N, DM, BM>>
+  };
 
-  // Methods
-  prefetch(arg: A, query?: ApiQuery): ApiResource<D>;
-  mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<D, A, M & ApiHookMutator<N, DM, BM>>
+// Utils
+function parseArgs<A, B>(builder: ApiUrlBuilder<A>, args: unknown[]): [string, B | undefined, ApiQuery] {
+  // Parse arguments
+  let arg: A | void;
+  let body: B | undefined;
+  let query: ApiQuery;
+
+  if (builder.length === 0) {
+    [body, query = {}] = args as [B | undefined, ApiQuery | undefined];
+  } else {
+    [arg, body, query = {}] = args as [A, B | undefined, ApiQuery | undefined];
+  }
+
+  return [arg === undefined ? (builder as () => string)() : builder(arg), body, query];
 }
 
 // Hook builder
-export function api<D = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'arraybuffer'>): ApiHook<D | undefined, A>;
-export function api<D = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'blob'>): ApiHook<D | undefined, A>;
-export function api<D = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'text'>): ApiHook<D | undefined, A>;
-export function api<D, A = void>(url: ApiUrl<A>, options: ApiOptionsEffect<ARTF<D>>): ApiHook<D | undefined, A>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'arraybuffer'>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'blob'>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'text'>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptionsEffect<ARTF<D>>): ApiHook<A, B, D | undefined>;
 
-export function api<D = ADC<'arraybuffer'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'arraybuffer'>): ApiHook<D, A>;
-export function api<D = ADC<'blob'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'blob'>): ApiHook<D, A>;
-export function api<D = ADC<'text'>, A = void>(url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'text'>): ApiHook<D, A>;
-export function api<D, A = void>(url: ApiUrl<A>, options?: ApiOptionsSuspense<ARTF<D>>): ApiHook<D, A>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'arraybuffer'>): ApiHook<A, B, D>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'blob'>): ApiHook<A, B, D>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'text'>): ApiHook<A, B, D>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsSuspense<ARTF<D>>): ApiHook<A, B, D>;
 
-export function api<D, A>(url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): ApiHook<D | undefined, A>;
+export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): ApiHook<A, B, D | undefined>;
 
-export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): ApiHook<D | undefined, A> {
+export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): ApiHook<A, B, D | undefined> {
   const builder = urlBuilder(url);
 
   // Options
@@ -72,17 +90,18 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
   const config = { ...globalApiConfig(), ...options.config };
 
   // Hook
-  function useApiData(arg: A, query: ApiQuery = {}) {
+  function useApiData(...args: unknown[]) {
+    const [url, body, query] = parseArgs<A, B>(builder, args);
     const { warehouse } = config;
 
     // Create resource
-    const send = useApi($get<D>(), builder(arg), {
-      query: { ..._query, ...query },
+    const send = useApi(method, url, {
+      query: _query,
       headers, responseType, config
     });
 
-    const key = `api:${url}:${JSON.stringify({ ..._query, ...query })}`;
-    const res = useResource(key, { warehouse, creator: send });
+    const key = `api:${url}:${JSON.stringify(query)}:${JSON.stringify(body)}`;
+    const res = useResource(key, { warehouse, creator: () => send(body, query) });
 
     // State
     const [data, setData] = useState<D | undefined>(suspense ? res.read().data : undefined);
@@ -106,32 +125,33 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
   }
 
   return Object.assign(useApiData, {
-    prefetch(arg: A, query: ApiQuery = {}) {
+    prefetch(...args: unknown[]) {
+      const [url, body, query] = parseArgs<A, B>(builder, args);
       const { fetcher, warehouse } = config;
-      const url = builder(arg);
 
-      const id = `api:${url}:${JSON.stringify({ ..._query, ...query })}`;
-      let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(id);
+      const key = `api:${url}:${JSON.stringify(query)}:${JSON.stringify(body)}`;
+      let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(key);
 
       if (!res) {
         const abort = new AbortController();
         res = new ApiResource<D>(fetcher<D>({
-          method: 'get',
-          url,
+          method, url,
           query: { ..._query, ...query },
-          headers,
+          headers, body,
           responseType,
         }, abort.signal), abort);
 
-        warehouse.set(id, res);
+        warehouse.set(key, res);
       }
 
       return res;
     },
     mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D) {
-      const useApiDataMutation = (arg: A, query?: ApiQuery) => {
-        const state: ApiHookState<D> = this(arg, query);
-        const send = useApi<DM, BM, void>(method, builder(arg) + url);
+      const useApiDataMutation = (...args: unknown[]) => {
+        const [_url,] = parseArgs<A, B>(builder, args);
+        const state: ApiHookState<D> = this(...args);
+
+        const send = useApi<DM, BM, void>(method, _url + url);
 
         const { setData } = state;
 
@@ -148,5 +168,5 @@ export function api<D, A>(url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): Ap
 
       return Object.assign(useApiDataMutation, this);
     }
-  });
+  }) as ApiHook<A, B, D>;
 }
