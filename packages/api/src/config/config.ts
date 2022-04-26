@@ -20,3 +20,11 @@ export function globalApiConfig(): ApiConfig {
     warehouse: globalWarehouse()
   };
 }
+
+/**
+ * Setup global configuration
+ * @param config
+ */
+export function almaApiConfig(config: Partial<ApiConfig>) {
+  Object.assign(globalApiConfig(), config);
+}
