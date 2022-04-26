@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { startTransition, useLayoutEffect, useState } from 'react';
 
 import { Resource } from './resource';
 import { Warehouse, WarehouseUpdateEventListener } from './warehouse';
@@ -25,12 +25,16 @@ export function useResource<T>(key: string, options: UseResourceOptions<T> = {})
   // Effects
   useLayoutEffect(() => {
     // Get resource
-    setRes(warehouse.getOrCreate(key, creator));
+    startTransition(() => {
+      setRes(warehouse.getOrCreate(key, creator));
+    });
 
     // Listen for updates
     const listener: WarehouseUpdateEventListener<T> = (evt) => {
       if (evt.key === key) {
-        setRes(evt.newResource);
+        startTransition(() => {
+          setRes(evt.newResource);
+        });
       }
     };
 

@@ -113,7 +113,9 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
       isLoading: res.status === 'pending',
       data, setData,
       refresh: useCallback(() => {
-        if (res.status === 'pending') return res;
+        if (res.status === 'pending') {
+          return res;
+        }
 
         // Refresh data
         const newResource = send();
