@@ -64,14 +64,14 @@ function parseArgs<A, B>(builder: ApiUrlBuilder<A>, args: unknown[]): [string, B
 }
 
 // Hook builder
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'arraybuffer'>): ApiHook<A, B, D | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'blob'>): ApiHook<A, B, D | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'text'>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'arraybuffer'>): ApiHook<A, B, (D & ADC<'arraybuffer'>) | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'blob'>): ApiHook<A, B, (D & ADC<'blob'>) | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'text'>): ApiHook<A, B, (D & ADC<'text'>) | undefined>;
 export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptionsEffect<ARTF<D>>): ApiHook<A, B, D | undefined>;
 
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'arraybuffer'>): ApiHook<A, B, D>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'blob'>): ApiHook<A, B, D>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'text'>): ApiHook<A, B, D>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'arraybuffer'>): ApiHook<A, B, D & ADC<'arraybuffer'>>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'blob'>): ApiHook<A, B, D & ADC<'blob'>>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'text'>): ApiHook<A, B, D & ADC<'text'>>;
 export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsSuspense<ARTF<D>>): ApiHook<A, B, D>;
 
 export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): ApiHook<A, B, D | undefined>;

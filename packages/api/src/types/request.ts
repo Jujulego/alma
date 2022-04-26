@@ -48,6 +48,6 @@ export interface RequestOptions<RT extends ApiResponseType = ApiResponseType> {
   config?: Partial<ApiConfig>;
 }
 
-export type EnforceRequestType<O extends RequestOptions, RT extends ApiResponseType> = Omit<O, 'responseType'> & {
+export type EnforceRequestType<O extends RequestOptions, RT extends ApiResponseType> = O & {
   responseType: RT;
 }

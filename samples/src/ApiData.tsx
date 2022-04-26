@@ -6,8 +6,6 @@ const useUSAPopulation = $api($get(), $url`https://api.github.com/repos/${'owner
   query: {
     sort: 'created', direction: 'desc'
   },
-  responseType: 'arraybuffer',
-  suspense: true,
 });
 
 useUSAPopulation.prefetch({ owner: 'microsoft', repo: 'typescript' });
