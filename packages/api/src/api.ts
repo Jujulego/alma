@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
-import { useResource } from '@jujulego/alma-resources';
+import { AbortResource, useResource } from '@jujulego/alma-resources';
 
 import { ApiResource } from './ApiResource';
 import { globalApiConfig } from './config';
@@ -38,13 +38,13 @@ export type ApiHookSender<A, B, R> = A extends void
   : (arg: A, body?: B, query?: ApiQuery) => R;
 
 export type ApiHookMutator<N extends string, DM, BM> = {
-  [K in N]: (body: BM) => ApiResource<DM>
+  [K in N]: (body: BM, query?: ApiQuery) => AbortResource<ApiResponse<DM>>
 }
 
 export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> & M> & {
     // Methods
     prefetch: ApiHookSender<A, B, ApiResource<D>>;
-    mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<D, A, M & ApiHookMutator<N, DM, BM>>
+    mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<A, B, D, M & ApiHookMutator<N, DM, BM>>
   };
 
 // Utils
@@ -158,7 +158,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
         const { setData } = state;
 
         return Object.assign(state, {
-          [name]: useCallback((body: BM) => send(body)
+          [name]: useCallback((body: BM, query?: ApiQuery) => send(body, query)
             .then((result) => {
               setData((old) => merge(old, result.data));
               return result;
