@@ -799,7 +799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-proposal-class-properties@npm:7.16.7, @babel/plugin-proposal-class-properties@npm:^7.16.7":
+"@babel/plugin-proposal-class-properties@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/plugin-proposal-class-properties@npm:7.16.7"
   dependencies:
@@ -2388,7 +2388,6 @@ __metadata:
   resolution: "@jujulego/alma-axios@workspace:packages/axios"
   dependencies:
     "@babel/core": 7.17.9
-    "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
@@ -2406,6 +2405,7 @@ __metadata:
     "@typescript-eslint/parser": 5.21.0
     alma-tools: "workspace:*"
     axios: 0.27.2
+    babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.14.0
     eslint-plugin-jest: 26.1.5
@@ -2436,7 +2436,6 @@ __metadata:
   resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
   dependencies:
     "@babel/core": 7.17.9
-    "@babel/plugin-proposal-class-properties": 7.16.7
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
@@ -2456,6 +2455,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.21.0
     "@typescript-eslint/parser": 5.21.0
     alma-tools: "workspace:*"
+    babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.14.0
     eslint-plugin-jest: 26.1.5
@@ -2479,7 +2479,7 @@ __metadata:
     typescript: 4.6.4
   peerDependencies:
     graphql: ^15.6.0 || ^16.0.0
-    react: ^17.0.0 || ^18.0.0
+    react: ^18.0.0
   languageName: unknown
   linkType: soft
 

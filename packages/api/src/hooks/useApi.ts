@@ -19,9 +19,9 @@ export type RequestSender<A, B, D> = A extends void
   : (arg: A, body?: B, query?: ApiQuery) => ApiResource<D>;
 
 // Hook
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'arraybuffer'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'arraybuffer'>): RequestSender<A, B, D>;
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'blob'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'blob'>): RequestSender<A, B, D>;
-export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D | ADC<'text'>, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'text'>): RequestSender<A, B, D>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'arraybuffer'>): RequestSender<A, B, D & ADC<'arraybuffer'>>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'blob'>): RequestSender<A, B, D & ADC<'blob'>>;
+export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<RequestOptions, 'text'>): RequestSender<A, B, D & ADC<'text'>>;
 export function useApi<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: RequestOptions<ARTF<D>>): RequestSender<A, B, D>;
 
 export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: RequestOptions<ARTF<D>> = {}): RequestSender<A, B, D> {

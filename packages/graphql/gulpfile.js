@@ -46,7 +46,7 @@ gulp.task('bundle:umd', () => flow(
     output: {
       file: 'alma-graphql.js',
       format: 'umd',
-      name: '@jujulego/alma-graphql',
+      name: 'almaGraphql',
     },
     plugins: [
       externals(),
