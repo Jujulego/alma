@@ -2440,6 +2440,7 @@ __metadata:
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
     "@jujulego/alma-api": ^2.4.0
+    "@jujulego/alma-resources": ^1.0.0
     "@jujulego/alma-utils": ^1.1.5
     "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-node-resolve": 13.2.1

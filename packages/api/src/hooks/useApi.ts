@@ -1,11 +1,11 @@
+import { AbortResource } from '@jujulego/alma-resources';
 import { useDeepMemo } from '@jujulego/alma-utils';
 import { useCallback, useContext } from 'react';
 
-import { ApiResource } from '../ApiResource';
 import { ApiConfigContext } from '../config';
 import {
   ApiDataConstraint as ADC,
-  ApiMethod, ApiQuery,
+  ApiMethod, ApiQuery, ApiResource, ApiResponse,
   ApiResponseTypeFor as ARTF,
   EnforceRequestType as ERT,
   RequestOptions
@@ -61,6 +61,6 @@ export function useApi<D, B, A>(method: ApiMethod, url: ApiUrl<A>, options: Requ
       responseType,
     }, abort.signal);
 
-    return new ApiResource<D>(promise, abort);
+    return new AbortResource<ApiResponse<D>>(promise, abort);
   }, [fetcher, method, _url, _query, _headers, responseType]) as RequestSender<A, B, D>;
 }

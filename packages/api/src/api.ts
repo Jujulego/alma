@@ -1,11 +1,10 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { AbortResource, useResource } from '@jujulego/alma-resources';
 
-import { ApiResource } from './ApiResource';
 import { globalApiConfig } from './config';
 import { useApi } from './hooks';
 import {
-  ApiDataConstraint as ADC, ApiQuery,
+  ApiDataConstraint as ADC, ApiQuery, ApiResource,
   ApiResponse,
   ApiResponseType,
   ApiResponseTypeFor as ARTF,
@@ -38,7 +37,7 @@ export type ApiHookSender<A, B, R> = A extends void
   : (arg: A, body?: B, query?: ApiQuery) => R;
 
 export type ApiHookMutator<N extends string, DM, BM> = {
-  [K in N]: (body: BM, query?: ApiQuery) => AbortResource<ApiResponse<DM>>
+  [K in N]: (body: BM, query?: ApiQuery) => ApiResource<DM>
 }
 
 export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> & M> & {
@@ -136,7 +135,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
 
       if (!res) {
         const abort = new AbortController();
-        res = new ApiResource<D>(fetcher<D>({
+        res = new AbortResource<ApiResponse<D>>(fetcher<D>({
           method, url,
           query: { ..._query, ...query },
           headers, body,
