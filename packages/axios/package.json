@@ -60,7 +60,7 @@
     "alma-tools": "workspace:*",
     "axios": "0.26.1",
     "del": "6.0.0",
-    "eslint": "8.13.0",
+    "eslint": "8.14.0",
     "eslint-plugin-jest": "26.1.5",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.4.0",
