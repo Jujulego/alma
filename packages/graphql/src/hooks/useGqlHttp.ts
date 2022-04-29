@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { GqlRequest, GqlResource, GqlResponse, GqlVars } from '../types';
 
 // Types
-export type RequestSender<D, V extends GqlVars> = (vars: V) => GqlResource<D>
+export type RequestSender<D, V extends GqlVars> = (vars: V) => GqlResource<D>;
 
 // Hook
 export function useGqlHttp<D, V extends GqlVars = GqlVars>(url: string, doc: string): RequestSender<D, V> {
