@@ -40,9 +40,9 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.17.9",
+    "@babel/core": "7.17.10",
     "@babel/plugin-proposal-class-properties": "7.16.7",
-    "@babel/preset-env": "7.16.11",
+    "@babel/preset-env": "7.17.10",
     "@babel/preset-react": "7.16.7",
     "@babel/runtime": "7.17.9",
     "@jujulego/alma-api": "2.4.0",
