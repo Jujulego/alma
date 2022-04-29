@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@jujulego/alma-api": "^2.4.0",
-    "axios": "^0.26.0",
+    "axios": "^0.26.0 || ^0.27.0",
     "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
@@ -58,7 +58,7 @@
     "@typescript-eslint/eslint-plugin": "5.21.0",
     "@typescript-eslint/parser": "5.21.0",
     "alma-tools": "workspace:*",
-    "axios": "0.26.1",
+    "axios": "0.27.2",
     "del": "6.0.0",
     "eslint": "8.14.0",
     "eslint-plugin-jest": "26.1.5",
