@@ -2351,7 +2351,7 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
@@ -2359,8 +2359,8 @@ __metadata:
     gulp-filter: 7.0.0
     jest: 27.5.1
     jest-fetch-mock: 3.0.3
-    react: 18.0.0
-    react-test-renderer: 18.0.0
+    react: 18.1.0
+    react-test-renderer: 18.1.0
     rollup: 2.70.2
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
@@ -2398,7 +2398,7 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
@@ -2406,7 +2406,7 @@ __metadata:
     gulp-filter: 7.0.0
     jest: 27.5.1
     jest-fetch-mock: 3.0.3
-    react: 18.0.0
+    react: 18.1.0
     rollup: 2.70.2
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
@@ -2448,7 +2448,7 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     graphql: 16.4.0
@@ -2458,8 +2458,8 @@ __metadata:
     gulp-cli: 2.3.0
     gulp-filter: 7.0.0
     jest: 27.5.1
-    react: 18.0.0
-    react-test-renderer: 18.0.0
+    react: 18.1.0
+    react-test-renderer: 18.1.0
     rollup: 2.70.2
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
@@ -2495,15 +2495,15 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
     gulp-filter: 7.0.0
     jest: 27.5.1
-    react: 18.0.0
-    react-test-renderer: 18.0.0
+    react: 18.1.0
+    react-test-renderer: 18.1.0
     rollup: 2.70.2
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
@@ -2540,15 +2540,15 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     gulp: 4.0.2
     gulp-cli: 2.3.0
     gulp-filter: 7.0.0
     jest: 27.5.1
-    react: 18.0.0
-    react-test-renderer: 18.0.0
+    react: 18.1.0
+    react-test-renderer: 18.1.0
     rollup: 2.70.2
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
@@ -3674,7 +3674,7 @@ __metadata:
     eslint: 8.13.0
     eslint-plugin-jest: 26.1.5
     eslint-plugin-react: 7.29.4
-    eslint-plugin-react-hooks: 4.4.0
+    eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.3.1
     eslint-plugin-workspaces: 0.7.0
     jest: 27.5.1
@@ -5569,12 +5569,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:4.4.0":
-  version: 4.4.0
-  resolution: "eslint-plugin-react-hooks@npm:4.4.0"
+"eslint-plugin-react-hooks@npm:4.5.0":
+  version: 4.5.0
+  resolution: "eslint-plugin-react-hooks@npm:4.5.0"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-  checksum: 350b50d45677cb2df682b9e54475912746bd2f56fc342e4d47fad78d71eb1b2b742e702f1e6c04ab2196346d3d7a2e327b5eee826f5b96bfb84b5c41d35e44e9
+  checksum: 0389377de635dd9b769f6f52e2c9e6ab857a0cdfecc3734c95ce81676a752e781bb5c44fd180e01953a03a77278323d90729776438815557b069ceb988ab1f9f
   languageName: node
   linkType: hard
 
@@ -9775,10 +9775,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^16.12.0 || ^17.0.0, react-is@npm:^17.0.1":
-  version: 17.0.2
-  resolution: "react-is@npm:17.0.2"
-  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
+"react-is@npm:^16.12.0 || ^17.0.0 || ^18.0.0, react-is@npm:^18.1.0":
+  version: 18.1.0
+  resolution: "react-is@npm:18.1.0"
+  checksum: d206a0fe6790851bff168727bfb896de02c5591695afb0c441163e8630136a3e13ee1a7ddd59fdccddcc93968b4721ae112c10f790b194b03b35a3dc13a355ef
   languageName: node
   linkType: hard
 
@@ -9789,44 +9789,44 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-is@npm:^18.0.0":
-  version: 18.0.0
-  resolution: "react-is@npm:18.0.0"
-  checksum: d38f6afee4d8d791cdd69c715841c01a503c9b06da6158e0893447cea6ba50cd262dca9bde84127720cf44fd05c58185eafc32accace4bb2deb03b3cdbeb6b6b
+"react-is@npm:^17.0.1":
+  version: 17.0.2
+  resolution: "react-is@npm:17.0.2"
+  checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
   languageName: node
   linkType: hard
 
-"react-shallow-renderer@npm:^16.13.1":
-  version: 16.14.1
-  resolution: "react-shallow-renderer@npm:16.14.1"
+"react-shallow-renderer@npm:^16.15.0":
+  version: 16.15.0
+  resolution: "react-shallow-renderer@npm:16.15.0"
   dependencies:
     object-assign: ^4.1.1
-    react-is: ^16.12.0 || ^17.0.0
+    react-is: ^16.12.0 || ^17.0.0 || ^18.0.0
   peerDependencies:
-    react: ^16.0.0 || ^17.0.0
-  checksum: f344c663c48720d19559b4198b1f63ad47a3f11bedc92ede053a6c0706b5209e6110086f3ccc6db04eda9f0d1a415845956ddfb6ce09a922167d4831fcba9314
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 6052c7e3e9627485120ebd8257f128aad8f56386fe8d42374b7743eac1be457c33506d153c7886b4e32923c0c352d402ab805ef9ca02dbcd8393b2bdeb6e5af8
   languageName: node
   linkType: hard
 
-"react-test-renderer@npm:18.0.0":
-  version: 18.0.0
-  resolution: "react-test-renderer@npm:18.0.0"
+"react-test-renderer@npm:18.1.0":
+  version: 18.1.0
+  resolution: "react-test-renderer@npm:18.1.0"
   dependencies:
-    react-is: ^18.0.0
-    react-shallow-renderer: ^16.13.1
-    scheduler: ^0.21.0
+    react-is: ^18.1.0
+    react-shallow-renderer: ^16.15.0
+    scheduler: ^0.22.0
   peerDependencies:
-    react: ^18.0.0
-  checksum: c0e5250fa2e4c3650e247b986c262631bec68f18c06817269ab7a4e2cffa5a152bb58ce0fe4182ffa8c333e6c2a8d763ac92e0928e5f6914a7aa188c2de1943a
+    react: ^18.1.0
+  checksum: 401a0020ff39ebdb37e015197ab11ceb13ddb7004716b7fb6304b169f20d6b0c4d0e14aaa0da139ce2b1eb14088cf370b5771b30fee52f16d6b682b5332c5781
   languageName: node
   linkType: hard
 
-"react@npm:18.0.0":
-  version: 18.0.0
-  resolution: "react@npm:18.0.0"
+"react@npm:18.1.0":
+  version: 18.1.0
+  resolution: "react@npm:18.1.0"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 293020b96536b3c7113ee57ca5c990a3f25649d1751b1c7a3aabd16dff0691fe9f1eed1206616d0906d05933536052037340a0c8d0941ff870b0eb469a2f975b
+  checksum: 5bb296b561b43ef2220395da4faac86c14a087c8c80e1a7598a5740f01ee605c11eaf249985c1e2000971c4cd32ccb46d40f00479bbd9fb6b1c7cf857393b7d4
   languageName: node
   linkType: hard
 
@@ -10332,12 +10332,12 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.21.0":
-  version: 0.21.0
-  resolution: "scheduler@npm:0.21.0"
+"scheduler@npm:^0.22.0":
+  version: 0.22.0
+  resolution: "scheduler@npm:0.22.0"
   dependencies:
     loose-envify: ^1.1.0
-  checksum: 4f8285076041ed2c81acdd1faa987f1655fdbd30554bc667c1ea64743fc74fb3a04ca7d27454b3d678735df5a230137a3b84756061b43dc5796e80701b66d124
+  checksum: a8ef5cab769c020cd6382ad9ecc3f72dbde56a50a36639b3a42ad9c11f7724f03700bcad373044059b8067d4a6365154dc7c0ca8027ef20ff4900cf58a0fc2c5
   languageName: node
   linkType: hard
 
