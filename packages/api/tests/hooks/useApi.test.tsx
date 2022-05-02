@@ -1,6 +1,7 @@
+import { AbortResource } from '@jujulego/alma-resources';
 import { renderHook } from '@testing-library/react-hooks';
 
-import { AlmaApiSetup, ApiFetcher, ApiResource, ApiResponse, $url, useApi } from '../../src';
+import { AlmaApiSetup, ApiFetcher, ApiResponse, $url, useApi } from '../../src';
 
 // Setup
 const fetcher: jest.MockedFunction<ApiFetcher> = jest.fn();
@@ -35,7 +36,7 @@ describe('useApi', () => {
       // Run request
       const res = result.current();
 
-      expect(res).toBeInstanceOf(ApiResource);
+      expect(res).toBeInstanceOf(AbortResource);
       expect(fetcher).toHaveBeenCalledWith({
         method: 'get',
         url: '/test/8',
@@ -58,7 +59,7 @@ describe('useApi', () => {
       // Run request
       const res = result.current({ id: 8 });
 
-      expect(res).toBeInstanceOf(ApiResource);
+      expect(res).toBeInstanceOf(AbortResource);
       expect(fetcher).toHaveBeenCalledWith({
         method: 'get',
         url: '/test/8',
@@ -83,7 +84,7 @@ describe('useApi', () => {
       // Run request
       const res = result.current('body');
 
-      expect(res).toBeInstanceOf(ApiResource);
+      expect(res).toBeInstanceOf(AbortResource);
       expect(fetcher).toHaveBeenCalledWith({
         method: 'post',
         url: '/test/8',
@@ -107,7 +108,7 @@ describe('useApi', () => {
       // Run request
       const res = result.current({ id: 8 }, 'body');
 
-      expect(res).toBeInstanceOf(ApiResource);
+      expect(res).toBeInstanceOf(AbortResource);
       expect(fetcher).toHaveBeenCalledWith({
         method: 'post',
         url: '/test/8',

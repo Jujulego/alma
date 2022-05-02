@@ -1,7 +1,7 @@
+// noinspection GraphQLUnresolvedReference
 import { print } from 'graphql';
-import gql from 'graphql-tag';
 
-import { buildRequest, gqlDoc } from '../src';
+import { buildRequest, gql } from '../../src';
 
 // Setup
 beforeEach(() => {
@@ -95,11 +95,5 @@ describe('buildRequest', () => {
       {
         query: print(doc),
       });
-  });
-});
-
-describe('gqlDoc', () => {
-  it('should return the given document', () => {
-    expect(gqlDoc('query Test { ... }')).toBe('query Test { ... }');
   });
 });
