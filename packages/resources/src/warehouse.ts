@@ -96,5 +96,25 @@ export class Warehouse extends EventTarget {
 
     return old;
   }
+
+  /**
+   * Remove resource at the given key.
+   * Returns the previous resource, if any.
+   *
+   * @param key
+   */
+  remove(key: string): Resource<unknown> | undefined {
+    const old = this._resources.get(key);
+    this._resources.delete(key);
+
+    return old;
+  }
+
+  /**
+   * Remove all resources.
+   */
+  clear(): void {
+    this._resources.clear();
+  }
 }
 

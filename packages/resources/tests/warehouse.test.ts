@@ -74,3 +74,47 @@ describe('Warehouse.getOrCreate', () => {
     expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
   });
 });
+
+describe('Warehouse.set', () => {
+  it('should add a new resource', () => {
+    const res = new Resource();
+
+    expect(warehouse.set('test', res)).toBeUndefined();
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(1);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res));
+  });
+  
+  it('should replace an existing resource', () => {
+    const old = warehouse.create('test');
+    const res = new Resource();
+
+    expect(warehouse.set('test', res)).toBe(old);
+    expect(warehouse.get('test')).toBe(res);
+    expect(updateEventSpy).toHaveBeenCalledTimes(2);
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', old));
+    expect(updateEventSpy).toHaveBeenCalledWith(new WarehouseUpdateEvent('test', res, old));
+  });
+});
+
+describe('Warehouse.remove', () => {
+  it('should remove an existing resource', () => {
+    const res = warehouse.create('test');
+
+    expect(warehouse.remove('test')).toBe(res);
+    expect(warehouse.get('test')).toBeUndefined();
+  });
+
+  it('should do nothing if nothing to delete', () => {
+    expect(warehouse.remove('test')).toBeUndefined();
+  });
+});
+
+describe('Warehouse.clear', () => {
+  it('should remove all existing resource', () => {
+    warehouse.create('test');
+    warehouse.clear();
+
+    expect(warehouse.get('test')).toBeUndefined();
+  });
+});

@@ -1,23 +1,26 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 
 import { $api, almaApiConfig, ApiFetcher } from '../src';
 
-// Modes
-describe('Effect mode', () => {
-  // Setup
-  let fetcher: ApiFetcher;
+// Setup
+let resolve: () => void;
+let fetcher: ApiFetcher;
 
-  beforeEach(() => {
-    fetcher = jest.fn().mockResolvedValue({
+beforeEach(() => {
+  fetcher = jest.fn().mockImplementation(() => new Promise((res) => {
+    resolve = () => res({
       status: 200,
       statusText: 'OK',
       headers: {},
       data: 'success'
     });
+  }));
 
-    almaApiConfig({ fetcher });
-  });
+  almaApiConfig({ fetcher });
+});
 
+// Modes
+describe('Effect mode', () => {
   // Tests
   it('should return a hook witch sends a get request', async () => {
     // Render
@@ -42,6 +45,7 @@ describe('Effect mode', () => {
     );
 
     // After response is received
+    act(() => resolve());
     await waitForNextUpdate();
 
     expect(result.current.isLoading).toBe(false);
@@ -52,23 +56,6 @@ describe('Effect mode', () => {
 });
 
 describe('Suspense mode', () => {
-  // Setup
-  let resolve: () => void;
-  let fetcher: ApiFetcher;
-
-  beforeEach(() => {
-    fetcher = jest.fn().mockImplementation(() => new Promise((res) => {
-      resolve = () => res({
-        status: 200,
-        statusText: 'OK',
-        headers: {},
-        data: 'success'
-      });
-    }));
-
-    almaApiConfig({ fetcher });
-  });
-
   // Tests
   it('should return a hook witch sends a get request', async () => {
     // Render
