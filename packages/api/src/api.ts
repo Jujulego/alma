@@ -41,10 +41,10 @@ export type ApiHookMutator<N extends string, DM, BM> = {
 }
 
 export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> & M> & {
-    // Methods
-    prefetch: ApiHookSender<A, B, ApiResource<D>>;
-    mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<A, B, D, M & ApiHookMutator<N, DM, BM>>
-  };
+  // Methods
+  prefetch: ApiHookSender<A, B, ApiResource<D>>;
+  mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<A, B, D, M & ApiHookMutator<N, DM, BM>>
+};
 
 // Utils
 function parseArgs<A, B>(builder: ApiUrlBuilder<A>, args: unknown[]): [string, B | undefined, ApiQuery] {
@@ -99,7 +99,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
       headers, responseType, config
     });
 
-    const key = `api:${url}:${JSON.stringify(query)}:${JSON.stringify(body)}`;
+    const key = `api:${url}`;
     const res = useResource(key, { warehouse, creator: () => send(body, query) });
 
     // State
@@ -117,11 +117,11 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
         }
 
         // Refresh data
-        const newResource = send();
+        const newResource = send(body, query);
         warehouse.set(key, newResource);
 
         return newResource;
-      }, [res, warehouse, key, send]),
+      }, [res, warehouse, key, body, query, send]),
     };
   }
 
