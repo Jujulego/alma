@@ -1,5 +1,5 @@
 import { AbortResource } from '@jujulego/alma-resources';
-import { GraphQLError } from 'graphql';
+import { GraphQLError } from 'packages/graphql/src/gql';
 
 // Utils
 export type GqlResource<D> = AbortResource<GqlResponse<D>>;

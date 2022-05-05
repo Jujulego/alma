@@ -1,4 +1,4 @@
-import { DocumentNode, OperationDefinitionNode, print } from 'graphql';
+import { DocumentNode, OperationDefinitionNode, print } from 'packages/graphql/src/gql';
 import { isNode } from 'graphql/language/ast';
 import _gql from 'graphql-tag';
 
