@@ -1,27 +1,28 @@
-import { globalWarehouse } from '@jujulego/alma-resources';
+import { Warehouse } from '@jujulego/alma-resources';
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { $api, $url, almaApiConfig, ApiFetcher } from '../src';
+import { $api, $get, $post, $put, $url, almaApiConfig, ApiFetcher, ApiRequest } from '../src';
 
 // Setup
 let resolve: () => void;
 let fetcher: ApiFetcher;
+const warehouse = new Warehouse();
 
 beforeEach(() => {
-  fetcher = jest.fn().mockImplementation(() => new Promise((res) => {
+  fetcher = jest.fn().mockImplementation((req: ApiRequest) => new Promise((res) => {
     resolve = () => res({
       status: 200,
       statusText: 'OK',
       headers: {},
-      data: 'success'
+      data: req.method === 'put' ? 'running' : 'success'
     });
   }));
 
-  almaApiConfig({ fetcher });
+  almaApiConfig({ fetcher, warehouse });
 });
 
 afterEach(() => {
-  globalWarehouse().clear();
+  warehouse.clear();
 });
 
 // Modes
@@ -29,7 +30,7 @@ describe('Effect mode', () => {
   // Tests
   it('should return a hook witch sends a get request', async () => {
     // Render
-    const useApiData = $api('get', '/test', { suspense: false });
+    const useApiData = $api<string>('get', '/test', { suspense: false });
 
     const { result, waitForNextUpdate } = renderHook(() => useApiData());
 
@@ -61,11 +62,9 @@ describe('Effect mode', () => {
 
   it('should send a get request to built url', async () => {
     // Render
-    const useApiData = $api('get', $url`/test/${'id'}`, { suspense: false });
+    const useApiData = $api($get<string>(), $url`/test/${'id'}`, { suspense: false });
 
-    const { waitForNextUpdate } = renderHook((props) => useApiData(props), {
-      initialProps: { id: 5 },
-    });
+    const { waitForNextUpdate } = renderHook(() => useApiData({ id: 5 }));
 
     // Trigger response
     act(() => resolve());
@@ -80,9 +79,65 @@ describe('Effect mode', () => {
     expect(fetcher).toHaveBeenCalledTimes(1);
   });
 
+  it('should send a get request with given query', async () => {
+    // Render
+    const useApiData = $api<string>('get', '/test', {
+      suspense: false,
+      query: {
+        a: 1,
+        b: true
+      }
+    });
+
+    const { waitForNextUpdate } = renderHook(() => useApiData(undefined, { b: false, c: '3' }));
+
+    // Trigger response
+    act(() => resolve());
+    await waitForNextUpdate();
+
+    // Should have called fetcher with given request
+    expect(fetcher).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: '/test',
+        query: { a: 1, b: false, c: '3' }
+      }),
+      expect.any(AbortSignal)
+    );
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('should send a post request with given body', async () => {
+    // Render
+    const useApiData = $api($post<string, { test: number }>(), '/test', {
+      suspense: false,
+      query: {
+        a: 1,
+        b: true
+      }
+    });
+
+    const { waitForNextUpdate } = renderHook(() => useApiData({ test: 5 }));
+
+    // Trigger response
+    act(() => resolve());
+    await waitForNextUpdate();
+
+    // Should have called fetcher with given request
+    expect(fetcher).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: '/test',
+        body: { test: 5 }
+      }),
+      expect.any(AbortSignal)
+    );
+
+    expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
   it('should cancel previous request when url changes', async () => {
     // Render
-    const useApiData = $api('get', $url`/test/${'id'}`, { suspense: false });
+    const useApiData = $api($get<string>(), $url`/test/${'id'}`, { suspense: false });
 
     const { rerender, waitForNextUpdate } = renderHook((props) => useApiData(props), {
       initialProps: { id: 5 },
@@ -115,7 +170,7 @@ describe('Effect mode', () => {
 
   it('should send a new request when calling refresh if previous ended', async () => {
     // Render
-    const useApiData = $api('get', '/test', { suspense: false });
+    const useApiData = $api<string>('get', '/test', { suspense: false });
 
     const { result, waitForNextUpdate } = renderHook(() => useApiData());
 
@@ -148,7 +203,7 @@ describe('Effect mode', () => {
 
   it('should send request before hook is called by using prefetch', async () => {
     // Render
-    const useApiData = $api('get', '/test', { suspense: false });
+    const useApiData = $api<string>('get', '/test', { suspense: false });
 
     // Prefetch
     useApiData.prefetch();
@@ -169,6 +224,60 @@ describe('Effect mode', () => {
 
     // Fetcher should have been called twice
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('should store resource at the given key', async () => {
+    // Render
+    const useApiData = $api<string>('get', '/test', {
+      suspense: false,
+      key: 'test:custom-key'
+    });
+
+    const { waitForNextUpdate } = renderHook(() => useApiData());
+
+    // Trigger response
+    act(() => resolve());
+    await waitForNextUpdate();
+
+    // Should have a resource at given key
+    expect(warehouse.get('test:custom-key')).toBeDefined();
+  });
+
+  it('should update state with mutation result', async () => {
+    // Render
+    const useApiData = $api<string>('get', '/test', { suspense: false })
+      .mutation('start', $put<string, number>(), '/start', (old, res) => res);
+
+    const { result, waitForNextUpdate } = renderHook(() => useApiData());
+
+    // Should have 'start' method
+    expect(result.current.start).toBeInstanceOf(Function);
+
+    // Trigger response
+    act(() => resolve());
+    await waitForNextUpdate();
+
+    expect(result.current.data).toBe('success');
+
+    // Trigger mutation
+    act(() => {
+      result.current.start(5);
+    });
+
+    expect(fetcher).toHaveBeenCalledWith(
+      expect.objectContaining({
+        method: 'put',
+        url: '/test/start',
+        body: 5,
+      }),
+      expect.any(AbortSignal)
+    );
+
+    // Trigger response
+    act(() => resolve());
+    await waitForNextUpdate();
+
+    expect(result.current.data).toBe('running');
   });
 });
 
