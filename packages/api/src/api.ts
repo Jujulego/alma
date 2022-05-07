@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import { AbortResource, useResource } from '@jujulego/alma-resources';
 
 import { globalApiConfig } from './config';
 import { useApi } from './hooks';
 import {
-  ApiDataConstraint as ADC, ApiQuery, ApiResource,
+  ApiDataConstraint as ADC, ApiMethod, ApiQuery, ApiResource,
   ApiResponse,
   ApiResponseType,
   ApiResponseTypeFor as ARTF,
@@ -13,15 +13,18 @@ import {
 import { ApiTypedMethod, ApiUrl, ApiUrlBuilder, urlBuilder } from './utils';
 
 // Types
-export interface ApiOptions<RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
+export type ApiKeyBuilder<B> = (req: { method: ApiMethod, url: string, query: ApiQuery, body?: B }) => string;
+
+export interface ApiOptions<B, RT extends ApiResponseType = ApiResponseType> extends RequestOptions<RT> {
+  key?: string | ApiKeyBuilder<B>;
   suspense?: boolean;
 }
 
-export interface ApiOptionsSuspense<RT extends ApiResponseType = ApiResponseType> extends ApiOptions<RT> {
+export interface ApiOptionsSuspense<B, RT extends ApiResponseType = ApiResponseType> extends ApiOptions<B, RT> {
   suspense: true;
 }
 
-export interface ApiOptionsEffect<RT extends ApiResponseType = ApiResponseType> extends ApiOptions<RT> {
+export interface ApiOptionsEffect<B, RT extends ApiResponseType = ApiResponseType> extends ApiOptions<B, RT> {
   suspense?: false;
 }
 
@@ -47,6 +50,16 @@ export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> 
 };
 
 // Utils
+function extractKeyBuilder<B>(options: ApiOptions<B>): ApiKeyBuilder<B> {
+  const { key } = options;
+
+  if (typeof key === 'string') {
+    return () => key;
+  } else {
+    return key ?? (({ method, url, query }) => `$api:${method}:${url}:${JSON.stringify(query)}`);
+  }
+}
+
 function parseArgs<A, B>(builder: ApiUrlBuilder<A>, args: unknown[]): [string, B | undefined, ApiQuery] {
   // Parse arguments
   let arg: A | void;
@@ -63,19 +76,19 @@ function parseArgs<A, B>(builder: ApiUrlBuilder<A>, args: unknown[]): [string, B
 }
 
 // Hook builder
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'arraybuffer'>): ApiHook<A, B, D & ADC<'arraybuffer'>>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'blob'>): ApiHook<A, B, D & ADC<'blob'>>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense, 'text'>): ApiHook<A, B, D & ADC<'text'>>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptionsSuspense<ARTF<D>>): ApiHook<A, B, D>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense<B>, 'arraybuffer'>): ApiHook<A, B, D & ADC<'arraybuffer'>>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense<B>, 'blob'>): ApiHook<A, B, D & ADC<'blob'>>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense<B>, 'text'>): ApiHook<A, B, D & ADC<'text'>>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptionsSuspense<B, ARTF<D>>): ApiHook<A, B, D>;
 
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'arraybuffer'>): ApiHook<A, B, (D & ADC<'arraybuffer'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'blob'>): ApiHook<A, B, (D & ADC<'blob'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect, 'text'>): ApiHook<A, B, (D & ADC<'text'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsEffect<ARTF<D>>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'arraybuffer'>): ApiHook<A, B, (D & ADC<'arraybuffer'>) | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'blob'>): ApiHook<A, B, (D & ADC<'blob'>) | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'text'>): ApiHook<A, B, (D & ADC<'text'>) | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsEffect<B, ARTF<D>>): ApiHook<A, B, D | undefined>;
 
-export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<ARTF<D>>): ApiHook<A, B, D | undefined>;
+export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<B, ARTF<D>>): ApiHook<A, B, D | undefined>;
 
-export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptions<ARTF<D>> = {}): ApiHook<A, B, D | undefined> {
+export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptions<B, ARTF<D>> = {}): ApiHook<A, B, D | undefined> {
   const builder = urlBuilder(url);
 
   // Options
@@ -86,6 +99,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
     responseType = 'json' as ARTF<D>,
   } = options;
 
+  const keyBuilder = extractKeyBuilder(options);
   const config = { ...globalApiConfig(), ...options.config };
 
   // Hook
@@ -99,7 +113,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
       headers, responseType, config
     });
 
-    const key = `$api:${method}:${url}:${JSON.stringify(query)}`;
+    const key = useMemo(() => keyBuilder({ method, url, query: { ..._query, ...query }, body} ), [url, query, body]);
     const res = useResource(key, { warehouse, creator: () => send(body, query) });
 
     // State
@@ -130,7 +144,7 @@ export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, opti
       const [url, body, query] = parseArgs<A, B>(builder, args);
       const { fetcher, warehouse } = config;
 
-      const key = `$api:${method}:${url}`;
+      const key = keyBuilder({ method, url, query: { ..._query, ...query }, body});
       let res = warehouse.get<ApiResponse<D>, ApiResource<D>>(key);
 
       if (!res) {
