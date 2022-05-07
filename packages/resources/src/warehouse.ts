@@ -1,4 +1,4 @@
-import { Resource } from './resource';
+import { Resource } from './resources/resource';
 
 // Events
 export interface WarehouseUpdateEvent<T = unknown> extends Event {

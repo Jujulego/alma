@@ -1,6 +1,6 @@
 import { createContext, useContext, useDebugValue } from 'react';
 
-import { Warehouse } from './warehouse';
+import { Warehouse } from '../warehouse';
 
 // Constants
 export const GLOBAL_WAREHOUSE = Symbol('jujulego:alma-resources:global-warehouse');

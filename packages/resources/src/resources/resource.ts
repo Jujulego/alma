@@ -50,7 +50,7 @@ export interface Resource<T> extends EventTarget {
   removeEventListener(type: 'update', callback: ResourceUpdateEventListener<T>, options?: EventListenerOptions | boolean): void;
 }
 
-export class Resource<T> extends EventTarget {
+export class Resource<T, C = unknown> extends EventTarget {
   // Attributes
   private _state: ResourceState<T> = { status: 'pending' };
 

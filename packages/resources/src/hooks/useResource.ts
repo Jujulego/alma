@@ -1,7 +1,7 @@
 import { startTransition, useLayoutEffect, useState } from 'react';
 
-import { Resource } from './resource';
-import { Warehouse, WarehouseUpdateEventListener } from './warehouse';
+import { Resource } from '../resources/resource';
+import { Warehouse, WarehouseUpdateEventListener } from '../warehouse';
 import { useWarehouse } from './useWarehouse';
 
 // Types

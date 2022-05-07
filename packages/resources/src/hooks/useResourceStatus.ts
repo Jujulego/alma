@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-import { Resource, ResourceStatus } from './resource';
+import { Resource, ResourceStatus } from '../resources/resource';
 
 // Hook
 /**

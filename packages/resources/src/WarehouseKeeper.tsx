@@ -1,4 +1,4 @@
-import { WarehouseCtx } from './useWarehouse';
+import { WarehouseCtx } from './hooks/useWarehouse';
 import { Warehouse } from './warehouse';
 import { FC, ReactNode, useRef } from 'react';
 
