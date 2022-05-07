@@ -2,18 +2,19 @@ import { $api, $get, $url } from '@jujulego/alma-api';
 import { FC, useCallback, useTransition } from 'react';
 
 // Constants
-const useUSAPopulation = $api($get(), $url`https://api.github.com/repos/${'owner'}/${'repo'}/issues`, {
+const useRepoIssues = $api($get(), $url`https://api.github.com/repos/${'owner'}/${'repo'}/issues`, {
   query: {
     sort: 'created', direction: 'desc'
   },
+  suspense: true
 });
 
-useUSAPopulation.prefetch({ owner: 'microsoft', repo: 'typescript' });
+useRepoIssues.prefetch({ owner: 'microsoft', repo: 'typescript' });
 
 // Component
 export const ApiData: FC<{ n: number }> = () => {
   const [isPending, startTransition] = useTransition();
-  const { data, isLoading, refresh } = useUSAPopulation({ owner: 'microsoft', repo: 'typescript' });
+  const { data, isLoading, refresh } = useRepoIssues({ owner: 'microsoft', repo: 'typescript' });
 
   const handleRefresh = useCallback(() => {
     startTransition(() => {
