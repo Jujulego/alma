@@ -2431,7 +2431,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/alma-graphql@workspace:packages/graphql":
+"@jujulego/alma-graphql@^2.1.5, @jujulego/alma-graphql@workspace:packages/graphql":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-graphql@workspace:packages/graphql"
   dependencies:
@@ -4308,6 +4308,7 @@ __metadata:
     "@babel/preset-typescript": 7.16.7
     "@babel/runtime": 7.17.9
     "@jujulego/alma-api": ^2.4.0
+    "@jujulego/alma-graphql": ^2.1.5
     "@jujulego/alma-utils": ^1.1.5
     "@types/node": 16.11.7
     "@types/react": ^18.0.3

@@ -1,5 +1,5 @@
-import { DocumentNode, OperationDefinitionNode, print } from 'packages/graphql/src/gql';
-import { isNode } from 'graphql/language/ast';
+import { DocumentNode, OperationDefinitionNode, print } from 'graphql';
+import { isNode } from 'graphql/language/ast.js';
 import _gql from 'graphql-tag';
 
 import { GqlRequest, GqlVars } from '../types';
