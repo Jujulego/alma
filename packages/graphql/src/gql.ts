@@ -23,7 +23,10 @@ export interface GqlHookState<D, Def = never> {
   refresh(): GqlResource<D>;
 }
 
-export type GqlHook<D, V extends GqlVars = GqlVars, Def = never> = (vars: V) => GqlHookState<D, Def>;
+export type GqlHook<D, V extends GqlVars = GqlVars, Def = never> = ((vars?: V) => GqlHookState<D, Def>) & {
+  // Methods
+  prefetch(vars?: V): GqlResource<D>;
+};
 
 // Hook builder
 export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptionsSuspense<V>): GqlHook<D, V>;
@@ -40,7 +43,7 @@ export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOption
   // Hook
   const useApiData = $api<GqlResponse<D>, GqlRequest<V>>('post', url, options);
 
-  function useGqlData(vars: V) {
+  function useGqlData(vars?: V) {
     // Add vars to body
     const _vars = useDeepMemo(vars);
     const body = useMemo(() => ({ ...request, variables: _vars }), [_vars]);
@@ -57,5 +60,10 @@ export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOption
     };
   }
 
-  return useGqlData;
+  return Object.assign(useGqlData, {
+    prefetch(vars?: V) {
+      return useApiData.prefetch({ ...request, variables: vars })
+        .then(({ data }) => data);
+    }
+  });
 }
