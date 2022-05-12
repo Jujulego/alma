@@ -28,10 +28,10 @@ export interface ApiOptionsEffect<B, RT extends ApiResponseType = ApiResponseTyp
   suspense?: false;
 }
 
-export interface ApiHookState<D> {
+export interface ApiHookState<D, Def = never> {
   isLoading: boolean;
-  data: D;
-  setData: Dispatch<SetStateAction<D>>;
+  data: D | Def;
+  setData: Dispatch<SetStateAction<D | Def>>;
   refresh(): ApiResource<D>;
 }
 
@@ -43,10 +43,10 @@ export type ApiHookMutator<N extends string, DM, BM> = {
   [K in N]: (body: BM, query?: ApiQuery) => ApiResource<DM>
 }
 
-export type ApiHook<A, B, D, M = unknown> = ApiHookSender<A, B, ApiHookState<D> & M> & {
+export type ApiHook<A, B, D, Def = never, M = unknown> = ApiHookSender<A, B, ApiHookState<D, Def> & M> & {
   // Methods
   prefetch: ApiHookSender<A, B, ApiResource<D>>;
-  mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D, res: DM) => D): ApiHook<A, B, D, M & ApiHookMutator<N, DM, BM>>
+  mutation<N extends string, DM, BM>(name: N, method: ApiTypedMethod<DM, BM>, url: string, merge: (old: D | Def, res: DM) => D): ApiHook<A, B, D, Def, M & ApiHookMutator<N, DM, BM>>
 };
 
 // Utils
@@ -81,14 +81,14 @@ export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url
 export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsSuspense<B>, 'text'>): ApiHook<A, B, D & ADC<'text'>>;
 export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptionsSuspense<B, ARTF<D>>): ApiHook<A, B, D>;
 
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'arraybuffer'>): ApiHook<A, B, (D & ADC<'arraybuffer'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'blob'>): ApiHook<A, B, (D & ADC<'blob'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'text'>): ApiHook<A, B, (D & ADC<'text'>) | undefined>;
-export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsEffect<B, ARTF<D>>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'arraybuffer'>): ApiHook<A, B, (D & ADC<'arraybuffer'>), undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'blob'>): ApiHook<A, B, (D & ADC<'blob'>), undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ERT<ApiOptionsEffect<B>, 'text'>): ApiHook<A, B, (D & ADC<'text'>), undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptionsEffect<B, ARTF<D>>): ApiHook<A, B, D, undefined>;
 
-export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<B, ARTF<D>>): ApiHook<A, B, D | undefined>;
+export function $api<D, B = unknown, A = void>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options?: ApiOptions<B, ARTF<D>>): ApiHook<A, B, D, undefined>;
 
-export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptions<B, ARTF<D>> = {}): ApiHook<A, B, D | undefined> {
+export function $api<D, B, A>(method: ApiTypedMethod<D, B>, url: ApiUrl<A>, options: ApiOptions<B, ARTF<D>> = {}): ApiHook<A, B, D, undefined> {
   const builder = urlBuilder(url);
 
   // Options

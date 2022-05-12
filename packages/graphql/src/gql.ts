@@ -1,7 +1,9 @@
 import { ApiOptionsEffect, ApiOptionsSuspense, ApiOptions, $api } from '@jujulego/alma-api';
+import { useDeepMemo } from '@jujulego/alma-utils';
 import { GraphQLError } from 'graphql';
+import { useCallback, useMemo } from 'react';
 
-import { GqlRequest, GqlResponse, GqlVars } from './types';
+import { GqlRequest, GqlResource, GqlResponse, GqlVars } from './types';
 import { buildRequest, GqlDoc } from './utils';
 
 // Types
@@ -13,21 +15,22 @@ export type GqlApiOptionsSuspense<V extends GqlVars> = GqlOptions & ApiOptionsSu
 export type GqlApiOptionsEffect<V extends GqlVars> = GqlOptions & ApiOptionsEffect<GqlRequest<V>, 'json'>;
 export type GqlApiOptions<V extends GqlVars> = GqlOptions & ApiOptions<GqlRequest<V>, 'json'>;
 
-export interface GqlHookState<D> {
+export interface GqlHookState<D, Def = never> {
   isLoading: boolean;
   errors: readonly GraphQLError[];
-  data: D;
-  setData: (data: D) => void;
+  data: D | Def;
+  setData(data: D | Def): void;
+  refresh(): GqlResource<D>;
 }
 
-export type GqlHook<D, V extends GqlVars = GqlVars> = (vars: V) => GqlHookState<D>;
+export type GqlHook<D, V extends GqlVars = GqlVars, Def = never> = (vars: V) => GqlHookState<D, Def>;
 
 // Hook builder
 export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptionsSuspense<V>): GqlHook<D, V>;
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptionsEffect<V>): GqlHook<D | undefined, V>;
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptions<V>): GqlHook<D | undefined, V>;
+export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptionsEffect<V>): GqlHook<D, V, undefined>;
+export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptions<V>): GqlHook<D, V, undefined>;
 
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptions<V> = {}): GqlHook<D | undefined, V> {
+export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptions<V> = {}): GqlHook<D, V, undefined> {
   const request = buildRequest(doc);
 
   // Options
@@ -35,7 +38,24 @@ export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOption
   options.key ??= `gql:${url}:${request.operationName}`;
 
   // Hook
-  const hook = $api<GqlResponse<D>, GqlRequest<V>, void>('post', url, options);
+  const useApiData = $api<GqlResponse<D>, GqlRequest<V>>('post', url, options);
 
-  return hook;
+  function useGqlData(vars: V) {
+    // Add vars to body
+    const _vars = useDeepMemo(vars);
+    const body = useMemo(() => ({ ...request, variables: _vars }), [_vars]);
+
+    // "send" request
+    const { isLoading, data, setData, refresh } = useApiData(body);
+
+    return {
+      isLoading,
+      data: data?.data,
+      errors: data?.errors || [],
+      setData: useCallback((update: D) => setData({ data: update, errors: [] }), [setData]),
+      refresh: useCallback(() => refresh().then(({ data }) => data), [refresh]),
+    };
+  }
+
+  return useGqlData;
 }
