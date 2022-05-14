@@ -29,11 +29,11 @@ export type GqlHook<D, V extends GqlVars = GqlVars, Def = never> = ((vars?: V) =
 };
 
 // Hook builder
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptionsSuspense<V>): GqlHook<D, V>;
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptionsEffect<V>): GqlHook<D, V, undefined>;
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptions<V>): GqlHook<D, V, undefined>;
+export function $graphql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptionsSuspense<V>): GqlHook<D, V>;
+export function $graphql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptionsEffect<V>): GqlHook<D, V, undefined>;
+export function $graphql<D, V extends GqlVars>(doc: GqlDoc<V>, options?: GqlApiOptions<V>): GqlHook<D, V, undefined>;
 
-export function $gql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptions<V> = {}): GqlHook<D, V, undefined> {
+export function $graphql<D, V extends GqlVars>(doc: GqlDoc<V>, options: GqlApiOptions<V> = {}): GqlHook<D, V, undefined> {
   const request = buildRequest(doc);
 
   // Options
