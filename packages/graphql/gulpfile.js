@@ -46,7 +46,7 @@ gulp.task('bundle:umd', () => flow(
     output: {
       file: 'alma-graphql.js',
       format: 'umd',
-      name: '@jujulego/alma-graphql',
+      name: 'almaGraphql',
     },
     plugins: [
       externals(),
@@ -66,7 +66,7 @@ gulp.task('build', gulp.series(
   'bundle:umd'
 ));
 
-gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.series(
     gulp.parallel('build:cjs', 'build:esm', 'build:types'),
     'bundle:umd',

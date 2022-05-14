@@ -9,6 +9,6 @@ module.exports = (api) => ({
     }]
   ],
   plugins: [
-    '@babel/proposal-class-properties'
+    'babel-plugin-add-import-extension'
   ]
 });

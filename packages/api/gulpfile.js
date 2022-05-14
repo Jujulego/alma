@@ -12,6 +12,7 @@ const paths = {
   tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*',
+    '../resources/dist/types/**',
     '../utils/dist/types/**',
   ]
 };
@@ -45,7 +46,7 @@ gulp.task('bundle:umd', () => flow(
     output: {
       file: 'alma-api.js',
       format: 'umd',
-      name: '@jujulego/alma-api',
+      name: 'almaApi',
     },
     plugins: [
       externals(),
@@ -65,7 +66,7 @@ gulp.task('build', gulp.series(
   'bundle:umd'
 ));
 
-gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.series(
     gulp.parallel('build:cjs', 'build:esm', 'build:types'),
     'bundle:umd',
