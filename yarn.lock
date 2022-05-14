@@ -2299,7 +2299,7 @@ __metadata:
     "@babel/preset-env": 7.16.11
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
-    "@jujulego/alma-utils": ^1.1.6
+    "@jujulego/alma-utils": ^1.1.7
     "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-node-resolve": 13.2.1
     "@testing-library/jest-dom": 5.16.4
@@ -2395,7 +2395,7 @@ __metadata:
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
     "@jujulego/alma-api": ^2.4.1
-    "@jujulego/alma-utils": ^1.1.6
+    "@jujulego/alma-utils": ^1.1.7
     "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-node-resolve": 13.2.1
     "@testing-library/jest-dom": 5.16.4
@@ -2483,7 +2483,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@jujulego/alma-utils@^1.1.6, @jujulego/alma-utils@workspace:packages/utils":
+"@jujulego/alma-utils@^1.1.7, @jujulego/alma-utils@workspace:packages/utils":
   version: 0.0.0-use.local
   resolution: "@jujulego/alma-utils@workspace:packages/utils"
   dependencies:
