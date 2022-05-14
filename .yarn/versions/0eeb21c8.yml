@@ -1,6 +1,0 @@
-releases:
-  "@jujulego/alma-api": 3.0.0-alpha.1
-  "@jujulego/alma-axios": 3.0.0-alpha.1
-  "@jujulego/alma-graphql": 3.0.0-alpha.1
-  "@jujulego/alma-resources": minor
-  "@jujulego/alma-utils": patch

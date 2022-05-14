@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-graphql",
-  "version": "2.1.5",
+  "version": "3.0.0-alpha.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -39,9 +39,9 @@
     "react": "^18.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-api": "^2.4.0",
-    "@jujulego/alma-resources": "^1.0.0",
-    "@jujulego/alma-utils": "^1.1.5",
+    "@jujulego/alma-api": "^3.0.0-alpha.1",
+    "@jujulego/alma-resources": "^1.1.0",
+    "@jujulego/alma-utils": "^1.1.6",
     "graphql-ws": "^5.5.0"
   },
   "devDependencies": {
@@ -84,5 +84,6 @@
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "4.6.4"
-  }
+  },
+  "stableVersion": "2.1.5"
 }

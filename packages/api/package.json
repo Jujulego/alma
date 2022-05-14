@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-api",
-  "version": "2.4.0",
+  "version": "3.0.0-alpha.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -38,8 +38,8 @@
     "react": "^18.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-resources": "^1.0.0",
-    "@jujulego/alma-utils": "^1.1.5"
+    "@jujulego/alma-resources": "^1.1.0",
+    "@jujulego/alma-utils": "^1.1.6"
   },
   "devDependencies": {
     "@babel/core": "7.17.9",
@@ -79,5 +79,6 @@
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "4.6.4"
-  }
+  },
+  "stableVersion": "2.4.0"
 }
