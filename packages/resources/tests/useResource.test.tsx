@@ -1,50 +1,55 @@
 import { act, renderHook } from '@testing-library/react-hooks';
 
-import { GLOBAL_WAREHOUSE, Resource, useResource } from '../src';
+import { Resource, useResource, Warehouse } from '../src';
 
 // Setup
+let warehouse: Warehouse;
+
 beforeEach(() => {
-  delete self[GLOBAL_WAREHOUSE];
+  warehouse = new Warehouse();
 });
 
 // Tests
 describe('useResource', () => {
-  it('should follow resource updates', () => {
+  it('should create resource and return it', () => {
     // Initial render
-    const { result } = renderHook(() => useResource('test'));
-
-    expect(result.current).toBeUndefined();
-
-    // Create resource
-    act(() => {
-      self[GLOBAL_WAREHOUSE]?.create('test');
-    });
-
-    expect(result.current).toBeInstanceOf(Resource);
-    expect(result.current).toBe(self[GLOBAL_WAREHOUSE]?.get('test'));
-
-    // Recreate resource
-    act(() => {
-      self[GLOBAL_WAREHOUSE]?.create('test');
-    });
-
-    expect(result.current).toBe(self[GLOBAL_WAREHOUSE]?.get('test'));
-  });
-
-  it('should create resource inside global warehouse and return it', () => {
-    // Initial render
-    const { result, rerender } = renderHook(({ rkey }) => useResource(rkey, { create: true }), {
+    const { result, rerender } = renderHook(({ id }) => useResource(id, { warehouse }), {
       initialProps: {
-        rkey: 'test1'
+        id: 'test1'
       }
     });
 
     expect(result.current).toBeInstanceOf(Resource);
-    expect(result.current).toBe(self[GLOBAL_WAREHOUSE]?.get('test1'));
+    expect(result.current).toBe(warehouse.get('test1'));
 
-    // Change key
-    rerender({ rkey: 'test2' });
+    // Change key => recreate it
+    rerender({ id: 'test2' });
 
-    expect(result.current).toBe(self[GLOBAL_WAREHOUSE]?.get('test2'));
+    expect(result.current).toBe(warehouse.get('test2'));
+  });
+
+  it('should use creator to create new resource', () => {
+    // Initial render
+    const creator = jest.fn(() => new Resource());
+    const { result } = renderHook(() => useResource('test', { creator, warehouse }));
+
+    expect(creator).toHaveBeenCalled();
+    expect(result.current).toBe(creator.mock.results[0].value);
+    expect(result.current).toBe(warehouse.get('test'));
+  });
+
+  it('should follow resource updates', () => {
+    // Initial render => create resource
+    const { result } = renderHook(() => useResource('test', { warehouse }));
+
+    expect(result.current).toBeInstanceOf(Resource);
+    expect(result.current).toBe(warehouse.get('test'));
+
+    // Recreate resource
+    act(() => {
+      warehouse.create('test');
+    });
+
+    expect(result.current).toBe(warehouse.get('test'));
   });
 });
