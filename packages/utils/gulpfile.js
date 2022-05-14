@@ -64,7 +64,7 @@ gulp.task('build', gulp.series(
   'bundle:umd',
 ));
 
-gulp.task('watch', () => gulp.watch([...paths.src, ...paths.deps], { ignoreInitial: false },
+gulp.task('watch', () => gulp.watch([paths.src, ...paths.deps], { ignoreInitial: false },
   gulp.series(
     gulp.parallel('build:cjs', 'build:esm', 'build:types'),
     'bundle:umd',

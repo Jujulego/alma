@@ -1,6 +1,7 @@
 {
   "name": "@jujulego/alma-api",
   "version": "3.0.0-alpha.1",
+  "stableVersion": "2.4.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -38,12 +39,12 @@
     "react": "^18.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-resources": "^1.1.0",
-    "@jujulego/alma-utils": "^1.1.6"
+    "@jujulego/alma-resources": "^1.1.1",
+    "@jujulego/alma-utils": "^1.1.7"
   },
   "devDependencies": {
-    "@babel/core": "7.17.9",
-    "@babel/preset-env": "7.16.11",
+    "@babel/core": "7.17.10",
+    "@babel/preset-env": "7.17.10",
     "@babel/preset-react": "7.16.7",
     "@babel/runtime": "7.17.9",
     "@rollup/plugin-commonjs": "22.0.0",
@@ -79,6 +80,5 @@
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
     "typescript": "4.6.4"
-  },
-  "stableVersion": "2.4.0"
+  }
 }
