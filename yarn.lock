@@ -2402,7 +2402,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/gulp-filter": 3.0.34
-    "@types/jest": 27.4.1
+    "@types/jest": 27.5.1
     "@types/node": 16.11.35
     "@types/react": 18.0.0
     "@types/testing-library__jest-dom": 5.14.3
@@ -2448,7 +2448,7 @@ __metadata:
     "@testing-library/jest-dom": 5.16.4
     "@types/gulp": 4.0.9
     "@types/gulp-filter": 3.0.34
-    "@types/jest": 27.4.1
+    "@types/jest": 27.5.1
     "@types/node": 16.11.35
     "@types/react": 18.0.0
     "@types/testing-library__jest-dom": 5.14.3
@@ -2498,7 +2498,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/gulp-filter": 3.0.34
-    "@types/jest": 27.4.1
+    "@types/jest": 27.5.1
     "@types/node": 16.11.35
     "@types/react": 18.0.0
     "@types/testing-library__jest-dom": 5.14.3
@@ -2548,7 +2548,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/gulp-filter": 3.0.34
-    "@types/jest": 27.4.1
+    "@types/jest": 27.5.1
     "@types/node": 16.11.35
     "@types/react": 18.0.0
     "@types/testing-library__jest-dom": 5.14.3
@@ -2593,7 +2593,7 @@ __metadata:
     "@testing-library/react-hooks": 7.0.2
     "@types/gulp": 4.0.9
     "@types/gulp-filter": 3.0.34
-    "@types/jest": 27.4.1
+    "@types/jest": 27.5.1
     "@types/node": 16.11.35
     "@types/react": 17.0.45
     "@types/testing-library__jest-dom": 5.14.3
@@ -3099,13 +3099,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:27.4.1":
-  version: 27.4.1
-  resolution: "@types/jest@npm:27.4.1"
+"@types/jest@npm:27.5.1":
+  version: 27.5.1
+  resolution: "@types/jest@npm:27.5.1"
   dependencies:
     jest-matcher-utils: ^27.0.0
     pretty-format: ^27.0.0
-  checksum: 5184f3eef4832d01ee8f59bed15eec45ccc8e29c724a5e6ce37bf74396b37bdf04f557000f45ba4fc38ae6075cf9cfcce3d7a75abc981023c61ceb27230a93e4
+  checksum: be20e39f7aaf17179109c0060d0a0489cec2034d4e2e28a631284c7ecd13c5ae52f62697a33a0e89b03b6cfe54e9d5e8c2bd387ab2bd90d6071d68c63b86d1e3
   languageName: node
   linkType: hard
 
