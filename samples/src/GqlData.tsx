@@ -1,8 +1,8 @@
-import { $gql, gql } from '@jujulego/alma-graphql';
+import { $graphql, gql } from '@jujulego/alma-graphql';
 import { FC, useCallback, useTransition } from 'react';
 
 // Constants
-const useRepoIssues = $gql(gql<{ repo: string, owner: string }>`query RepoIssues($repo: String!, $owner: String!) {
+const useRepoIssues = $graphql(gql<{ repo: string, owner: string }>`query RepoIssues($repo: String!, $owner: String!) {
     repository(owner: $owner, name: $repo) {
         issues(first: 10, orderBy: { field: CREATED_AT, direction: DESC }) {
             totalCount
@@ -22,7 +22,7 @@ const useRepoIssues = $gql(gql<{ repo: string, owner: string }>`query RepoIssues
   }
 });
 
-// useRepoIssues.prefetch();
+useRepoIssues.prefetch({ owner: 'microsoft', repo: 'typescript' });
 
 // Component
 export const GqlData: FC<{ n: number }> = () => {
