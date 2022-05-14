@@ -41,8 +41,8 @@
     "@jujulego/alma-utils": "^1.1.5"
   },
   "devDependencies": {
-    "@babel/core": "7.17.9",
-    "@babel/preset-env": "7.16.11",
+    "@babel/core": "7.17.10",
+    "@babel/preset-env": "7.17.10",
     "@babel/preset-react": "7.16.7",
     "@babel/runtime": "7.17.9",
     "@rollup/plugin-commonjs": "22.0.0",
