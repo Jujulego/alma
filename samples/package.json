@@ -11,9 +11,9 @@
     "@jujulego/alma-api": "^3.0.0-alpha.1",
     "@jujulego/alma-graphql": "^3.0.0-alpha.1",
     "@jujulego/alma-utils": "^1.1.6",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "regenerator-runtime": "^0.13.9"
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "regenerator-runtime": "0.13.9"
   },
   "devDependencies": {
     "@babel/core": "7.17.9",
@@ -22,8 +22,8 @@
     "@babel/preset-typescript": "7.16.7",
     "@babel/runtime": "7.17.9",
     "@types/node": "16.11.7",
-    "@types/react": "^18.0.3",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "18.0.3",
+    "@types/react-dom": "18.0.0",
     "@types/webpack": "5.28.0",
     "@types/webpack-bundle-analyzer": "4.4.1",
     "@typescript-eslint/eslint-plugin": "5.19.0",
