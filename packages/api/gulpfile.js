@@ -12,7 +12,6 @@ const paths = {
   tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*',
-    '../resources/dist/types/**',
     '../utils/dist/types/**',
   ]
 };

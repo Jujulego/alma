@@ -38,7 +38,6 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-resources": "^1.0.0",
     "@jujulego/alma-utils": "^1.1.5"
   },
   "devDependencies": {

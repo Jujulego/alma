@@ -50,6 +50,11 @@ export interface Resource<T> extends EventTarget {
   removeEventListener(type: 'update', callback: ResourceUpdateEventListener<T>, options?: EventListenerOptions | boolean): void;
 }
 
+/**
+ * Base class allowing to interact with React's Suspense api.
+ * Use it's `read` method to access data if the resource has been successfully computed,
+ * or to trigger React Suspense Api to wait until the data is computed.
+ */
 export class Resource<T> extends EventTarget {
   // Attributes
   private _state: ResourceState<T> = { status: 'pending' };
