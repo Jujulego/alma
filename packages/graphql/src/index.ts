@@ -1,5 +1,4 @@
-export * from './gql';
-export * from './gql-resource';
-export * from './ws';
+export * from './graphql';
+export * from './hooks';
 export * from './types';
 export * from './utils';

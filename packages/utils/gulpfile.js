@@ -1,3 +1,4 @@
+import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import { babel, dest, dts, flow, rollup, src, terser, ts } from 'alma-tools';
 import del from 'del';
@@ -7,7 +8,7 @@ import externals from 'rollup-plugin-node-externals';
 
 // Config
 const paths = {
-  src: ['src/**/*.ts', 'src/**/*.tsx'],
+  src: 'src/**/*.{ts,tsx}',
   tsconfig: 'tsconfig.json',
   deps: [
     '../../.pnp.*'
@@ -43,11 +44,12 @@ gulp.task('bundle:umd', () => flow(
     output: {
       file: 'alma-utils.js',
       format: 'umd',
-      name: '@jujulego/alma-utils',
+      name: 'almaUtils',
     },
     plugins: [
       externals(),
-      nodeResolve()
+      nodeResolve(),
+      commonjs(),
     ]
   }),
   dest('dist/umd'),

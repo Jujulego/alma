@@ -8,5 +8,7 @@ module.exports = (api) => ({
       runtime: 'automatic'
     }]
   ],
-  plugins: []
+  plugins: [
+    'babel-plugin-add-import-extension',
+  ]
 });

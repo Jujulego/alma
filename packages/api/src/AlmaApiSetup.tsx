@@ -1,24 +1,26 @@
 import { FC, ReactNode } from 'react';
 
-import { SwrCache } from './cache';
-import { ApiConfig, ApiConfigProps } from './config';
+import { ApiConfigContext, globalApiConfig } from './config';
+import { ApiConfig } from './types';
 
 // Props
-export interface AlmaApiSetupProps extends ApiConfigProps {
-  children?: ReactNode;
-  globalCache?: boolean;
+export interface AlmaApiSetupProps extends Partial<ApiConfig> {
+  children: ReactNode;
 }
 
 // Component
 export const AlmaApiSetup: FC<AlmaApiSetupProps> = (props) => {
-  const { globalCache = false, children, ...config } = props;
+  const global = globalApiConfig();
+  const {
+    fetcher = global.fetcher,
+    warehouse = global.warehouse,
+    children
+  } = props;
 
   // Render
-  let content = <>{ children }</>;
-
-  if (globalCache) {
-    content = <SwrCache>{ children }</SwrCache>;
-  }
-
-  return <ApiConfig {...config}>{ content }</ApiConfig>;
+  return (
+    <ApiConfigContext.Provider value={{ fetcher, warehouse }}>
+      { children }
+    </ApiConfigContext.Provider>
+  );
 };
