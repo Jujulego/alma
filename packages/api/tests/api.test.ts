@@ -285,11 +285,12 @@ describe('Suspense mode', () => {
   // Tests
   it('should return a hook witch sends a get request', async () => {
     // Render
-    const useApiData = $api('get', '/test');
+    const useApiData = $api('get', '/test', { suspense: true });
 
     const { result, rerender } = renderHook(() => useApiData());
 
-    // Should have called fetcher with given request
+    // Should have called fetcher with given request and did not render
+    expect(result.current).toBeUndefined();
     expect(fetcher).toHaveBeenCalledWith(
       {
         method: 'get',
@@ -315,7 +316,7 @@ describe('Suspense mode', () => {
 
   it('should send a get request to built url', async () => {
     // Render
-    const useApiData = $api('get', $url`/test/${'id'}`);
+    const useApiData = $api('get', $url`/test/${'id'}`, { suspense: true });
 
     const { result, rerender } = renderHook(() => useApiData({ id: 5 }));
 
@@ -339,7 +340,7 @@ describe('Suspense mode', () => {
 
   it('should send a new request when calling refresh', async () => {
     // Render
-    const useApiData = $api('get', '/test');
+    const useApiData = $api('get', '/test', { suspense: true });
 
     const { rerender, result } = renderHook(() => useApiData());
 
@@ -370,7 +371,7 @@ describe('Suspense mode', () => {
 
   it('should send request before hook is called by using prefetch', async () => {
     // Render
-    const useApiData = $api('get', '/test');
+    const useApiData = $api('get', '/test', { suspense: true });
 
     // Prefetch
     useApiData.prefetch();
