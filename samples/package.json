@@ -21,7 +21,7 @@
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "7.16.7",
     "@babel/runtime": "7.17.9",
-    "@types/node": "16.11.7",
+    "@types/node": "16.11.35",
     "@types/react": "18.0.3",
     "@types/react-dom": "18.0.0",
     "@types/webpack": "5.28.0",
