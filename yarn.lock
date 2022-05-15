@@ -4419,7 +4419,7 @@ __metadata:
     eslint-plugin-jest: 26.1.4
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
-    fork-ts-checker-webpack-plugin: 7.2.4
+    fork-ts-checker-webpack-plugin: 7.2.11
     html-webpack-plugin: 5.5.0
     react: 18.0.0
     react-dom: 18.0.0
@@ -7707,9 +7707,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fork-ts-checker-webpack-plugin@npm:7.2.4":
-  version: 7.2.4
-  resolution: "fork-ts-checker-webpack-plugin@npm:7.2.4"
+"fork-ts-checker-webpack-plugin@npm:7.2.11":
+  version: 7.2.11
+  resolution: "fork-ts-checker-webpack-plugin@npm:7.2.11"
   dependencies:
     "@babel/code-frame": ^7.16.7
     chalk: ^4.1.2
@@ -7729,7 +7729,7 @@ __metadata:
   peerDependenciesMeta:
     vue-template-compiler:
       optional: true
-  checksum: a45997570ae893ef616951bb5d26b770abe1f75a2c76b99ec0af8e949d72e4d9de6e8bfcc2393c6e4468a9c518412245ced6a9408647551d8258d44925bde6c1
+  checksum: b02942753e1c90b62ca674bfa004bc1561049b0c8c0fdc4d62bb13c156c93a0f2f496a7d3f95f93adcbac46c830bf83ba4c9fdef64cf871cdedf2f69f403511f
   languageName: node
   linkType: hard
 
