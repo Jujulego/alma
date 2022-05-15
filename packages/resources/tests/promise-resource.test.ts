@@ -26,12 +26,13 @@ describe('PromiseResource', () => {
   });
 
   it('should fail & reject when promise reject', async () => {
-    reject(new Error('test'));
+    const error = new Error('test');
+    reject(error);
 
-    await expect(resource).rejects.toEqual(new Error('test'));
+    await expect(resource).rejects.toBe(error);
 
     expect(resource.status).toBe('error');
-    expect(() => resource.read()).toThrow(new Error('test'));
+    expect(() => resource.read()).toThrow(error);
   });
 });
 
@@ -51,12 +52,41 @@ describe('PromiseResource.then', () => {
   it('should fail & reject when promise reject', async () => {
     const res = resource.then((txt) => txt.length);
 
-    reject(new Error('test'));
+    const error = new Error('test');
+    reject(error);
 
-    await expect(resource).rejects.toEqual(new Error('test'));
-    await expect(res).rejects.toEqual(new Error('test'));
+    await expect(resource).rejects.toBe(error);
+    await expect(res).rejects.toBe(error);
 
     expect(res.status).toBe('error');
-    expect(() => res.read()).toThrow(new Error('test'));
+    expect(() => res.read()).toThrow(error);
+  });
+
+  it('should catch error and use it as result', async () => {
+    const res = resource.then((txt) => txt.length, (err) => err);
+
+    const error = new Error('test');
+    reject(error);
+
+    await expect(resource).rejects.toBe(error);
+    await expect(res).resolves.toBe(error);
+
+    expect(res.status).toBe('success');
+    expect(res.read()).toBe(error);
+  });
+});
+
+describe('PromiseResource.catch', () => {
+  it('should catch error and use it as result', async () => {
+    const res = resource.catch((err) => err);
+
+    const error = new Error('test');
+    reject(error);
+
+    await expect(resource).rejects.toBe(error);
+    await expect(res).resolves.toBe(error);
+
+    expect(res.status).toBe('success');
+    expect(res.read()).toBe(error);
   });
 });
