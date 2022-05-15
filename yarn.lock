@@ -2424,7 +2424,7 @@ __metadata:
     jest-fetch-mock: 3.0.3
     react: 18.0.0
     react-test-renderer: 18.0.0
-    rollup: 2.70.2
+    rollup: 2.73.0
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
     ts-node: 10.7.0
@@ -2470,7 +2470,7 @@ __metadata:
     jest: 27.5.1
     jest-fetch-mock: 3.0.3
     react: 18.0.0
-    rollup: 2.70.2
+    rollup: 2.73.0
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
     ts-node: 10.7.0
@@ -2523,7 +2523,7 @@ __metadata:
     jest: 27.5.1
     react: 18.0.0
     react-test-renderer: 18.0.0
-    rollup: 2.70.2
+    rollup: 2.73.0
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
     ts-node: 10.7.0
@@ -2569,7 +2569,7 @@ __metadata:
     jest: 27.5.1
     react: 18.0.0
     react-test-renderer: 18.0.0
-    rollup: 2.70.2
+    rollup: 2.73.0
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
     ts-node: 10.7.0
@@ -2615,7 +2615,7 @@ __metadata:
     jest: 27.5.1
     react: 18.0.0
     react-test-renderer: 18.0.0
-    rollup: 2.70.2
+    rollup: 2.73.0
     rollup-plugin-node-externals: 4.0.0
     ts-jest: 27.1.4
     ts-node: 10.7.0
@@ -3727,14 +3727,14 @@ __metadata:
     gulp-sourcemaps: 3.0.0
     gulp-terser: 2.1.0
     gulp-typescript: 6.0.0-alpha.1
-    rollup: 2.70.2
+    rollup: 2.73.0
     typescript: 4.6.4
     vinyl-buffer: 1.0.1
     vinyl-source-stream: 2.0.0
   peerDependencies:
     "@babel/core": 7.17.10
     gulp: 4.0.2
-    rollup: 2.70.2
+    rollup: 2.73.0
     typescript: 4.6.4
   languageName: unknown
   linkType: soft
@@ -10441,9 +10441,9 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"rollup@npm:2.70.2":
-  version: 2.70.2
-  resolution: "rollup@npm:2.70.2"
+"rollup@npm:2.73.0":
+  version: 2.73.0
+  resolution: "rollup@npm:2.73.0"
   dependencies:
     fsevents: ~2.3.2
   dependenciesMeta:
@@ -10451,7 +10451,7 @@ resolve@^2.0.0-next.3:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: eb04eb9b87b30517308cb41018d57a23976f42b269c3229e4124746d3136a77aa16ba8b891a3fa571931dd72419eea40642a334835fe4f33161fea30d0b803f7
+  checksum: 38b12cecc59eaa8f32fe0df456e4585d35997572de185eaeb0c97df7fd6db56711842011c6e8ef5601613024fd8074b2d73a65dbdc90baa781090ba99e75d174
   languageName: node
   linkType: hard
 
