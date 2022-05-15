@@ -68,7 +68,7 @@
     "eslint-plugin-jest": "26.2.2",
     "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.4.0",
-    "eslint-plugin-testing-library": "5.3.1",
+    "eslint-plugin-testing-library": "5.5.0",
     "eslint-plugin-workspaces": "0.7.0",
     "graphql": "16.4.0",
     "graphql-tag": "2.12.6",
