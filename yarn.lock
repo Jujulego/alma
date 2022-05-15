@@ -2542,7 +2542,7 @@ __metadata:
     "@babel/preset-env": 7.17.10
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
-    "@rollup/plugin-commonjs": 21.1.0
+    "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-node-resolve": 13.3.0
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react-hooks": 7.0.2
@@ -2587,7 +2587,7 @@ __metadata:
     "@babel/preset-env": 7.17.10
     "@babel/preset-react": 7.16.7
     "@babel/runtime": 7.17.9
-    "@rollup/plugin-commonjs": 21.1.0
+    "@rollup/plugin-commonjs": 22.0.0
     "@rollup/plugin-node-resolve": 13.3.0
     "@testing-library/jest-dom": 5.16.4
     "@testing-library/react-hooks": 7.0.2
@@ -2745,23 +2745,6 @@ __metadata:
   version: 3.0.4
   resolution: "@repeaterjs/repeater@npm:3.0.4"
   checksum: cca0db3e802bc26fcce0b4a574074d9956da53bf43094de03c0e4732d05e13441279a92f0b96e2a7a39da50933684947a138c1213406eaafe39cfd4683d6c0df
-  languageName: node
-  linkType: hard
-
-"@rollup/plugin-commonjs@npm:21.1.0":
-  version: 21.1.0
-  resolution: "@rollup/plugin-commonjs@npm:21.1.0"
-  dependencies:
-    "@rollup/pluginutils": ^3.1.0
-    commondir: ^1.0.1
-    estree-walker: ^2.0.1
-    glob: ^7.1.6
-    is-reference: ^1.2.1
-    magic-string: ^0.25.7
-    resolve: ^1.17.0
-  peerDependencies:
-    rollup: ^2.38.3
-  checksum: e8280f4b6192729f2bdf878c48c451dc441075f2a12f22c688393f48a6b95e8ff83caaacc3df4eb1d81516e08a0e3a669213632879910d85dd630b37bb284df7
   languageName: node
   linkType: hard
 
