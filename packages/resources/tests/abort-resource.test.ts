@@ -23,8 +23,15 @@ describe('AbortResource.abort', () => {
     expect(holder.abort).toHaveBeenCalled();
   });
 
-  it('should call the "parent" abort function', async () => {
+  it('should call the "parent" abort function (then)', async () => {
     const res = resource.then(() => null);
+    res.abort();
+
+    expect(holder.abort).toHaveBeenCalled();
+  });
+
+  it('should call the "parent" abort function (catch)', async () => {
+    const res = resource.catch(() => null);
     res.abort();
 
     expect(holder.abort).toHaveBeenCalled();
