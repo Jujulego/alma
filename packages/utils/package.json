@@ -1,6 +1,6 @@
 {
   "name": "@jujulego/alma-utils",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -25,7 +25,8 @@
     },
     "module": "./dist/esm/index.js",
     "browser": "./dist/umd/alma-utils.js",
-    "types": "./dist/types/index.d.ts"
+    "types": "./dist/types/index.d.ts",
+    "default": "./dist/esm/index.js"
   },
   "scripts": {
     "lint": "eslint {src,tests}/**/*.*",
@@ -35,7 +36,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "react": "17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
     "dequal": "^2.0.2"

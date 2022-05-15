@@ -38,7 +38,7 @@
     "react": "^17.0.0 || ^18.0.0"
   },
   "dependencies": {
-    "@jujulego/alma-utils": "^1.1.7"
+    "@jujulego/alma-utils": "^1.1.8"
   },
   "devDependencies": {
     "@babel/core": "7.17.10",
