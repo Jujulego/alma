@@ -9,6 +9,7 @@
   },
   "workspaces": [
     "packages/*",
+    "samples",
     "tools"
   ],
   "browserslist": [

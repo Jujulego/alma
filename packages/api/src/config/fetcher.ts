@@ -1,4 +1,4 @@
-import { ApiHeaders, ApiMethod, ApiRequest, ApiResponse, ApiResponseType, ApiRTConstraint } from '../types';
+import { ApiHeaders, ApiMethod, ApiRequest, ApiResponse, ApiResponseType, ApiResponseTypeFor as ARTF } from '../types';
 
 // Utils
 function encodeBody(body: unknown, headers: Headers): BodyInit | undefined {
@@ -28,22 +28,20 @@ function decodeHeaders(headers: Headers): ApiHeaders {
   return res;
 }
 
-async function decodeBody<T extends ApiResponseType, D extends ApiRTConstraint[T]>(responseType: T, res: Response): Promise<D> {
+async function decodeBody(responseType: ApiResponseType, res: Response): Promise<unknown> {
   switch (responseType) {
     case 'arraybuffer':
-      return await res.arrayBuffer() as D;
+      return await res.arrayBuffer();
 
     case 'blob':
-      return await res.blob() as D;
+      return await res.blob();
 
     case 'json':
-      return await res.json() as D;
+      return await res.json();
 
     case 'text':
-      return await res.text() as D;
+      return await res.text();
   }
-
-  throw new Error(`Unsupported responseType ${responseType}`);
 }
 
 /**
@@ -61,10 +59,15 @@ async function decodeBody<T extends ApiResponseType, D extends ApiRTConstraint[T
  * @param req: request to send
  * @param signal: AbortSignal used to interrupt the call
  */
-export async function fetcher<M extends ApiMethod, B, D extends ApiRTConstraint[T], T extends ApiResponseType>(req: ApiRequest<M, T, B>, signal: AbortSignal): Promise<ApiResponse<T, D>> {
+export async function fetcher<D>(req: ApiRequest<ApiMethod, ARTF<D>>, signal: AbortSignal): Promise<ApiResponse<D>> {
+  const url = new URL(req.url, self.origin);
   const headers = new Headers(req.headers);
 
-  const res = await fetch(req.url, {
+  for (const [key, value] of Object.entries(req.query)) {
+    url.searchParams.append(key, value.toString());
+  }
+
+  const res = await fetch(url.toString(), {
     method: req.method,
     headers,
     body: encodeBody(req.body, headers),
@@ -73,7 +76,8 @@ export async function fetcher<M extends ApiMethod, B, D extends ApiRTConstraint[
 
   return {
     status: res.status,
+    statusText: res.statusText,
     headers: decodeHeaders(res.headers),
-    data: await decodeBody(req.responseType, res),
+    data: await decodeBody(req.responseType, res) as D,
   };
 }

@@ -1,6 +1,7 @@
 {
   "name": "@jujulego/alma-api",
-  "version": "2.4.1",
+  "version": "3.0.0-alpha.1",
+  "stableVersion": "2.4.1",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -35,9 +36,10 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "react": "^17.0.0 || ^18.0.0"
+    "react": "^18.0.0"
   },
   "dependencies": {
+    "@jujulego/alma-resources": "^1.1.2",
     "@jujulego/alma-utils": "^1.1.8"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 {
   "name": "@jujulego/alma-axios",
-  "version": "1.0.6",
+  "version": "3.0.0-alpha.1",
+  "stableVersion": "1.0.6",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -35,7 +36,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@jujulego/alma-api": "^2.4.1",
+    "@jujulego/alma-api": "^3.0.0-alpha.1",
     "axios": "^0.26.0 || ^0.27.0",
     "react": "^17.0.0 || ^18.0.0"
   },
@@ -44,7 +45,7 @@
     "@babel/preset-env": "7.17.10",
     "@babel/preset-react": "7.16.7",
     "@babel/runtime": "7.17.9",
-    "@jujulego/alma-api": "2.4.1",
+    "@jujulego/alma-api": "3.0.0-alpha.1",
     "@rollup/plugin-commonjs": "22.0.0",
     "@rollup/plugin-node-resolve": "13.3.0",
     "@testing-library/jest-dom": "5.16.4",

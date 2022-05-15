@@ -23,6 +23,7 @@ describe('fetcher', () => {
     const req: ApiRequest<'get', 'json'> = {
       method: 'get',
       url: '/api/test',
+      query: {},
       headers: {
         Test: 'true'
       },
@@ -38,6 +39,7 @@ describe('fetcher', () => {
     expect(axios.request).toHaveBeenCalledWith({
       method: 'get',
       url: '/api/test',
+      params: {},
       headers: {
         Test: 'true'
       },
