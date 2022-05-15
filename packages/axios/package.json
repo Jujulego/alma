@@ -46,7 +46,7 @@
     "@babel/runtime": "7.17.9",
     "@jujulego/alma-api": "2.4.1",
     "@rollup/plugin-commonjs": "22.0.0",
-    "@rollup/plugin-node-resolve": "13.2.1",
+    "@rollup/plugin-node-resolve": "13.3.0",
     "@testing-library/jest-dom": "5.16.4",
     "@types/gulp": "4.0.9",
     "@types/gulp-filter": "3.0.34",
