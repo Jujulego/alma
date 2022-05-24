@@ -63,7 +63,7 @@
     "@typescript-eslint/parser": "5.23.0",
     "alma-tools": "workspace:*",
     "babel-plugin-add-import-extension": "1.6.0",
-    "del": "6.0.0",
+    "del": "6.1.1",
     "eslint": "8.15.0",
     "eslint-plugin-jest": "26.2.2",
     "eslint-plugin-react": "7.29.4",
