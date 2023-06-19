@@ -2457,7 +2457,7 @@ __metadata:
     babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -2504,7 +2504,7 @@ __metadata:
     babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -2555,7 +2555,7 @@ __metadata:
     babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -2604,7 +2604,7 @@ __metadata:
     babel-plugin-add-import-extension: 1.6.0
     del: 6.0.0
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -2650,7 +2650,7 @@ __metadata:
     del: 6.0.0
     dequal: ^2.0.2
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -4339,7 +4339,7 @@ __metadata:
     babel-loader: 8.2.5
     copy-webpack-plugin: 10.2.4
     eslint: 8.15.0
-    eslint-plugin-jest: 26.1.4
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.4.0
     fork-ts-checker-webpack-plugin: 7.2.11
@@ -4399,7 +4399,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.23.0
     "@typescript-eslint/parser": 5.23.0
     eslint: 8.15.0
-    eslint-plugin-jest: 26.2.2
+    eslint-plugin-jest: 26.9.0
     eslint-plugin-react: 7.29.4
     eslint-plugin-react-hooks: 4.5.0
     eslint-plugin-testing-library: 5.5.0
@@ -6827,9 +6827,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest@npm:26.1.4":
-  version: 26.1.4
-  resolution: "eslint-plugin-jest@npm:26.1.4"
+"eslint-plugin-jest@npm:26.9.0":
+  version: 26.9.0
+  resolution: "eslint-plugin-jest@npm:26.9.0"
   dependencies:
     "@typescript-eslint/utils": ^5.10.0
   peerDependencies:
@@ -6840,24 +6840,7 @@ __metadata:
       optional: true
     jest:
       optional: true
-  checksum: f9989a853a165ad1afc077d7d75582391d511e8e14145bb67c76b0ad70a0966358311659da0e82162832bd23a327c2bd1d15dd5d3917f69bb8c14d256e8e1d77
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-jest@npm:26.2.2":
-  version: 26.2.2
-  resolution: "eslint-plugin-jest@npm:26.2.2"
-  dependencies:
-    "@typescript-eslint/utils": ^5.10.0
-  peerDependencies:
-    "@typescript-eslint/eslint-plugin": ^5.0.0
-    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-  peerDependenciesMeta:
-    "@typescript-eslint/eslint-plugin":
-      optional: true
-    jest:
-      optional: true
-  checksum: c1299a0bb465196d3c8a26ee892e29398b91bb741fe69ac6b19b54096f795142a152355ca520d80c778fb588ba2282a7c625ef204c17fe65ee94709d16970d46
+  checksum: 6d5fd5c95368f1ca2640389aeb7ce703d6202493c3ec6bdedb4eaca37233710508b0c75829e727765a16fd27029a466d34202bc7f2811c752038ccbbce224400
   languageName: node
   linkType: hard
 
