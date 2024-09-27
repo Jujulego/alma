@@ -70,7 +70,7 @@
     "jest": "27.5.1",
     "react": "18.1.0",
     "react-test-renderer": "18.1.0",
-    "rollup": "2.73.0",
+    "rollup": "2.79.2",
     "rollup-plugin-node-externals": "4.0.0",
     "ts-jest": "27.1.4",
     "ts-node": "10.7.0",
